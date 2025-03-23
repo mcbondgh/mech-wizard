@@ -163,3 +163,80 @@ vaadin-form-layout[empty] {
   min-width: 64px;
   min-height: 32px;
 }
+
+
+.employees-header-container {
+  /* display:grid; */
+  /* grid-template-columns: 70% 20%; */
+  background-color: rgb(255, 255, 255);
+  align-items: center;
+  padding:5px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.employees-pagebody-layout {
+  border:1px solid #ddd;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+  box-shadow: 2px 3px 2px #ddd;
+  border-radius: 10px;
+}
+
+.filter-and-export-button-layout {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 14fr 1fr;
+}
+.filter-and-export-button-layout .export-button {
+  width: auto;
+  /* border: 1px solid rgb(222, 222, 222); */
+  /* padding: 5px; */
+  border-radius: 100%;
+  margin:auto;
+}
+.employees-header-container .page-header-container {
+  border: none;
+  margin: auto;
+  padding:0;
+}
+
+.add-employee-form-layout-component {
+  margin:10px 0;
+  padding: 10px;
+  box-sizing: border-box;
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+/* .add-employee-dialog-component .emp-name-field {
+  grid-column:span 2;
+} */
+.add-employee-dialog-component .emp-description-field {
+  grid-column:span 2;
+}
+
+.combo-box, .date-picker, .input-style {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+
+
+
+
+
+@media screen and (max-width: 760px) {
+  .add-employee-form-layout-component {
+    border: 1px solid red;
+    display: block;
+  }
+  .add-employee-dialog-component .emp-name-field {
+    
+  }
+}

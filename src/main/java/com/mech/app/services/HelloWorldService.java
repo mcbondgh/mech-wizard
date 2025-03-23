@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 public class HelloWorldService {
 
     public String sayHello(String name) {
-        if (name.isEmpty()) {
-            return "Hello stranger";
-        } else {
-            return "Hello " + name;
-        }
+        return name == null ? "Hello stranger" : "Hello " + name;
     }
 }

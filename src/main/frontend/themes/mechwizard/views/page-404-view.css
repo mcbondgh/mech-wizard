@@ -1,0 +1,141 @@
+/* Styles for the 404 error page */
+.page-not-found-view {
+    background-color: var(--lumo-base-color);
+    color: var(--lumo-body-text-color);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.page-not-found-view .background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.page-not-found-view .circle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(108, 99, 255, 0.1);
+}
+
+.page-not-found-view .circle-1 {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 10%;
+    animation: float 8s infinite ease-in-out;
+}
+
+.page-not-found-view .circle-2 {
+    width: 100px;
+    height: 100px;
+    top: 30%;
+    right: 20%;
+    animation: float 8s infinite ease-in-out 2s;
+}
+
+.page-not-found-view .circle-3 {
+    width: 150px;
+    height: 150px;
+    bottom: 20%;
+    left: 20%;
+    animation: float 8s infinite ease-in-out 4s;
+}
+
+.page-not-found-view .circle-4 {
+    width: 80px;
+    height: 80px;
+    bottom: 30%;
+    right: 10%;
+    animation: float 8s infinite ease-in-out 6s;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+.page-not-found-view .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    max-width: 600px;
+    z-index: 10;
+    position: relative;
+}
+
+.page-not-found-view .error-code {
+    font-size: 10rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    line-height: 1;
+    color: #6c63ff;
+    text-shadow: 4px 4px 0px rgba(108, 99, 255, 0.2);
+}
+
+.page-not-found-view .error-message {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--lumo-secondary-text-color);
+}
+
+.page-not-found-view .error-description {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--lumo-tertiary-text-color);
+    line-height: 1.6;
+}
+
+.page-not-found-view .home-button {
+    background-color: #6c63ff;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(108, 99, 255, 0.2);
+    cursor: pointer;
+}
+
+.page-not-found-view .home-button:hover {
+    background-color: #5549ff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(108, 99, 255, 0.3);
+}
+
+.page-not-found-view .lost-traveler {
+    margin-top: 2rem;
+    opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .page-not-found-view .error-code {
+        font-size: 6rem;
+    }
+
+    .page-not-found-view .error-message {
+        font-size: 1.5rem;
+    }
+
+    .page-not-found-view .error-description {
+        font-size: 1rem;
+    }
+}

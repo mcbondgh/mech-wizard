@@ -18,3 +18,138 @@ vaadin-side-nav-item vaadin-icon {
 [slot="drawer"]:is(header, footer):is(:empty) {
   display: none;
 }
+
+
+.header {
+  /* background-color:green; */
+  width:100%;
+  justify-content: space-between;
+  padding:10px;
+  box-sizing: border-box;
+}
+
+.header vaadin-icon {
+  /* max-width:20px; */
+  margin-right: 5px;
+}
+
+.header-logo{
+  width:70px;
+  margin-left: 10px;
+}
+
+.header vaadin-icon:hover {
+  cursor:pointer;
+  color:gray;
+  transition: 0.5ms ease;
+}
+
+.drawer-footer {
+  padding:10px;
+  width:100%;
+  background-color: var(--page-body-color);
+}
+
+.drawer-scroller .menu-item-link {
+  /* border:1px solid red; */
+  color:#333;
+  margin: 7px;
+  font-size: small;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.drawer-scroller .menu-item-link:hover {
+  background-color: var(--lumo-primary-color-10pct);
+  cursor:pointer;
+  transition:0.5ms;
+}
+
+.drawer-scroller {
+  
+}
+
+.page-body {
+  background-color:var(--page-body-color);
+}
+
+.notification-icon-context-menu h4 {
+  font-size: large;
+  padding: 10px;
+}
+
+.dialog-box {
+  background-color: rgba(0, 0, 0, 0.409);
+  position: fixed;
+  top: 0; left: 0;bottom: 0;right: 0;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+.dialog-box::part(overlay) {
+  
+}
+
+
+.dialog-box::part(header) {
+  border-bottom: 1px solid var(--lumo-contrast-10pct);
+  background-color: var(--page-body-color);
+}
+
+.dialog-header-component {
+  margin: 0;
+}
+
+.dialog-close-button {
+  /* border:1px solid rgb(214, 214, 214); */
+  text-align: center;
+  border-radius: 100%;
+  padding: 5px;
+  font-weight: 100;
+  
+}
+
+.dialog-close-button:hover {
+  cursor:pointer;
+  background-color: #eee;
+  transition: 0.5ms;
+}
+
+.add-employee-dialog-component::part(content) {
+  width:800px;
+}
+
+.add-employee-dialog-component h4  {
+  color: var(--header-text-color);
+  margin: 5px 0;
+  font-size: large;
+}
+
+.add-employee-dialog-component span {
+  font-size: 12px;
+  color:var(--subtitle-color);
+}
+.add-employee-dialog-component div {
+  /* border: 1px solid red; */
+  align-items: center;
+}
+
+.item-delete-button {
+  font-size: smaller;
+  color: #ff0000;
+  height: 10px;
+  align-items: center;
+  margin: auto;
+}
+
+.item-update-button {
+  font-size: smaller;
+  color: #0da914;
+  margin: auto;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .add-employee-dialog-component::part(content) {
+    width:100%;  
+  }
+}

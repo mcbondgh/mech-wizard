@@ -25,6 +25,7 @@
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.29.3",
     "lit": "3.2.1",
+    "no-name": "file:",
     "proj4": "2.15.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -51,6 +52,7 @@
     "@vitejs/plugin-react": "4.3.4",
     "async": "3.2.6",
     "glob": "11.0.1",
+    "prettier": "3.3.3",
     "rollup-plugin-brotli": "3.1.0",
     "rollup-plugin-visualizer": "5.14.0",
     "strip-css-comments": "5.0.0",
@@ -60,8 +62,7 @@
     "vite-plugin-checker": "0.8.0",
     "workbox-build": "7.3.0",
     "workbox-core": "7.3.0",
-    "workbox-precaching": "7.3.0",
-    "prettier": "3.3.3"
+    "workbox-precaching": "7.3.0"
   },
   "vaadin": {
     "dependencies": {
@@ -124,7 +125,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "5b40f18d1e73a172790c314aa6a8b46e6380a9de035e6f204f5181446ea8a966"
+    "hash": "3e923e18b4645cc1c302e03b8af8f44c5345b81a5b0db351f747e15888700344"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",

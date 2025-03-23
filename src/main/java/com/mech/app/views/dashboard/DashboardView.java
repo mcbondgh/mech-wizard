@@ -8,15 +8,13 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Menu;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Dashboard")
 @Route("")
+@RouteAlias("/dashboard")
 @Menu(order = 0, icon = LineAwesomeIconUrl.CHALKBOARD_SOLID)
 public class DashboardView extends Composite<VerticalLayout> {
 

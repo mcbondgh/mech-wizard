@@ -163,3 +163,227 @@ vaadin-form-layout[empty] {
   min-width: 64px;
   min-height: 32px;
 }
+
+.page-header-container {
+  border:1px solid rgb(219, 219, 219);
+  display: block;
+  padding: 20px;
+  text-align: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.settings-body-container {
+  background-color: #fff;
+  border:1px solid #eee;
+}
+
+.tab-sheet-style {
+  width:100%;
+}
+
+.page-header-container p {
+  color:var(--subtitle-color);
+  font-size:16px;
+}
+
+.page-header-container h4{
+  font-size: 29px;
+  text-align:center;
+  color: var(--header-text-color);
+}
+
+.settings-tab {
+  /* width:100%; */
+  /* gap:5px; */
+}
+
+.tab-content-container {
+  text-align:center;
+  color:var(--header-text-color);
+  width:100%;
+  box-sizing:border-box;
+}
+
+.profile-tab-content {
+  display:grid;
+  grid-template-columns: 30% 70%;
+  box-sizing:border-box;
+  padding:10px;
+}
+
+.profile-tab-content vaadin-form-layout {
+  border:1px solid black;
+  box-sizing:border-box;
+  padding:29px;
+}
+
+.company-tab-content h3 {
+  color: var(--header-text-color);
+  font-size: 20px;
+  padding:10px 0;
+  border-bottom:3px  solid rgb(245, 241, 241);
+  text-align: center;
+  width:100%;
+  margin: auto;
+}
+
+.profile-tab-content h3 {
+  grid-column: span 3;
+  color: var(--header-text-color);
+  font-size: 20px;
+  padding:10px 0;
+  border-bottom:3px  solid rgb(245, 241, 241);
+}
+
+.settings-profile-container {
+  border:1px solid rgb(239, 236, 236);
+  border-radius:10px;
+  padding:20px;
+}
+
+.profile-image-style{
+  border:1px solid rgb(210, 210, 210);
+  padding:10px;
+  border-radius: 100%;
+  width:100px;
+  height: 100px;
+  margin:10px;
+}
+
+.settings-profile-formlayout {
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:5px;
+  width:100%;
+  box-sizing: border-box;
+  line-height: 40px;
+  box-shadow: 1px 1px 1px 1px #cbcbcb;
+}
+
+/* .settings-profile-formlayout .profile-name-field{
+  grid-column:span 4;
+}
+
+.settings-profile-formlayout .profile-number-field, .profile-email-field{
+  grid-column:span 2;
+} */
+
+
+/* SETTINGS FORM STYLING */
+.settings-form-layout {
+  max-width:80%;
+  margin:auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding:20px;
+  box-shadow: 1px 1px 2px 1px #e1dede;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
+
+.settings-form-layout .name-field, .description-field, .company-time-container{
+  grid-column: span 3;
+}
+
+.company-time-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  box-sizing: border-box;
+}
+
+.company-time-container .company-time-header-container {
+  grid-column: span 2;
+  margin:auto;
+  background-color: #eee;
+  padding:5px;
+  box-sizing: border-box;
+}
+
+.company-time-header-container h5{
+  color:var(--header-text-color);
+}
+
+.company-time-header-container p{
+  color:var(--subtitle-color);
+}
+
+.settings-form-layout .name-field::part(input-field) {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: large;
+}
+
+.settings-form-layout .button-container {
+  grid-column: span 3;
+  width:100%;
+  box-sizing: border-box;
+}
+
+
+/* SERVICE TYPES STYLING */
+.system-tab-content {
+  align-items: center;
+  height: 100vh;
+}
+
+.system-tab-content h3 {
+  color: var(--header-text-color);
+  font-size: 20px;
+  padding:10px 0;
+  border-bottom:3px  solid rgb(245, 241, 241);
+  text-align: center;
+  width:100%;
+  margin: auto;
+}
+.system-tab-content span {
+  color: var(--subtitle-color);
+}
+
+.service-types-layout {
+  display: grid;
+  margin: auto;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  padding: 20px;
+  background-color:var(--page-body-color);
+  border-radius: 5px;
+  justify-content: center;
+}
+
+.service-types-layout .add-service-button {
+  width:20%;
+  align-self:flex-end;
+}
+
+
+.default-grid-style::part(header-cell) {
+  background-color: #e9e9e9;
+  color: var(--subtitle-color);
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.default-grid-style::part(body-cell) {
+  font-size: 15px;
+  color:var(--header-text-color);
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-tab-content, .settings-form-layout,.service-types-layout {
+    display: block;
+    min-width:100%;
+  }
+  .service-types-layout .cost-field {
+    /* grid-column: span 6; */
+    width:100%;
+    margin-bottom: 10px;
+  }
+}
