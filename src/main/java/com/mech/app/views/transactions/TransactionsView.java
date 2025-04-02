@@ -9,7 +9,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Transactions")
 @Route("transactions")
-@Menu(order = 5, icon = LineAwesomeIconUrl.MONEY_CHECK_SOLID)
+@Menu(order = 6, icon = LineAwesomeIconUrl.MONEY_CHECK_SOLID)
 public class TransactionsView extends Composite<VerticalLayout> {
 
     public TransactionsView() {

@@ -41,10 +41,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @PageTitle("Employees")
 @Route("employees")
-@Menu(order = 6, icon = LineAwesomeIconUrl.USER_PLUS_SOLID)
+@Menu(order = 7, icon = LineAwesomeIconUrl.USER_PLUS_SOLID)
 public class EmployeesView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
-    private static final Grid<EmployeesDataProvider.EmployeesRecord> employeesGrid = new Grid<>();
+    private final Grid<EmployeesDataProvider.EmployeesRecord> employeesGrid = new Grid<>();
     private final TextField searchField = new TextField("", "Search by name, position or mobile number");
     private final TextField nameField = new TextField("Employee Name");
     private final TextField mobileNumber = new TextField("Mobile Number");

@@ -24,6 +24,34 @@ public class ComponentLoader {
         comboBox.setItems(items);
     }
 
+    public static void setCarBrands(ComboBox<String> comboBox) {
+        var items = List.of(
+                "Toyota", "Honda", "Hyundai", "Kia", "Ford",
+                "Mercedes-Benz", "Nissan", "Kantanka", "Volkswagen", "BMW", "Audi",
+                "Chevrolet", "Mitsubishi", "Renault", "Suzuki", "Volvo", "Jeep",
+                "Land Rover", "Lexus", "Opel", "Porsche", "Acura", "Dodge", "Jaguar"
+        );
+        items.stream().sorted();
+        comboBox.setItems(items);
+
+    }
+
+    public static void setServiceTypes(ComboBox<String> comboBox) {
+        var items = List.of("Oil and Filter Change",
+                "Brake Repair and Service",
+                "Tire Rotation and Alignment",
+                "Engine Diagnostics and Repair",
+                "Electrical Works",
+                "Other",
+                "Air Conditioning (A/C) Repair",
+                "Exhaust System Repair",
+                "General Vehicle Inspection"
+        );
+        items.stream().sorted();
+        comboBox.setItems(items);
+
+    }
+
     public static void setStatusTypes(ComboBox<String> comboBox) {
         var items = List.of(
             "Active",

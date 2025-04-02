@@ -1,0 +1,14 @@
+/*
+ * This file has been created by the Vaadin Theme Editor. Please note that
+ * manual changes to individual CSS properties may be overwritten by the theme editor.
+ */
+html {
+  --lumo-line-height-m:1.625;
+  --lumo-line-height-s:1.375;
+  --lumo-line-height-xs:1.25;
+  --lumo-size-l:2rem;
+  --lumo-size-m:1.75rem;
+  --lumo-size-s:1.5rem;
+  --lumo-size-xl:2.5rem;
+  --lumo-size-xs:1.25rem;
+}

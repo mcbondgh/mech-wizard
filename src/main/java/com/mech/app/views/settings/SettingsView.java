@@ -2,7 +2,7 @@ package com.mech.app.views.settings;
 
 import com.mech.app.components.FormColumns;
 import com.mech.app.components.HeaderComponent;
-import com.mech.app.dataproviders.ServiceTypesRecord;
+import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -12,26 +12,21 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-import java.security.Provider;
-import java.util.Collections;
-
 @PageTitle("Settings")
 @Route("settings")
-@Menu(order = 8, icon = LineAwesomeIconUrl.TOOLS_SOLID)
+@Menu(order = 10, icon = LineAwesomeIconUrl.TOOLS_SOLID)
 public class SettingsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     private final TabSheet tabSheet = new TabSheet();

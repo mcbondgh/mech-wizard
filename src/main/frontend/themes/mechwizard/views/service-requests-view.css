@@ -163,3 +163,326 @@ vaadin-form-layout[empty] {
   min-width: 64px;
   min-height: 32px;
 }
+
+.service-request-body-box {
+  /* display: grid;
+  grid-template-columns: 35% 64%; */
+  width:100%;
+  
+}
+
+.service-request-form-layout {
+  background-color: #fff;
+  height:max-content;
+}
+
+.request-form-scroll-layout {
+  width:45%;
+  border:1px solid rgb(221, 221, 255);
+  border-radius:8px;
+  background-color:#fff
+}
+
+ .service-request-list-layout{
+  border:1px solid rgb(221, 221, 255);
+  border-radius:8px;
+  width:100%;
+  /* padding:10px; */
+
+}
+
+.service-request-form-layout .buttons-box {
+  width:100%;
+}
+
+.service-request-button-box {
+  box-sizing: border-box;
+  padding-left: 200px;
+  background-color:rgb(255, 255, 255);
+  display: flex;
+  justify-content: end;
+}
+
+.view-header {
+  display: flex;
+  color: var(--subtitle-color);
+  width: 100%;
+  border-bottom: 1px solid rgb(231, 231, 231);
+  padding: 10px;
+  background-color: #fff;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.view-header h4{
+  /* background-color:rgb(255, 255, 255); */
+  color: var(--subtitle-color);
+  width:100%;
+}
+
+.list-box-component {
+  border:1px solid rgb(206, 200, 200);
+  height:150px;
+  padding:0;
+  overflow:auto;
+}
+.section2 {
+  background-color: #fff;
+
+}
+
+.section2 vaadin-text-field::part(input-field){
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.search-field-component-box {
+  border:1px solid rgb(234, 224, 224);
+  border-radius: 5px;
+  border-radius: 3px;
+}
+
+.service-request-list {
+  width:100%;
+  border:1px solid #ddd;
+  border-radius: 2px;
+  padding:2px;
+}
+
+.customers-list-item-renderer-box {
+  /* border-bottom: 1px solid #ddd; */
+  padding: 5px 0 5px 5px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border-left: 3px solid #ddd;
+}
+
+.customers-list-item-renderer-box p {
+  color: var(--header-text-color);
+  font-size: medium;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+.customers-list-item-renderer-box span {
+  font-size: small;
+  color: var(--subtitle-color);
+}
+
+.service-selector-box {
+  box-sizing: border-box;
+  /* border: 1px solid red; */
+  padding: 0 10px;
+  gap: 10px;
+  width: 100%;
+}
+
+.service-selector-box .combo-box-style{
+  width:60%;
+}
+.service-selector-box .input-style {
+  width:40%;
+}
+
+.default-check-box-style {
+  border: 1px solid rgb(231, 225, 225);
+  width:100%;
+  border-radius: 5px;
+  padding:2px;
+  box-sizing: border-box;
+}
+
+
+/* SERVICE REQUEST CONTENT COMPONENT STYLING */
+.service-operation-buttons {
+  /* border: 1px solid rgb(151, 39, 199); */
+  
+}
+
+.add-service-request-header {
+  display:flex; color:var(--subtitle-color);
+  gap:5px;
+}
+
+.add-service-request-header h4 {
+  color: var(--subtitle-color);
+}
+
+.service-operation-buttons vaadin-button {
+  width:fit-content;
+}
+
+.content-blocks {
+  border-bottom: 1px solid rgb(225, 239, 225);
+  width:100%;
+  justify-content: space-between;
+  align-items:center;
+  padding:5px;
+  align-content: baseline;
+}
+.request-icon-and-service-box {
+  /* border: 1px solid blue; */
+  display:flex;
+  padding:5px;
+  /* width:90%; */
+}
+
+.request-icon-and-service-box .request-icon{
+  margin-right: 5px;
+  color: var(--subtitle-color);
+  /* background-color: #ddd; */
+}
+
+.request-icon-and-service-box h3{
+  color: var(--header-text-color);
+}
+
+.block-on{
+  box-sizing:border-box;
+  padding:0 20px;
+
+}
+.block-on h4 {
+  color:var(--header-text-color);
+}
+.block-on span {
+  color: var(--subtitle-color);
+}
+
+.block-two {
+  background-color: #f4f4f4;
+  box-sizing:border-box;
+  padding:10px 20px;
+  border-radius: 5px;
+  /* border: 1px solid #ecdfdf; */
+}
+
+.service-request-component-layout {
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-sizing:border-box;
+}
+
+.service-request-component-layout:hover {
+  box-shadow: 1px 1px 2px #ddd;
+}
+
+/* CUSTOMERS SERVICE REQUEST VIEW STYLING */
+.page-body-layout {
+  /* height:100vh; */
+  width:100%;
+  /* border:1px solid red; */
+}
+
+.customer-add-service-button-box {
+  width:100%;
+  justify-content: flex-end;
+}
+
+.customer-add-service-button-box vaadin-button {
+  min-width:min-content;
+  font-size: smaller;
+}
+
+.customer-service-request-details-box {
+  border:1px solid #ddd;
+  border-radius: 5px;
+  padding:10px;
+  box-sizing:border-box;
+  margin:10px auto;
+}
+
+.customer-service-request-details-box h3 {
+  color:var(--subtitle-color);
+  /* font-size: medium; */
+}
+
+.customer-service-booking-dialog::part(content) {
+  width:600px;
+  height:fit-content;
+}
+
+.customer-service-booking-dialog h2 {
+  color:var(--header-text-color);
+  padding:10px;
+  font-size: large;
+}
+
+.book-service-layout {
+  border:1px solid #ddd;
+  margin:10px auto;
+  border-radius:7px;
+  padding:10px;
+}
+.book-service-layout h3 {
+  color:var(--subtitle-color);
+  margin:10px auto;
+  border-bottom: 1px solid #ddd;
+  /* width:100%; */
+}
+
+.book-service-layout vaadin-text-area {
+  /* margin:10px auto; */
+  height:90px;
+}
+
+.book-service-layout .default-btn-style {
+  background-color: var(--lumo-primary-color);
+  color:#fff;
+  margin: 10px 0;
+}
+.book-service-layout .combo-box::part(input-field) {
+  /* height:40px; */
+}
+
+
+/* SECONDARY LAYOUT STYLING */
+
+.secondary-booking-header-section {
+    align-items:center;
+    text-align: center;
+    margin:auto;
+}
+
+.secondary-booking-header-section h3 {
+  color:var(--header-text-color);
+  font-size:30px;
+}
+.secondary-booking-header-section p {
+  color:var(--subtitle-color);
+  font-size: medium;
+}
+
+.secondary-booking-header-section .book-service-confirm-icon{
+  width:50px;
+  background-color: rgb(0, 255, 34);
+  border-radius:100%;
+  padding:5px;
+}
+
+/* RESPONSIVE VIEW STYLING */
+@media screen and (max-width: 768px) {
+  .service-request-body-box {
+    display: block;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .request-form-scroll-layout  {
+    width:100%;
+    margin-bottom: 10px;
+  }
+
+  .service-selector-box, .content-blocks {
+    flex-direction: column;
+    width:100%;
+  }
+  .service-selector-box .combo-box-style,
+  .service-selector-box .input-style {
+    width:100%;
+  }
+  .customer-service-booking-dialog::part(content) {
+    max-width:100%;
+  }
+  
+}

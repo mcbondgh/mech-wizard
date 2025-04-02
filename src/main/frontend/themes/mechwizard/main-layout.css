@@ -139,6 +139,7 @@ vaadin-side-nav-item vaadin-icon {
   height: 10px;
   align-items: center;
   margin: auto;
+  background-color: transparent;
 }
 
 .item-update-button {
@@ -146,6 +147,14 @@ vaadin-side-nav-item vaadin-icon {
   color: #0da914;
   margin: auto;
   align-items: center;
+}
+
+.alternative-grid-style::part(header-cell) {
+  color: var(--subtitle-color);
+}
+
+.combo-box-style{
+  width:100%;
 }
 
 @media screen and (max-width: 768px) {

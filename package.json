@@ -13,7 +13,7 @@
     "@vaadin/hilla-react-crud": "24.7.0",
     "@vaadin/hilla-react-form": "24.7.0",
     "@vaadin/hilla-react-i18n": "24.7.0",
-    "@vaadin/hilla-react-signals": "24.7.0",
+    "@vaadin/hilla-react-signals": "^24.7.0",
     "@vaadin/polymer-legacy-adapter": "24.7.1",
     "@vaadin/react-components": "24.7.1",
     "@vaadin/react-components-pro": "24.7.1",
@@ -125,7 +125,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "3e923e18b4645cc1c302e03b8af8f44c5345b81a5b0db351f747e15888700344"
+    "hash": "592e5fa8dcf9d217743ca889b20e8ed81ea993b8395c022135f278d9d2281d79"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -141,29 +141,20 @@
     "@types/react": "$@types/react",
     "@polymer/polymer": "$@polymer/polymer",
     "react": "$react",
-    "@vaadin/hilla-generator-plugin-model": "$@vaadin/hilla-generator-plugin-model",
-    "@vaadin/hilla-react-crud": "$@vaadin/hilla-react-crud",
-    "@vaadin/hilla-generator-plugin-subtypes": "$@vaadin/hilla-generator-plugin-subtypes",
     "proj4": "$proj4",
-    "@vaadin/hilla-generator-utils": "$@vaadin/hilla-generator-utils",
-    "@vaadin/hilla-generator-plugin-barrel": "$@vaadin/hilla-generator-plugin-barrel",
-    "@vaadin/hilla-react-form": "$@vaadin/hilla-react-form",
-    "@vaadin/hilla-generator-core": "$@vaadin/hilla-generator-core",
-    "@vaadin/hilla-generator-plugin-push": "$@vaadin/hilla-generator-plugin-push",
-    "@vaadin/hilla-generator-plugin-client": "$@vaadin/hilla-generator-plugin-client",
     "date-fns": "$date-fns",
-    "@vaadin/hilla-lit-form": "$@vaadin/hilla-lit-form",
-    "@vaadin/hilla-react-auth": "$@vaadin/hilla-react-auth",
-    "@vaadin/hilla-generator-cli": "$@vaadin/hilla-generator-cli",
-    "@vaadin/hilla-generator-plugin-backbone": "$@vaadin/hilla-generator-plugin-backbone",
-    "@vaadin/hilla-frontend": "$@vaadin/hilla-frontend",
-    "@vaadin/hilla-file-router": "$@vaadin/hilla-file-router",
-    "@vaadin/hilla-react-signals": "$@vaadin/hilla-react-signals",
-    "@vaadin/hilla-react-i18n": "$@vaadin/hilla-react-i18n",
     "@vaadin/react-components-pro": "$@vaadin/react-components-pro",
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
-    "react-router": "$react-router"
+    "react-router": "$react-router",
+    "@vaadin/hilla-frontend": "$@vaadin/hilla-frontend",
+    "@vaadin/hilla-react-auth": "$@vaadin/hilla-react-auth",
+    "@vaadin/hilla-react-crud": "$@vaadin/hilla-react-crud",
+    "@vaadin/hilla-file-router": "$@vaadin/hilla-file-router",
+    "@vaadin/hilla-react-i18n": "$@vaadin/hilla-react-i18n",
+    "@vaadin/hilla-lit-form": "$@vaadin/hilla-lit-form",
+    "@vaadin/hilla-react-form": "$@vaadin/hilla-react-form",
+    "@vaadin/hilla-react-signals": "$@vaadin/hilla-react-signals"
   }
 }

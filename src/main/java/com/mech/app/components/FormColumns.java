@@ -1,6 +1,8 @@
 package com.mech.app.components;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 
 public class FormColumns{
 
@@ -18,5 +20,12 @@ public class FormColumns{
         formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("1500px", 8));
         formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("1700px", 9));
         formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("1900", 10));
+    }
+
+
+    public static Component buttonsBox(Component ... component) {
+        var layout = new FlexLayout(component);
+        layout.addClassNames("buttons-box");
+        return layout;
     }
 }//end of class...
