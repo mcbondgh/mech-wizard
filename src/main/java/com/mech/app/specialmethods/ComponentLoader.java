@@ -52,6 +52,10 @@ public class ComponentLoader {
 
     }
 
+    public static List<String> getJobStatusList() {
+        return List.of("New", "In Progress", "Waiting for part", "Completed");
+    }
+
     public static void setStatusTypes(ComboBox<String> comboBox) {
         var items = List.of(
             "Active",

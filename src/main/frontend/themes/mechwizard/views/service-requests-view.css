@@ -186,6 +186,7 @@ vaadin-form-layout[empty] {
  .service-request-list-layout{
   border:1px solid rgb(221, 221, 255);
   border-radius:8px;
+  background-color:#fff;
   width:100%;
   /* padding:10px; */
 
@@ -363,10 +364,15 @@ vaadin-form-layout[empty] {
   border-radius: 5px;
   border: 1px solid #ddd;
   box-sizing:border-box;
+  margin:6px auto;
+  max-width:98%;
 }
 
 .service-request-component-layout:hover {
-  box-shadow: 1px 1px 2px #ddd;
+  box-shadow: 1px 1px 2px 2px #ddd;
+  transform:scale(1.01);
+  transition: 0.3s ease;
+
 }
 
 /* CUSTOMERS SERVICE REQUEST VIEW STYLING */

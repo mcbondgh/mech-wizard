@@ -47,6 +47,9 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
         getContent().setSizeUndefined();
         getContent().addClassNames("page-content");
 
+        pageLoadIndicator.setClassName("page-loader-indicator");
+        pageLoadIndicator.add(new H4("Content Loading...."));
+
         var Header = new HeaderComponent().pageHeaderWithComponent("Registered Customers",
                 "easily manage and register all your customers from here", addCustomerButton);
         getContent().add(Header);
@@ -56,8 +59,6 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        pageLoadIndicator.setClassName("page-loader-indicator");
-        pageLoadIndicator.add(new H4("Content Loading...."));
 
     }
 

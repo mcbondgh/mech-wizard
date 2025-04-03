@@ -22,6 +22,7 @@ import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -187,7 +188,7 @@ public class ServiceRequestsView extends Composite<VerticalLayout> implements Be
 
         });
 
-        ListBox<serviceRequestSampleData> serviceList = new ListBox<>();
+        VirtualList<serviceRequestSampleData> serviceList = new VirtualList<>();
         serviceList.addClassNames("service-request-list");
         serviceList.setSizeUndefined();
         serviceList.setItems(serviceRequestSampleData());
