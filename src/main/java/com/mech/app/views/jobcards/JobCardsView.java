@@ -47,9 +47,9 @@ import java.util.List;
 @Route("view/job-cards")
 @Menu(order = 3, icon = LineAwesomeIconUrl.ADDRESS_CARD)
 public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
-    private final Button jobCardButton = new Button("Add Job Card");
+    private final Button jobCardButton = new Button("Create Job Card");
     private final Grid<JobCardDataProvider> jobCardGrid = new Grid<>();
-    private static final Grid<JobCardDataProvider.partsDataProvider> partsGrid = new Grid<>();
+    private final Grid<JobCardDataProvider.partsDataProvider> partsGrid = new Grid<>();
 
     public JobCardsView() {
         getContent().setWidth("100%");
@@ -223,7 +223,7 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
         return gridAndSearchFieldContainer;
     }
 
-    private Component partsGridConfiguration() {
+    private Grid<JobCardDataProvider.partsDataProvider> partsGridConfiguration() {
 
         partsGrid.addClassNames("alternative-grid-style");
         partsGrid.setWidthFull();
@@ -263,11 +263,11 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
                 .setPadding("5px");
 
         switch (dataProvider.getJobStatus()) {
-            case "In Progress" -> item.getElement().getThemeList().add("badge");
-            case "Waiting for parts" -> item.getElement().getThemeList().add("badge warning pill");
-            case "Completed" -> item.getElement().getThemeList().add("badge success pill");
-            case "New" -> item.getElement().getThemeList().add("badge contrast");
-            default -> item.getElement().getThemeList().add("badge error pill");
+            case "In Progress" -> item.getElement().getThemeList().add("badge small");
+            case "Waiting for parts" -> item.getElement().getThemeList().add("badge warning pill small");
+            case "Completed" -> item.getElement().getThemeList().add("badge success pill small");
+            case "New" -> item.getElement().getThemeList().add("badge contrast small");
+            default -> item.getElement().getThemeList().add("badge error pill small");
         }
         return item;
     }
@@ -280,7 +280,6 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
 
     private Renderer<JobCardDataProvider> jobDetailsComponent() {
         return new ComponentRenderer<>(dataProvider -> {
-
             var assignedTechnician = dataProvider.getAssignedTechnician().isEmpty() || dataProvider.getAssignedTechnician().isBlank();
             var techs = List.of("Tech One", "Tech Two", "Tech Three");
             var technicianSelector = new ComboBox<>("Select Technician", techs);
@@ -359,7 +358,6 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
             addPartsButton.addSingleClickListener(e -> {
                 addPartsComponent(dataProvider.getJobNumber()).open();
             });
-
             return layout;
         });
     }
@@ -377,20 +375,19 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
         TextField partName = new TextField("Part Or item Name", "eg Bread Pad Set");
         IntegerField qtyField = new IntegerField("Quantity");
         BigDecimalField amountField = new BigDecimalField("Amount");
-        Button saveButton = new Button("Save Part", LineAwesomeIcon.SAVE.create());
+        Button saveButton = new Button("Save Date", LineAwesomeIcon.SAVE.create());
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
-        Button addItemButton = new Button("", LineAwesomeIcon.PLUS_SOLID.create());
+        Button addItemButton = new Button("Add", LineAwesomeIcon.PLUS_SOLID.create());
         addItemButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
 
         var fieldsBox = new HorizontalLayout(partName, qtyField, amountField, addItemButton);
         fieldsBox.addClassNames("add-part-fields-box");
 
-        amountField.setPrefixComponent(new H4("Ghc"));
+        amountField.setPrefixComponent(new H5("Ghc"));
         partName.addClassNames("input-style");
         qtyField.addClassNames("input-style", "number-field-item");
         amountField.addClassNames("input-style", "number-field-item");
         qtyField.setStepButtonsVisible(true);
-
 
         VerticalLayout tableBox = new VerticalLayout(partsGridConfiguration());
         tableBox.addClassNames("add-part-table-box");
@@ -399,7 +396,7 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
 
         //ACTION EVENT LISTENERS
         addItemButton.addClickListener(e -> {
-            partsGrid.getListDataView().addItem(
+            partsGridConfiguration().getListDataView().addItem(
                     new JobCardDataProvider
                             .partsDataProvider(jobNumber, partName.getValue(), qtyField.getValue(), amountField.getValue().doubleValue()));
         });
