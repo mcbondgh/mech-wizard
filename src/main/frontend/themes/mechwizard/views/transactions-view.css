@@ -241,12 +241,12 @@ vaadin-form-layout[empty] {
   font-size: smaller;
   transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform transition */
 }
-.print-receipt-button:hover {
+.print-receipt-button:hover, .make-payment-button:hover {
   background-color: var(--lumo-primary-text-color); /* Change to primary color on hover */
   color: white; /* Change text color to white on hover */
   transform: scale(1.05); /* Slightly increase size on hover */
 }
-.print-receipt-button:active {
+.print-receipt-button:active, .make-payment-button:active {
   transform: scale(0.95); /* Slightly decrease size on click */
 }
 .print-receipt-button:focus {
@@ -264,10 +264,6 @@ vaadin-form-layout[empty] {
   cursor: pointer;
   font-size: smaller;
   transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform transition */
-}
-.make-payment-button:hover {
-  transform: scale(0.95); /* Slightly decrease size on click */
-  transition: transform 0.1s ease; /* Quick transition for click effect */
 }
 
 /* PAYMENT DIALOG STYLING SECTION */

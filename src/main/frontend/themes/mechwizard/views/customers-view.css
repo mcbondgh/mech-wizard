@@ -65,9 +65,9 @@
 
 .customers-details-renderer-box .customer-avator {
     opacity: 0.3;
-    background-color: rgb(75, 208, 244);
+    background-color: rgb(218, 247, 255);
     align-self: center;
-    margin-right: 20px;
+    margin-right:5px;
 }
 
 .customers-details-renderer-box span {
@@ -90,9 +90,11 @@
     text-align: center;
     align-items: center;
     box-sizing: border-box;
+    align-items: flex-start;
     margin: auto;
     gap:10px;
     /* border: 1px solid red; */
+    width:100%;
 }
 
 .customers-details-grid-component vaadin-icon {
@@ -103,11 +105,13 @@
 .customer-name-and-cars-box {
     /* border: 2px solid red; */
     align-self: flex-start;
+    justify-content: space-between;
     /* max-width:20%; */
 }
 .customer-name-and-cars-box h4 {
     text-align: start;
     margin: 5px 0;
+    color:var(--header-text-color);
 }
 
 .customer-name-and-cars-box .vehicles-layout {

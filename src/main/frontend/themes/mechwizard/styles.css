@@ -10,6 +10,7 @@
 @import url('./views/page-404-view.css');
 @import url('./views/confirm-dialog-component.css');
 @import url('./views/customers-view.css');
+@import url('./views/completed-services-view.css');
 @import url('./views/settings-view.css');    html {
       --lumo-primary-color: hsla(191, 100%, 41%, 1);
       --page-body-color: rgb(242, 248, 255);

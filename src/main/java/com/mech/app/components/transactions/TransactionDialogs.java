@@ -1,23 +1,25 @@
 package com.mech.app.components.transactions;
 
+import com.mech.app.dataproviders.servicesrequest.ServiceRequestDataProvider;
 import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.vaadin.lineawesome.LineAwesomeIcon;
+
+import java.util.List;
 
 public class TransactionDialogs {
     private Dialog dialog;
@@ -31,8 +33,26 @@ public class TransactionDialogs {
     private final TextField accountNumberField = new TextField("Account Number");
     private Button actionButton;
 
-    private final TransactionsDataProvider.transactionRecord data;
+    private TransactionsDataProvider.transactionRecord data;
     private final RadioButtonGroup<String> paymentMethodSelector = new RadioButtonGroup<>("Select Payment Method");
+
+    public TransactionDialogs() {
+        dialogContent = new VerticalLayout();
+        dialog = new Dialog(dialogContent);
+        dialog.addClassNames("transaction-dialog");
+        dialog.setCloseOnOutsideClick(false);
+        dialog.setCloseOnEsc(false);
+        dialog.setModal(false);
+        dialogContent.setSpacing(false);
+
+        dialog.addClassNames("transaction-dialog");
+        tabs.addClassNames("payment-tab");
+        cashTab.addClassNames("payment-item-tab");
+        posTab.addClassNames("payment-item-tab");
+        discountField.addClassNames("input-style");
+        electronicTab.addClassNames("payment-item-tab");
+        dialogContent.addClassNames("transaction-dialog-content-box");
+    }
 
     public TransactionDialogs(TransactionsDataProvider.transactionRecord data) {
         this.data = data;
@@ -113,12 +133,6 @@ public class TransactionDialogs {
     }
 
     public void receiptDialog() {
-        // dialog = new Dialog();
-        // dialog.addClassNames("transaction-dialog");
-        // dialog.setCloseOnOutsideClick(true);
-        // dialog.setCloseOnEsc(true);
-        // dialog.setModal(false);
-
         // Header
         dialog.getHeader().add(headerComponent("Transaction Receipt For"));
 
@@ -134,6 +148,7 @@ public class TransactionDialogs {
         var receiptNo = new Paragraph("Receipt No: RCT-2025-001"); // Example receipt number
         var labourCost = new Paragraph("Labour Cost: Ghc100.00"); // Example labour cost
 
+//        var image = new Image("images/logo-icon.png", "img");
         // Styling
         customerName.addClassNames("receipt-detail");
         serviceType.addClassNames("receipt-detail");
@@ -167,4 +182,31 @@ public class TransactionDialogs {
         dialogContent.add(receiptLayout);
         dialog.open();
     }
-}
+
+    public void feedbackDialog(String jobNumber) {
+        dialog.getHeader().add("Share Your Feedback For " + jobNumber);
+        TextArea textArea = new TextArea("Please enter your comments here", "Your may choose to leave this field empty.");
+        textArea.addClassNames("feedback-comment-field");
+        textArea.setWidthFull();
+        textArea.setHeight("30px");
+
+        RadioButtonGroup<Component> starRates = new RadioButtonGroup<>("How would you rate your service");
+        starRates.addClassName("feedback-rates");
+        var star1 = new Div(LineAwesomeIcon.STAR_SOLID.create(), new Span("1"));
+        var star2 = new Div(LineAwesomeIcon.STAR_SOLID.create(), new Span("2"));
+        var star3 = new Div(LineAwesomeIcon.STAR_SOLID.create(), new Span("3"));
+        var star4 = new Div(LineAwesomeIcon.STAR_SOLID.create(), new Span("4"));
+        var star5 = new Div(LineAwesomeIcon.STAR_SOLID.create(), new Span("5"));
+        starRates.setItems(List.of(star1, star2, star3, star4, star5));
+
+        var button = new Button("Submit Feedback", LineAwesomeIcon.STAR.create());
+
+        var body = new VerticalLayout(starRates, textArea, button);
+        body.setBoxSizing(BoxSizing.BORDER_BOX);
+        body.setWidthFull();
+        body.addClassNames("feedback-body");
+        dialogContent.add(body);
+        dialog.open();
+    }
+
+}//end of class...

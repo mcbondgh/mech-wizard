@@ -75,13 +75,11 @@ public class TransactionsView extends Composite<VerticalLayout> {
             if (e.getValue()) {
                 // Show both paid and unpaid invoices
                 transactionGrid.setItems(sampleData());
-                transactionGrid.getLazyDataView().refreshAll();
             } else {
                 // Show only unpaid invoices
                 transactionGrid.setItems(sampleData().stream()
                         .filter(record -> "unpaid".equalsIgnoreCase(record.status()))
                         .toList());
-                transactionGrid.getLazyDataView().refreshAll();
             }
         });
 
@@ -113,9 +111,8 @@ public class TransactionsView extends Composite<VerticalLayout> {
         filterField.setValueChangeMode(ValueChangeMode.LAZY);
         filterField.addValueChangeListener(
                 input -> {
-                    transactionsGridConfiguration().getListDataView().addFilter(filter -> {
+                    transactionGrid.getListDataView().setFilter(filter -> {
                         if (input.getValue().isEmpty()) return true;
-
                         var matchesName = filter.customerName().toLowerCase().contains(input.getValue().toLowerCase());
                         var matchesJobNo = filter.jobNo().toLowerCase().contains(input.getValue().toLowerCase());
                         var matchesServiceType = filter.service().toLowerCase().contains(input.getValue().toLowerCase());

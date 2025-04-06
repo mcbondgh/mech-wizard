@@ -224,7 +224,6 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
     }
 
     private Grid<JobCardDataProvider.partsDataProvider> partsGridConfiguration() {
-
         partsGrid.addClassNames("alternative-grid-style");
         partsGrid.setWidthFull();
 
@@ -395,11 +394,11 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
         dialog.add(fieldsBox, tableBox, saveButton);
 
         //ACTION EVENT LISTENERS
-        addItemButton.addClickListener(e -> {
-            partsGridConfiguration().getListDataView().addItem(
-                    new JobCardDataProvider
-                            .partsDataProvider(jobNumber, partName.getValue(), qtyField.getValue(), amountField.getValue().doubleValue()));
-        });
+        addItemButton.addClickListener(
+                e -> {
+                    var item = new JobCardDataProvider.partsDataProvider(jobNumber, partName.getValue(), qtyField.getValue(), amountField.getValue().doubleValue());
+                    partsGrid.getListDataView().addItem(item);
+                });
 
         return dialog;
     }

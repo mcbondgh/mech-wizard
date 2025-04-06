@@ -167,7 +167,7 @@ vaadin-form-layout[empty] {
 .page-header-container {
   border:1px solid rgb(219, 219, 219);
   display: block;
-  padding: 20px;
+  padding: 10px 0;
   text-align: center;
   justify-content: center;
   background-color: #fff;
@@ -185,7 +185,8 @@ vaadin-form-layout[empty] {
 
 .page-header-container p {
   color:var(--subtitle-color);
-  font-size:16px;
+  font-size:14px;
+  /* margin:auto; */
 }
 
 .page-header-container h4{
