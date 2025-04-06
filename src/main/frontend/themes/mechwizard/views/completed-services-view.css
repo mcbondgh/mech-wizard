@@ -1,0 +1,151 @@
+.completed-job-view-layout {
+    border: 1px solid #ddd;
+    background-color:#fff;
+    border-radius:5px;
+    width:100%;
+    max-height:fit-content;
+    padding:10px;
+    /* display:flex; */
+}
+
+.completed-job-record-layout {
+    /* border:1px solid #ddd; */
+    width:100%;
+    box-shadow: 1px 1px 2px #ddd;
+
+}
+.completed-job-record-layout .alternative-grid-style::part(cell) {
+    color:var(--header-text-color);   
+    padding:15px 0;
+}
+
+.completed-job-record-layout .alternative-grid-style{
+    min-height: 400px;
+}
+
+.completed-service-details-renderer-box {
+    background-color: rgb(225, 255, 56);
+    padding:1px 10px; 
+    border-radius:10px;
+    width:max-content;
+    /* font-weight: 400; */
+    text-align: center;
+    /* margin:auto; */
+}
+
+.completed-job-record-layout ul{
+    background-color:rgb(241, 241, 241);
+    width:100%;
+    box-sizing:border-box;
+    padding:10px;
+    color:#120f0f;
+    font-size:small;
+}
+.completed-service-component-header {
+    color:var(--header-text-color);
+    font-size:medium;
+    background-color: rgb(236, 236, 236);
+    width:100%;
+    padding:10px;
+    box-sizing:border-box;
+    border-radius:3px;
+}
+
+.details-empty-div {
+    border:1px solid rgb(222, 222, 222);
+    width:100%;
+    height:100%;
+    border-radius:5px;
+    margin: auto;
+    text-align: center;
+    align-content:center;
+    color:var(--subtitle-color);
+}
+
+.details-empty-div vaadin-icon {
+    font-size:50px;
+}
+.details-empty-div p {
+    font-size: medium;
+}
+
+.details-card-layout {
+    /* background-color:#eff9fc; */
+    /* border:1px solid rgb(236, 231, 231); */
+    width:auto;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.details-card-layout:hover {
+    transform: scale(1.0) ;
+    transition: 0.3s ease;
+    border:1px solid #ddd;
+}
+
+.details-card-layout .detail-card-header {
+    color:var(--subtitle-color);
+}
+
+.details-card-layout .detail-card-content {
+    color:var(--header-text-color);
+    /* width:100%; */
+    font-size:medium;
+}
+
+.details-container-filter {
+    display:flex;
+    box-sizing:border-box;
+    /* border:1px solid green; */
+    line-height: 3px;
+}
+
+.details-container-filter vaadin-icon {
+    align-self: center;
+    font-size: medium;
+    width: 40px;
+    height:40px;
+    font-weight: 700;
+    color:var(--subtitle-color);
+    background-color: #e8f1fb;
+    border-radius:100%;
+    padding:5px;
+}
+
+.details-container-filter-amount p{
+    line-height:1px;
+    /* background-color:blue; */
+    font-weight: 600;
+}
+
+.list-and-header-section {
+    box-sizing: border-box;
+    padding:10px;
+    border-radius:5px;
+    margin:5px 0;
+    /* border:1px solid var(--subtitle-color); */
+
+}
+
+.list-and-header-section h5 {
+    color:var(--header-text-color);
+}
+
+.details-container-filter .detail-card-content{
+    /* color:red; */
+    font-weight: 600;
+}
+
+
+
+@media screen and (max-width: 760px) {
+    .completed-job-view-layout {
+        display: block;
+        width:100%;
+    }
+    .completed-job-record-layout {
+        display: block;
+        width:100%;
+        margin:10px 0;
+    }
+}
