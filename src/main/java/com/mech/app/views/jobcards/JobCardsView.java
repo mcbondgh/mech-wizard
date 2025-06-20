@@ -3,6 +3,7 @@ package com.mech.app.views.jobcards;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.dataproviders.jobcards.JobCardDataProvider;
 import com.mech.app.specialmethods.ComponentLoader;
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -44,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @PageTitle("Job Cards")
-@Route("view/job-cards")
+@Route(value = "view/job-cards", layout = MainLayout.class)
 @Menu(order = 3, icon = LineAwesomeIconUrl.ADDRESS_CARD)
 public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
     private final Button jobCardButton = new Button("Create Job Card");
@@ -317,9 +318,12 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
             progressButtons.setValue(dataProvider.getProgressValue() + "%");
 
             progressButtons.addValueChangeListener(event -> {
-                var value = Double.parseDouble(event.getSource().getValue().replace("%", ""));
-                Notification.show(String.format("Job progress update to %s", event.getValue()));
-                progressBar.setValue((value) * 0.01);
+                try {
+                    var value = Double.parseDouble(event.getSource().getValue().replace("%", ""));
+                    Notification.show(String.format("Job progress update to %s", event.getValue()));
+                    progressBar.setValue((value) * 0.01);
+                }catch(NullPointerException ignore) {}
+
             });
 
             var progressBarAndLabel = new Div(new H5("Job Progress Indicator"), progressBar);

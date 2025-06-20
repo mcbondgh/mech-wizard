@@ -3,6 +3,7 @@ package com.mech.app.views.customers;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.specialmethods.ComponentLoader;
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -33,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 @PageTitle("Customers")
-@Route("/view/customers")
+@Route(value = "/view/customers", layout = MainLayout.class)
 @Menu(title = "Customers", order = 2, icon = LineAwesomeIconUrl.USER_FRIENDS_SOLID)
 public class CustomersView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 

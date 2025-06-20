@@ -4,8 +4,10 @@ import { useSignal } from '@vaadin/hilla-react-signals';
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
  
 export const config: ViewConfig = {
+  route: "./views/feedbacks",
   menu: { order: 9, icon: 'line-awesome/svg/feedback.svg' },
   title: 'Feedbacks',
+  flowLayout: true
 };
 
 export default function FeedbackView() {

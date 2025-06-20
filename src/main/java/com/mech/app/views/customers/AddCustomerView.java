@@ -5,6 +5,7 @@ import com.mech.app.dataproviders.cars.CarDataProvider;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.enums.GenderEnums;
 import com.mech.app.specialmethods.ComponentLoader;
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -34,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Add Customer")
-@Route(value = "/view/add-customer")
+@Route(value = "/view/add-customer", layout = MainLayout.class)
 public class AddCustomerView extends VerticalLayout implements BeforeEnterObserver {
 
     private TextField nameField = new TextField("Full Name", "Kofi Mensah");

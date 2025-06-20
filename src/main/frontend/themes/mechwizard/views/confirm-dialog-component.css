@@ -1,3 +1,33 @@
 .confirm-dialog-header-container {
-    background-color:red;
+    margin: 0;
+}
+
+
+.save-dialog-header-style{
+    background-color: var(--lumo-success-color);
+}
+.confirm-dialog-style h4 {
+    color: var(--lumo-success-contrast-color);
+}
+.confirm-dialog-style::part(content) {
+    padding:18px;
+}
+
+.update-dialog-header-style {
+    background-color: var(--lumo-primary-color);
+}
+.delete-dialog-header-style {
+    background-color: var(--lumo-error-color);
+}
+.dialog-box::part(header) {
+    border-bottom: 1px solid var(--lumo-contrast-10pct);
+    background-color: var(--page-body-color);
+}
+.dialog-header-component {
+    margin: 0;
+}
+
+.notification-icon{
+    margin-right: 10px;
+    width:25px;
 }

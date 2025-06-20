@@ -175,6 +175,10 @@ vaadin-form-layout[empty] {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
+
+.employees-header-container div {
+
+}
 .employees-pagebody-layout {
   border:1px solid #ddd;
   height: 100%;
@@ -203,14 +207,20 @@ vaadin-form-layout[empty] {
 }
 
 .add-employee-form-layout-component {
-  margin:10px 0;
-  padding: 10px;
   box-sizing: border-box;
   display:grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   border-radius: 5px;
+  border: 1px solid #dddddd;
   background-color: #fff;
+  width:100%;
+}
+
+.buttons-container {
+  box-sizing: border-box;
+  grid-column: span 2;
+  justify-self: end;
 }
 
 /* .add-employee-dialog-component .emp-name-field {
@@ -224,17 +234,18 @@ vaadin-form-layout[empty] {
   width: 100%;
   box-sizing: border-box;
 }
-
-
-
-
-
+.add-employee-button {
+  font-size: smaller;
+  width:fit-content;
+  background-color: var(--lumo-primary-text-color);
+  padding:10px 7px;
+}
 
 
 @media screen and (max-width: 760px) {
   .add-employee-form-layout-component {
-    border: 1px solid red;
     display: block;
+    width:fit-content;
   }
   .add-employee-dialog-component .emp-name-field {
     

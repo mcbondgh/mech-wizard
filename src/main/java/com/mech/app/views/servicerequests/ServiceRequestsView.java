@@ -5,6 +5,7 @@ import com.mech.app.components.FormColumns;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.specialmethods.ComponentLoader;
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Objects;
 
 @PageTitle("Service Requests")
-@Route("/view/service-requests")
+@Route(value = "/view/service-requests", layout = MainLayout.class)
 @Menu(order = 5, icon = LineAwesomeIconUrl.TOOLBOX_SOLID)
 public class ServiceRequestsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
     private static H4 layoutHeaderText;

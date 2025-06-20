@@ -6,20 +6,21 @@
 @import url('./views/service-requests-view.css');
 @import url('./views/transactions-view.css');
 @import url('./views/employees-view.css');
-/* @import url('./views/reports-view.css'); */
+ @import url('./views/login-view.css');
 @import url('./views/page-404-view.css');
 @import url('./views/confirm-dialog-component.css');
 @import url('./views/customers-view.css');
 @import url('./views/completed-services-view.css');
 @import url('./views/settings-view.css');    html {
-      --lumo-primary-color: hsla(191, 100%, 41%, 1);
+
+      --lumo-primary-color: #4A6FA5;
       --page-body-color: rgb(242, 248, 255);
       --subtitle-color:#7c8d9b;
       --header-text-color:rgb(65, 70, 86);
       /* --lumo-primary-color: black; */
       --lumo-primary-color-50pct: hsla(191, 100%, 41%, 0.5);
       --lumo-primary-color-10pct: hsla(191, 100%, 41%, 0.1);
-      --lumo-primary-text-color: hsla(191, 100%, 41%, 1);
+      --lumo-primary-text-color: #4A6FA5;
       --lumo-shade-5pct: rgba(33, 33, 33, 0.05);
       --lumo-shade-10pct: rgba(33, 33, 33, 0.1);
       --lumo-shade-20pct: rgba(33, 33, 33, 0.2);
@@ -38,8 +39,8 @@
       --lumo-error-color: hsl(0, 81%, 50%);
       --lumo-error-text-color: hsl(0, 86%, 45%);
       --lumo-success-color: hsl(153, 76%, 57%);
-      --lumo-success-contrast-color: hsl(159, 29%, 10%);
-      --lumo-success-text-color: hsl(159, 61%, 40%);
+      --lumo-success-contrast-color: #fff;
+      --lumo-success-text-color: hsl(159, 67%, 40%);
       --lumo-size-xl: 3rem;
       --lumo-size-l: 2.5rem;
       --lumo-size-m: 2rem;

@@ -1,11 +1,13 @@
 :host {
-    /* color:#fff;
-    background-color: #000000;
-    font-size:smaller; */
+    font-size:small;
+    /*background-color:red;*/
+    padding: 18px 10px;
+    border-radius:5px;
     width:100%;
+
 } 
-/* 
+
 :host:hover {
-    background-color:#32323255;
+    background-color:red;
     cursor:pointer;
-} */
+}

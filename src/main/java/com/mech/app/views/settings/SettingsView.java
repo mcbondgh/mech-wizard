@@ -3,6 +3,7 @@ package com.mech.app.views.settings;
 import com.mech.app.components.FormColumns;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -25,7 +26,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Settings")
-@Route("settings")
+@Route(value = "settings", layout = MainLayout.class)
 @Menu(order = 10, icon = LineAwesomeIconUrl.TOOLS_SOLID)
 public class SettingsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 

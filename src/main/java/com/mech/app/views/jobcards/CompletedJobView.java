@@ -3,6 +3,7 @@ package com.mech.app.views.jobcards;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.transactions.TransactionDialogs;
 import com.mech.app.dataproviders.servicesrequest.ServiceRequestDataProvider;
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 @PageTitle("Completed Jobs")
-@Route(value = "/view/completed-job")
+@Route(value = "/view/completed-job", layout = MainLayout.class)
 @Menu(title = "Completed Jobs", order = 4, icon = LineAwesomeIconUrl.CHECK_CIRCLE_SOLID)
 public class CompletedJobView extends Composite<VerticalLayout> implements BeforeEnterObserver, AfterNavigationObserver {
 

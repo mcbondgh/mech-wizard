@@ -4,6 +4,7 @@ import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.transactions.CardComponent;
 import com.mech.app.components.transactions.TransactionDialogs;
 import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -31,7 +32,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @PageTitle("Transactions")
-@Route("transactions")
+@Route(value = "transactions", layout = MainLayout.class)
 @Menu(order = 6, icon = LineAwesomeIconUrl.DOLLAR_SIGN_SOLID)
 public class TransactionsView extends Composite<VerticalLayout> {
 
@@ -68,7 +69,7 @@ public class TransactionsView extends Composite<VerticalLayout> {
     private Component headerLayout() {
         var HeaderText = "Payment Transactions";
         var subText = "Process and view all payment transactions in your system";
-        var toggleButton = new Checkbox("Show Paid Jobs");
+        var toggleButton = new Checkbox("Show Paid Jobs", true);
         toggleButton.addClassNames("check-box-style");
 
         toggleButton.addValueChangeListener(e -> {
@@ -160,6 +161,7 @@ public class TransactionsView extends Composite<VerticalLayout> {
                         badge.getElement().getThemeList().add("badge success pill small");
                     } else {
                         badge.getElement().getThemeList().add("badge error pill small");
+                       
                     }
                     return badge;
                 });

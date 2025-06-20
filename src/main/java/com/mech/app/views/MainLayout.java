@@ -22,6 +22,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.io.ByteArrayInputStream;
@@ -30,8 +31,8 @@ import java.util.List;
 /**
  * The main view is a top-level placeholder for other views.
  */
-@Layout
-@AnonymousAllowed
+//@Layout
+@PermitAll
 public class MainLayout extends AppLayout implements AfterNavigationObserver{
 
     private H1 viewTitle;
@@ -53,7 +54,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver{
     }
 
     private void addDrawerContent() {
-        Span appName = new Span("Mechanic Wizard");
+        Span appName = new Span("");
 
         //LOGO
         var imageByte = ImageLoader.readLogoAsByte();
@@ -109,9 +110,14 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver{
             Notification.show("Notification 2 clicked");
         });
 
-        var signoutLink = new Anchor("#", "Sign Out");
+        var signoutLink = new Anchor();
+        signoutLink.setText(" Sign Out");
         signoutLink.addComponentAsFirst(LineAwesomeIcon.SIGN_OUT_ALT_SOLID.create());
         signoutLink.getStyle().setColor("black").setTextDecoration("none").setFontSize("small");
+        signoutLink.getElement().addEventListener("click", e -> {
+            signoutLink.setHref("/");
+            contextMenu.setVisible(false);
+        });
         contextMenu.add(signoutLink);
 
         NotificationIcon.addSingleClickListener(e -> {

@@ -1,18 +1,42 @@
 package com.mech.app.dataproviders.employees;
 
+import com.mech.app.dataproviders.users.UsersDataProvider;
+
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class EmployeesDataProvider {
-    private int recordId;
+    private int recordId, shopId, userId;
     private String fullName, mobileNumber, email, digitalAddress;
-    private String gender, position, cardNumber;
+    private String gender, employeeSkill, cardNumber;
     private String cardType;
     private Date dateJoined;
-    private String status, description;
+    private String description;
     private Timestamp dateCreated;
+    private boolean active, deleted;
+    private UsersDataProvider usersData;
 
-    public record EmployeesRecord(int id, String name, String number, String email, String status){}
+    public record EmployeesRecord(int id, String name, String number, String email,
+                                  String address, String gender, String skill, String cardType,
+                                  String cardNumber, Timestamp date, String description, boolean active,
+                                  UsersDataProvider.usersRecord usersData
+                                  ){}
+
+    public int getShopId() {
+        return shopId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setShopId(int shopId) {
+        this.shopId = shopId;
+    }
 
     public int getRecordId() {
         return recordId;
@@ -62,12 +86,12 @@ public class EmployeesDataProvider {
         this.gender = gender;
     }
 
-    public String getPosition() {
-        return position;
+    public String getEmployeeSkill() {
+        return employeeSkill;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setEmployeeSkill(String employeeSkill) {
+        this.employeeSkill = employeeSkill;
     }
 
     public String getCardNumber() {
@@ -82,6 +106,30 @@ public class EmployeesDataProvider {
         return cardType;
     }
 
+    public Timestamp getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Timestamp dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public void setCardType(String cardType) {
         this.cardType = cardType;
     }
@@ -94,19 +142,17 @@ public class EmployeesDataProvider {
         this.dateJoined = dateJoined;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    public UsersDataProvider getUsersData() {
+        return usersData;
+    }
+    public void setUsersData(UsersDataProvider data) {
+        usersData = data;
     }
 }

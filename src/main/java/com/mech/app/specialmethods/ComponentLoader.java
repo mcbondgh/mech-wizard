@@ -1,15 +1,19 @@
 package com.mech.app.specialmethods;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.dom.Style;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import javax.swing.*;
 import java.util.List;
 
 public class ComponentLoader {
 
-    public static void loadMechanicPositions(ComboBox<String> comboBox) {
+    public static void loadMechanicSkill(ComboBox<String> comboBox) {
         var items = List.of(
                 "Master Mechanic",
+                "Receptionist",
                 "Lead Technician",
                 "Service Technician",
                 "Electrician",
@@ -21,7 +25,7 @@ public class ComponentLoader {
                 "Lube Technician",
                 "Quality Control Inspector"
         );
-        comboBox.setItems(items);
+        comboBox.setItems(items.stream().sorted().toList());
     }
 
     public static void setCarBrands(ComboBox<String> comboBox) {
@@ -33,6 +37,18 @@ public class ComponentLoader {
         );
         comboBox.setItems(items.stream().sorted().toList());
 
+    }
+
+    public static Component emptyGridComponent(String content) {
+        Div div = new Div(content);
+        div.addClassName("empty-grid-component");
+        div.getStyle().setPadding("20px")
+                .setTextAlign(Style.TextAlign.CENTER)
+                .setJustifyContent(Style.JustifyContent.CENTER)
+                .setFontSize("var(--lumo-font-size-l)")
+                .setColor("var(--lumo-secondary-text-color)")
+                .setMargin("auto");
+        return div;
     }
 
     public static void setServiceTypes(ComboBox<String> comboBox) {
@@ -80,7 +96,7 @@ public class ComponentLoader {
         comboBox.setItems(List.of(
                 "Customer",
                 "Mechanic",
-                "Accountant",
+                "Receptionist",
                 "Admin"
         ));
     }

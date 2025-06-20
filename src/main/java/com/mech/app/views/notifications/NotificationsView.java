@@ -1,5 +1,6 @@
 package com.mech.app.views.notifications;
 
+import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
@@ -12,7 +13,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Notifications")
-@Route("notifications")
+@Route(value = "notifications", layout = MainLayout.class)
 @Menu(order = 1, icon = LineAwesomeIconUrl.BELL)
 public class NotificationsView extends Composite<VerticalLayout> {
 
