@@ -25,7 +25,9 @@
 }
 .dialog-header-component {
     margin: 0;
+    align-items: center;
 }
+
 
 .notification-icon{
     margin-right: 10px;

@@ -27,7 +27,7 @@ public class ErrorLoggerTemplate {
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write("MECHANIC SHOP ERROR LOG FILE");
-            writer.write("-------------------------------------------");
+            writer.write("--------------------------------------------------");
             writer.newLine();
             writer.write("Date: " + errorDate);
             writer.newLine();

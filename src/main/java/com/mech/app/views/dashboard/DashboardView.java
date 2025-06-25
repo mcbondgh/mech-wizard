@@ -28,6 +28,7 @@ public class DashboardView extends Composite<VerticalLayout> implements BeforeEn
     public DashboardView() {
         getContent().addClassName("page-body");
         getContent().setWidth("100%");
+        getContent().setSizeFull();
         getContent().getStyle().set("flex-grow", "1");
     }
 

@@ -1,16 +1,3 @@
-.page-loader-indicator {
-    background-color: dodgerblue;
-    height: 100vh;
-    padding: 0;
-    margin:auto;
-    text-align: center;
-    align-items: center;
-}
-
-.page-loader-indicator h4 {
-    color: #fff;
-    margin: auto;
-}
 .page-header-with-button-container .header-with-button-section{
     box-sizing: border-box;
 }
@@ -24,7 +11,11 @@
     align-items: center;
     
 }
-
+.add-customer-button {
+    width:fit-content;
+    font-size: smaller;
+    padding:10px 7px;
+}
 .page-header-with-button-container .add-customer-button {
     width:auto;
 }
@@ -55,8 +46,8 @@
     display: flex;
     align-items:center;
     justify-content: flex-start;
-    padding:20px;
-    margin: 10px 0;
+    padding:5px;
+    margin:5px 0;
     box-sizing: border-box;
     /* border: 1px solid #ddd; */
     border-radius: 10px;
@@ -75,26 +66,19 @@
 }
 
 .customers-details-renderer-box .default-menu-bar-style{
-    border: 1px solid #ab1111;
-    border-radius:15px;
-    box-sizing: border-box;
-    width: 30px;
+    /*border: 1px solid #ab1111;*/
+    /*border-radius:15px;*/
+    /*box-sizing: border-box;*/
+    /*width: 30px;*/
+    padding:0;
 }
 
-.customers-details-renderer-box .default-menu-bar-style::part(content):hover {
+.customers-details-renderer-box .default-menu-bar-style::part(content) {
     background-color: red
 }
 
 .customers-details-grid-component {
-    display: block;
-    text-align: center;
-    align-items: center;
-    box-sizing: border-box;
-    align-items: flex-start;
-    margin: auto;
-    gap:10px;
-    /* border: 1px solid red; */
-    width:100%;
+
 }
 
 .customers-details-grid-component vaadin-icon {
@@ -103,35 +87,211 @@
 }
 
 .customer-name-and-cars-box {
-    /* border: 2px solid red; */
-    align-self: flex-start;
-    justify-content: space-between;
-    /* max-width:20%; */
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 .customer-name-and-cars-box h4 {
-    text-align: start;
-    margin: 5px 0;
     color:var(--header-text-color);
+    padding:5px;
 }
 
 .customer-name-and-cars-box .vehicles-layout {
-    gap:5px;
+    /*gap:5px;*/
     color:var(--subtitle-color);
-    text-transform: capitalize;
-    font-style: italic;
+    /*text-transform: capitalize;*/
+    /*font-style: italic;*/
 }
 
 .customers-action-button-container {
-    gap:10px;
-    font-size: small;
+    gap:5px;
+    font-size: smaller;
+    margin:0;
+    justify-content:start;
+    cursor:pointer;
+}
+
+.customers-action-button-container div {
+    align-items: stretch;
+    justify-content: stretch;
+    width: 100%;
+    gap:3px;
+    margin:0;
+}
+
+/*customer update form styling...*/
+.customer-update-form-parent-layout {
+    border:1px solid var(--lumo-contrast-50pct);
+    box-sizing: border-box;
+    border-radius:5px;
+    padding:10px;
+}
+
+.customer-update-header-title {
+    color: var(--header-text-color);
+    padding: 10px;
+    width:100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--lumo-contrast-20pct);
+}
+
+.customer-update-form-layout {
+    border:1px solid #ddd;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 10px;
+}
+.customer-password-section {
+    background-color: #eef9ff;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+.customer-password-section vaadin-button {
+    width:fit-content;
+    font-size: 11px;
+    cursor:pointer;
+}
+
+.customer-password-body-content {
+    text-align: center;
+}
+.customer-update-button-container {
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.dialog-content-layout {
+    box-sizing: border-box;
+    height:500px;
+    border:1px solid #dddddd;
+    border-radius: 5px;
+}
+.form-layout-style {
+    box-sizing: border-box;
+    border-radius:5px;
+    padding:10px;
+    border:1px solid lightsteelblue;
+}
+.form-layout-style .default-button-style {
+    max-width:60px;
+    margin: 5px 0;
+    align-self: end;
+}
+
+.form-layout-style vaadin-text-field, .form-layout-style vaadin-combo-box {
+    min-width:fit-content;
+}
+
+/*CUSTOMER ACCOUNT DIALOG STYLING...*/
+.customer-account-parent-box {
+    background-color: #f3fbff;
+    box-sizing: border-box;
+    border-radius:5px;
+    border:1px solid #e5f4fc;
+    box-shadow: var(--lumo-box-shadow-xs);
+}
+.customer-account-parent-layout {
+
+}
+
+.customer-account-body {
+    padding:0;
+    height:100%;
+}
+.payment-radio-button{
+    align-items:center;
+    margin:auto;
+}
+.payment-method-radio-group {
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    margin:5px 0;
+    width:100%;
+    padding:5px 10px;
+    box-sizing: border-box;
+
 }
 
 
+.transaction-section {
+    background-color: #fff;
+    height:100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    box-shadow: var(--lumo-box-shadow-xs);
+}
+.transaction-section vaadin-button {
+    width:100%;
+    font-size: small;
+    padding:10px;
+    margin: 5px 0;
+    color: #fff;
+    background-color:var(--lumo-primary-color);
+    cursor: pointer;
+}
+.deposit-history-section {
+    min-height:650px;
+}
 
+.transaction-section h4 {
+    background-color: var(--lumo-contrast-5pct);
+    color:var(--header-text-color);
+    box-sizing: border-box;
+    padding:10px;
+    border-radius: 5px;
+    width:100%;
+}
+
+.customer-account-box {
+    margin:-7px 0;
+    align-items: center;
+    justify-content: space-between;
+    width:100%;
+}
+.account-box-3 {
+    background-color: var(--lumo-success-color-50pct);
+    border-radius: 5px;
+    margin: 0;
+    padding: 8px;
+}
+.account-box-3 h3 {
+    color: #13de1d;
+}
+
+.back-button{
+    width:fit-content;
+    font-size: small;
+    padding:10px;
+    margin: 5px 0;
+}
+
+.back-button:hover {
+    background-color: var(--lumo-primary-color);
+    color: #ffffff;
+    cursor: pointer;
+    scale:  1.02;
+}
+
+.customer-account-header {
+    border: 1px solid #ddd;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffff;
+    border-radius: 5px;
+    box-shadow:  var(--lumo-box-shadow-xs);
+    box-sizing: border-box;
+}
+
+.customer-account-header h4 {
+    text-align: center;
+    color: var(--header-text-color);
+    width: 100%;
+
+}
 
 
 /* ADD CUSTOMER VIEW STYLING */
-
 .customer-input-area {
     box-sizing: border-box;
     padding:10px;
@@ -164,18 +324,29 @@
 }
 
 .car-info-box {
-    display: grid;
-    grid-template-columns: 35% 15% 15% 25% 10%;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    padding:5px;
-    border-radius:3px;
-    justify-content: baseline;
+    /*display: grid;*/
+    /*grid-template-columns: 35% 15% 15% 25% 10%;*/
+    /*margin: 10px 0;*/
+    /*border: 1px solid #ddd;*/
+    /*padding:5px;*/
+    /*border-radius:3px;*/
+    /*box-sizing: border-box;*/
+    /*align-items: baseline;*/
+    /*justify-content: center;*/
+
+    justify-content: center;
     align-items: baseline;
+    margin:15px auto;
+    box-sizing:border-box;
+    border: 1px solid var(--lumo-contrast-20pct);
+    padding:10px;
+    border-radius: var(--lumo-space-s);
 }
 
 .car-info-box .add-car-info-button {
-    
+    font-size: var(--lumo-font-size-xs);
+    cursor:pointer;
+    align-self: end;
 }
 
 .buttons-box{
@@ -194,6 +365,7 @@
     height: 100px;
 }
 
+/*MOBILE VIEW STYLING...*/
 @media screen and (max-width:768px) {
     
     .customers-details-renderer-box {
@@ -202,8 +374,21 @@
         align-items: center;
     }
 
-    .car-info-box,.customer-input-area  {
+    .car-info-box,.customer-input-area ,
+    .customer-password-section, .customer-account-box   {
         display: flex;
         flex-direction: column;
+    }
+
+    .customer-password-section vaadin-button {
+        width:100%;
+    }
+    .customer-account-parent-box {
+       /*min-width:100px;*/
+    }
+
+    .car-info-box .add-car-info-button {
+        width:100%;
+        content: none;
     }
 }

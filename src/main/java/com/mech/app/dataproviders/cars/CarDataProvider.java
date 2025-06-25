@@ -3,25 +3,23 @@ package com.mech.app.dataproviders.cars;
 public class CarDataProvider {
     private int recordIId, customerId;
     private String brand, model, plateNumber;
-    private int carYear;
+    private String carYear;
     private boolean isDeleted, isUpdated;
 
     public CarDataProvider() {
     }
 
-    public CarDataProvider(int recordIId, int customerId, String brand, String model, String plateNumber, int carYear, boolean isDeleted, boolean isUpdated) {
+    public CarDataProvider(int recordIId, int customerId, String brand, String model, String plateNumber, String carYear) {
         this.recordIId = recordIId;
         this.customerId = customerId;
         this.brand = brand;
         this.model = model;
         this.plateNumber = plateNumber;
         this.carYear = carYear;
-        this.isDeleted = isDeleted;
-        this.isUpdated = isUpdated;
     }
-    public CarDataProvider(int customerId, String brand, String model, String plateNumber, int carYear) {
+    public CarDataProvider(String brand, String model, String plateNumber, String carYear) {
         this.brand = brand;
-        this.customerId = customerId;
+//        this.customerId = customerId;
         this.model = model;
         this.plateNumber = plateNumber;
         this.carYear = carYear;
@@ -68,11 +66,11 @@ public class CarDataProvider {
         this.plateNumber = plateNumber;
     }
 
-    public int getCarYear() {
+    public String getCarYear() {
         return carYear;
     }
 
-    public void setCarYear(int carYear) {
+    public void setCarYear(String carYear) {
         this.carYear = carYear;
     }
 

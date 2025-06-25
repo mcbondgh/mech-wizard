@@ -4,6 +4,7 @@ vaadin-scroller[slot="drawer"] {
 
 vaadin-side-nav-item vaadin-icon {
   padding: 0;
+  color:#fff;
 }
 
 [slot="drawer"]:is(header, footer) {
@@ -26,7 +27,7 @@ vaadin-side-nav-item vaadin-icon {
   justify-content: space-between;
   padding:10px;
   box-sizing: border-box;
-  background-color: #fff;
+  /*background-color: #fff;*/
   border-radius: 10px;
   cursor:pointer;
 }
@@ -35,10 +36,13 @@ vaadin-side-nav-item vaadin-icon {
   /* max-width:20px; */
   margin-right: 5px;
 }
+.app-name {
+    font-weight:700;
+    color:var(--lumo-primary-color);
+}
 
 .header-logo{
-  width:70px;
-  margin-left: 10px;
+  width:50px;
 }
 
 .header vaadin-icon:hover {
@@ -51,7 +55,7 @@ vaadin-side-nav-item vaadin-icon {
   padding:10px;
   width:100%;
   /*background-color: var(--page-body-color);*/
-  background-color: var(--lumo-primary-color-50pct);
+  /*background-color: var(--lumo-primary-color-50pct);*/
 }
 
 .drawer-footer .header {
@@ -60,21 +64,29 @@ vaadin-side-nav-item vaadin-icon {
 
 .drawer-scroller .menu-item-link {
   /* border:1px solid red; */
-  color:#333;
+  color:#fff;
   margin: 7px;
   font-size: small;
   box-sizing: border-box;
   border-radius: 5px;
 }
 
+.drawer-scroller .menu-item-link:hover vaadin-icon {
+  color:var(--lumo-primary-color);
+}
+
 .drawer-scroller .menu-item-link:hover {
-  background-color: var(--lumo-primary-color-10pct);
+  background-color: rgb(255, 255, 255);
   cursor:pointer;
   transition:0.5ms;
 }
+.drawer-scroller .menu-item-link[current] {
+  background-color: rgba(255, 255, 255, 0.44);
+    color: var(--lumo-primary-color);
+}
 
 .drawer-scroller {
-  
+  background-color: #1d5375;
 }
 
 .page-body {
@@ -105,9 +117,19 @@ vaadin-side-nav-item vaadin-icon {
 .dialog-close-button {
   /* border:1px solid rgb(214, 214, 214); */
   text-align: center;
-  border-radius: 100%;
+  align-items: center;
   padding: 5px;
+  border-radius: 50%;
   font-weight: 100;
+  margin: 0 10px;
+}
+.default-dialog-style::part(header) {
+  background-color: #f8fcff;
+  color: var(--lumo-primary-contrast-color);
+  padding: 10px;
+  font-size: medium;
+  font-weight: 600;
+
 }
 
 .dialog-close-button:hover {
@@ -172,10 +194,11 @@ vaadin-side-nav-item vaadin-icon {
 }
 
 .default-button-style {
-  padding:18px 10px;
+  padding:16px 10px;
   border-radius: 5px;
-  font-size: small;
+  font-size: smaller;
   color:#fff;
+  width: fit-content;
   background-color: var(--lumo-primary-color);
 }
 .default-button-style:hover {
@@ -184,9 +207,14 @@ vaadin-side-nav-item vaadin-icon {
   box-shadow 0.2s ease-in-out;
   cursor: pointer;
 }
-.default-button-style:focus {
-  background-color: red;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+.default-error-button {
+  padding:18px 10px;
+  border-radius: 5px;
+  font-size: small;
+}
+.default-error-button:hover {
+  cursor:pointer;
 }
 
 .disable-button-style {

@@ -2,6 +2,8 @@ package com.mech.app.dataproviders.dao;
 
 import com.mech.app.configfiles.ErrorLoggerTemplate;
 import com.mech.app.configfiles.database.AppConnection;
+import com.mech.app.dataproviders.cars.CarDataProvider;
+import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.dataproviders.employees.EmployeesDataProvider;
 import com.mech.app.dataproviders.logs.ErrorLogsDataProvider;
 import com.mech.app.dataproviders.logs.NotificationRecords;
@@ -56,9 +58,6 @@ public class DAO extends AppConnection {
         logError(errorLogger);
     }
 
-
-
-
     /*
     * THIS PART OF THE CLASS SHALL BE USED TO QUERY THE DATABASE FOR SELECT STATEMENTS...
      */
@@ -72,7 +71,7 @@ public class DAO extends AppConnection {
                 emp.is_active, username, user_role, user_password, user_status\s
                 FROM employees AS emp
                 INNER JOIN users AS u\s
-                ON emp.record_id = u.emp_id
+                ON emp.record_id = u.reference_id
                 WHERE emp.is_deleted = FALSE;
                 """;
 
@@ -110,6 +109,91 @@ public class DAO extends AppConnection {
         }
         return data;
     }
+
+    public List<CustomersDataProvider> fetchAllCustomers() {
+        List<CustomersDataProvider> data = new ArrayList<>();
+        String query = """
+                SELECT * FROM customers WHERE is_deleted = false;
+                """;
+       try {
+           resultSet = getCon().prepareStatement(query).executeQuery();
+           while(resultSet.next()) {
+               data.add(
+                       new CustomersDataProvider(
+                               resultSet.getInt("record_id"),
+                               resultSet.getInt("created_by"),
+                               resultSet.getInt("shop_id"),
+                               resultSet.getString("customer_name"),
+                               resultSet.getString("mobile_number"),
+                               resultSet.getString("other_number"),
+                               resultSet.getString("email"),
+                               resultSet.getString("address"),
+                               resultSet.getString("gender"),
+                               resultSet.getString("notes"),
+                               resultSet.getBoolean("is_active"),
+                               resultSet.getTimestamp("date_created")
+                       )
+               );
+           }
+       }catch(Exception ex){
+           new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "fetcAllCustomers").logErrorToFile();
+           logError(ex, "fetchAllCustomers");
+           ex.printStackTrace();
+       }
+
+        return data;
+    }
+
+    public List<CarDataProvider> fetchCustomerCarInformation() {
+        List<CarDataProvider> data = new ArrayList<>();
+        String query = "SELECT * FROM customer_vehicles;";
+
+        try {
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            while(resultSet.next()) {
+                data.add(new CarDataProvider(
+                        resultSet.getInt("record_id"),
+                        resultSet.getInt("customer_id"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("model"),
+                        resultSet.getString("plate_number"),
+                        resultSet.getString("car_year"))
+                );
+            }
+        }catch (Exception ex){
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "fetchCustomerCarInformation").logErrorToFile();
+            logError(ex, "fetchCustomerCarInformation");
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    public ArrayList<CarDataProvider>fetchCustomerCarsById(int customerId) {
+        ArrayList<CarDataProvider> data = new ArrayList<>();
+        String query = "SELECT * FROM customer_vehicles WHERE customer_id = ?;";
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, customerId);
+            resultSet = prepare.executeQuery();
+            while(resultSet.next()) {
+                data.add(new CarDataProvider(
+                        resultSet.getInt("record_id"),
+                        resultSet.getInt("customer_id"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("model"),
+                        resultSet.getString("plate_number"),
+                        resultSet.getString("car_year"))
+                );
+            }
+        }catch (Exception ex){
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "fetchCustomerCarsById").logErrorToFile();
+            logError(ex, "fetchCustomerCarsById");
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+
 
 
 }//end of class...

@@ -3,6 +3,7 @@ package com.mech.app.dataproviders.users;
 public class UsersDataProvider {
     int record_id;
     int shop_id;
+    boolean status;
     int emp_id;
     String username;
     String password;
@@ -20,6 +21,14 @@ public class UsersDataProvider {
 
     public void setRecord_id(int record_id) {
         this.record_id = record_id;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public int getShop_id() {

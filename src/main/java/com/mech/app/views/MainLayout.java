@@ -54,8 +54,8 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver{
     }
 
     private void addDrawerContent() {
-        Span appName = new Span("");
-
+        Span appName = new Span("Aliboat Motors.");
+        appName.setClassName("app-name");
         //LOGO
         var imageByte = ImageLoader.readLogoAsByte();
         var resource = new StreamResource("logo", ()-> new ByteArrayInputStream(imageByte));

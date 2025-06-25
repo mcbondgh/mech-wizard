@@ -235,7 +235,7 @@ vaadin-form-layout[empty] {
   box-sizing: border-box;
 }
 .add-employee-button {
-  font-size: smaller;
+  font-size: 10px;
   width:fit-content;
   background-color: var(--lumo-primary-text-color);
   padding:10px 7px;

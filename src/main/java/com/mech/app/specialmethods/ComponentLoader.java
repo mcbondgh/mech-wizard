@@ -6,6 +6,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ComponentLoader {
@@ -73,6 +74,16 @@ public class ComponentLoader {
         return List.of("Cash", "Mobile Money", "Card | POS");
     }
 
+    public static void enableOrDisableComponent(Component target, boolean condition) {
+        if (condition) {
+                target.getElement().setEnabled(false);
+                target.setClassName("disable-button-style");
+            } else {
+                target.removeClassName("disable-button-style");
+                target.getElement().setEnabled(true);
+        }
+    }
+
     public static void setStatusTypes(ComboBox<String> comboBox) {
         var items = List.of(
             "Active",
@@ -88,13 +99,11 @@ public class ComponentLoader {
                 "Ghana Card",
                 "Passport"
         );
-        items.stream().sorted();
-        comboBox.setItems(items);
+        comboBox.setItems(items.stream().sorted().toList());
     }
 
     public static void setRoles(ComboBox<String> comboBox) {
         comboBox.setItems(List.of(
-                "Customer",
                 "Mechanic",
                 "Receptionist",
                 "Admin"

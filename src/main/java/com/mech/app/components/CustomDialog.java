@@ -1,6 +1,7 @@
 package com.mech.app.components;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -22,7 +23,6 @@ public class CustomDialog {
     private static Image icon;
     private static Paragraph paragraph;
 
-
     public CustomDialog() {
         headerContainer = new FlexLayout();
         headerContainer.addClassName("confirm-dialog-header-container");
@@ -30,7 +30,6 @@ public class CustomDialog {
         headerContainer.getStyle().setMargin("0").setPadding("10px");
         dialog = new ConfirmDialog();
         dialog.addClassNames("confirm-dialog-style");
-        notification = new Notification();
         dialog.setHeader(headerContainer);
         dialog.setCancelable(true);
 
@@ -74,7 +73,6 @@ public class CustomDialog {
     public ConfirmDialog showDeleteDialog(String title, String content) {
         headerContainer.addClassName("delete-dialog-header-style");
         dialog.addClassNames("delete-dialog-style", "confirm-dialog-button");
-        dialog.getStyle().setWidth("fit-content");
         button = new Button("Delete");
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_SMALL);
         dialog.setConfirmButton(button);
@@ -94,7 +92,8 @@ public class CustomDialog {
         var closeButton = new Span(VaadinIcon.CLOSE_SMALL.create());
         closeButton.addClassNames("dialog-close-button");
         closeButton.addClickListener(e -> {
-            dialog.removeAll(); dialog.close();
+            dialog.close();
+            UI.getCurrent().refreshCurrentRoute(false);
         });
 
         FlexLayout headerComponent = new FlexLayout(container1, closeButton);
@@ -103,6 +102,7 @@ public class CustomDialog {
         headerComponent.setAlignContent(FlexLayout.ContentAlignment.CENTER);
         headerComponent.setWidthFull();
         dialog.addClassNames("default-dialog-style");
+        dialog.getHeader().add(headerComponent);
         dialog.open();
     }
 //    CUSTOM NOTIFICATION SECTION
@@ -113,15 +113,14 @@ public class CustomDialog {
 
     public void showErrorNotification(String content) {
         icon.setSrc("icons/icons8-delete-48.png");
-        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR, NotificationVariant.LUMO_PRIMARY);
         paragraph.getStyle().setColor(LumoUtility.TextColor.ERROR);
         setNotificationText(content);
     }
 
     public void showWarningNotification(String content) {
         icon.setSrc("icons/icons8-warning-30.png");
-        notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
-
+        notification.addThemeVariants(NotificationVariant.LUMO_WARNING, NotificationVariant.LUMO_PRIMARY);
         setNotificationText(content);
     }
 
@@ -133,8 +132,8 @@ public class CustomDialog {
                 .setJustifyContent(Style.JustifyContent.INITIAL);
         headerContainer.addClassName("notification-header-container");
         notification = new Notification(headerContainer);
+        notification.setDuration(5000);
         notification.setPosition(Notification.Position.TOP_CENTER);
-        notification.setDuration(3000);
         notification.open();
     }
 

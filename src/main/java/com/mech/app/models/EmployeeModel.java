@@ -48,7 +48,7 @@ public class EmployeeModel extends DAO {
         }catch (SQLException e) {
             e.printStackTrace();
             logError(e, "registerEmployee()");
-            new ErrorLoggerTemplate(LocalDateTime.now().toString(), e.getLocalizedMessage(), "registerEmployee").logErrorToFile();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), e.getLocalizedMessage(), "registerEmployee()").logErrorToFile();
 
         }
         return 0;
@@ -56,7 +56,7 @@ public class EmployeeModel extends DAO {
 
     public int registerUser(UsersDataProvider obj) {
         String query = """
-                INSERT INTO users(shop_id, emp_id, username, user_role, user_password)
+                INSERT INTO users(shop_id, reference_id, username, user_role, user_password)
                 VALUES(?, (SELECT MAX(record_id) from employees), ?, ?, ?);
                 """;
         try {

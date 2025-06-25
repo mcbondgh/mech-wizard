@@ -1,18 +1,45 @@
 package com.mech.app.dataproviders.customers;
 
+import com.mech.app.dataproviders.cars.CarDataProvider;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 public class CustomersDataProvider {
-    private int customerId, userId, carId;
+    private int customerId, userId, shopId;
     private String name, mobileNumber, otherNumber, email, digitalAddress;
     private String gender, comments;
     private boolean status;
-    private String carBrand, carModel, plateNumber;
-    private int carYear;
     private Timestamp dateJoined;
 
     public record CustomersRecord(String name, String mobileNumber, String otherNumber, String email, List<String> cars, boolean status){}
+
+    public CustomersDataProvider(){}
+    public CustomersDataProvider(int customerId, int userId, int shopId, String name, String mobileNumber,
+                                 String otherNumber, String email, String digitalAddress,
+                                 String gender, String comments, boolean status, Timestamp dateJoined) {
+        this.customerId = customerId;
+        this.userId = userId;
+        this.shopId = shopId;
+        this.name = name;
+        this.mobileNumber = mobileNumber;
+        this.otherNumber = otherNumber;
+        this.email = email;
+        this.digitalAddress = digitalAddress;
+        this.gender = gender;
+        this.comments = comments;
+        this.status = status;
+        this.dateJoined = dateJoined;
+    }
+
+    //SETERS AND GETTERS
+    public int getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(int shopId) {
+        this.shopId = shopId;
+    }
 
     public int getCustomerId() {
         return customerId;
@@ -28,14 +55,6 @@ public class CustomersDataProvider {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public int getCarId() {
-        return carId;
-    }
-
-    public void setCarId(int carId) {
-        this.carId = carId;
     }
 
     public String getName() {
@@ -100,38 +119,6 @@ public class CustomersDataProvider {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public String getCarBrand() {
-        return carBrand;
-    }
-
-    public void setCarBrand(String carBrand) {
-        this.carBrand = carBrand;
-    }
-
-    public String getCarModel() {
-        return carModel;
-    }
-
-    public void setCarModel(String carModel) {
-        this.carModel = carModel;
-    }
-
-    public String getPlateNumber() {
-        return plateNumber;
-    }
-
-    public void setPlateNumber(String plateNumber) {
-        this.plateNumber = plateNumber;
-    }
-
-    public int getCarYear() {
-        return carYear;
-    }
-
-    public void setCarYear(int carYear) {
-        this.carYear = carYear;
     }
 
     public Timestamp getDateJoined() {

@@ -2,7 +2,7 @@
  * This file has been created by the Vaadin Theme Editor. Please note that
  * manual changes to individual CSS properties may be overwritten by the theme editor.
  */
-/* html {
+ html {
   --lumo-header-text-color:var(--header-text-color);
   --lumo-line-height-m:1.625;
   --lumo-line-height-s:1.375;
@@ -13,4 +13,4 @@
   --lumo-size-xl:2.5rem;
   --lumo-size-xs:1.25rem;
   --lumo-success-text-color:rgba(29,217,61,1);
-} */
+}

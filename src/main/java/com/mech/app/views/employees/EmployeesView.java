@@ -169,7 +169,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
         //add filter to the table grid
         searchField.setValueChangeMode(ValueChangeMode.LAZY);
         searchField.addValueChangeListener(input -> {
-           employeesGrid.getListDataView().addFilter(filter -> {
+           employeesGrid.getListDataView().setFilter(filter -> {
                if (input.getValue().isEmpty()) return true;
                boolean matchesName = input.getValue().toLowerCase().contains(filter.name().toLowerCase());
                boolean matchesMail = input.getValue().toLowerCase().contains(filter.email().toLowerCase());
@@ -227,16 +227,9 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
         closeButton.addClickListener(e -> UI.getCurrent().refreshCurrentRoute(false));
         dialog.setCloseOnOutsideClick(false);
 
+        //check for empty fields and enable or disable button
         formLayout.getElement().addEventListener("mouseover", e -> {
-            if (formHasEmptyFields()) {
-                addEmployeeButton.setEnabled(false);
-                addEmployeeButton.setClassName("disable-button-style");
-                addEmployeeButton.setTooltipText("Please fill all required fields before adding an employee.");
-            } else {
-                addEmployeeButton.removeClassName("disable-button-style");
-                addEmployeeButton.setEnabled(true);
-                addEmployeeButton.setTooltipText("Click to add the new employee.");
-            }
+           ComponentLoader.enableOrDisableComponent(addEmployeeButton, formHasEmptyFields());
         });
 
         addEmployeeButton.addSingleClickListener(event -> processFormData());
@@ -245,7 +238,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
 
     private Component configureEmployeesGrid() {
         employeesGrid.setSizeFull();
-        employeesGrid.addClassNames("default-grid-style");
+        employeesGrid.addClassNames("alternative-grid-style");
         employeesGrid.addColumn(EmployeesDataProvider.EmployeesRecord::id).setHeader("Id").setSortable(true);
         employeesGrid.addColumn(EmployeesDataProvider.EmployeesRecord::name).setHeader("Full Name");
         employeesGrid.addColumn(EmployeesDataProvider.EmployeesRecord::number).setHeader("Mobile Number");
@@ -292,7 +285,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
             menuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL, MenuBarVariant.LUMO_TERTIARY);
             menuBar.getStyle().setBackgroundColor("transparent").setMargin("auto");
 
-            var updateButton = menuBar.addItem(" Update", e -> {
+            var updateButton = menuBar.addItem(" Update Info", e -> {
                 Notification.show("Update button clicked for " + data.usersData().username());
             });
             updateButton.addComponentAsFirst(LineAwesomeIcon.PENCIL_ALT_SOLID.create());
