@@ -4,8 +4,12 @@ import com.mech.app.configfiles.ErrorLoggerTemplate;
 import com.mech.app.dataproviders.cars.CarDataProvider;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.dataproviders.dao.DAO;
+import com.mech.app.dataproviders.transactions.CustomerAccountRecord;
+import com.mech.app.dataproviders.transactions.TransactionLogs;
+import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
 import com.mech.app.dataproviders.users.UsersDataProvider;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class CustomerModel extends DAO {
@@ -78,4 +82,48 @@ public class CustomerModel extends DAO {
         return 0;
     }
 
+    public int insertOrUpdateCustomerAccountByCustomerId(int customerId, double amount, int userId ) {
+        String query = """
+                INSERT INTO customer_account(customer_id, account_balance, updated_by)
+                VALUES(?, ?, ?) ON DUPLICATE KEY
+                UPDATE account_balance = VALUES(account_balance),
+                last_updated = CURRENT_TIMESTAMP,
+                updated_by = VALUES(updated_by);
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, customerId);
+            prepare.setDouble(2, amount);
+            prepare.setInt(3, userId);
+            return prepare.executeUpdate();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "insertOrUpdateCustomerAccountByCustomerId()").logErrorToFile();
+            logError(ex, "insertOrUpdateCustomerAccountByCustomerId");
+        }
+        return 0;
+    }
+
+    public int logCustomerTransaction(TransactionLogs obj) {
+        String query = """
+                INSERT INTO transaction_logs(customer_id, transaction_type, transaction_id, payment_method, notes, amount, user_id)
+                VALUES(?, ?, ?, ?, ?, ?, ?);
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, obj.getCustomerId());
+            prepare.setString(2, obj.getTransactionType());
+            prepare.setString(3, obj.getTransactionId());
+            prepare.setString(4, obj.getPaymentMethod());
+            prepare.setString(5, obj.getNotes());
+            prepare.setDouble(6, obj.getAmount());
+            prepare.setInt(7, obj.getUserId());
+            return prepare.executeUpdate();
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "logCustomerTransaction()").logErrorToFile();
+            logError(ex, "logCustomerTransaction");
+        }
+        return 0;
+    }
 }//END OF CLASS...

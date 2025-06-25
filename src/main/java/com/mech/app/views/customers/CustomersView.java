@@ -41,9 +41,7 @@ import com.vaadin.flow.router.*;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -229,8 +227,13 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
             deleteButton.addClickListener(e -> deleteCustomerAction(dataProvider));
             addCarButton.addSingleClickListener(e -> CUSTOMER_COMPONENTS.addCarAction(dataProvider.getCustomerId()));
 
-            String param = "customer_id="+dataProvider.getCustomerId();
-            accountButton.addSingleClickListener(e -> getUI().ifPresent(ui -> ui.navigate(CustomerAccountView.class.getAnnotation(Route.class).value() +"?" + param)));
+            Map<String, String> paramValues = new HashMap<>();
+            paramValues.put("customer_id", String.valueOf(dataProvider.getCustomerId()));
+            paramValues.put("name", dataProvider.getName());
+            paramValues.put("mobile_number", dataProvider.getMobileNumber());
+
+            QueryParameters params = QueryParameters.simple(paramValues);
+            accountButton.addSingleClickListener(e -> getUI().ifPresent(ui -> ui.navigate(CustomerAccountView.class.getAnnotation(Route.class).value(), params)));
 
             updateButton.addSingleClickListener(e -> {
                 customersRecordGrid.setDetailsVisible(dataProvider, !customersRecordGrid.isDetailsVisible(dataProvider));

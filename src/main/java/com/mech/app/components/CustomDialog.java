@@ -28,6 +28,7 @@ public class CustomDialog {
         headerContainer.addClassName("confirm-dialog-header-container");
         headerContainer.setWidthFull();
         headerContainer.getStyle().setMargin("0").setPadding("10px");
+        notification = new Notification();
         dialog = new ConfirmDialog();
         dialog.addClassNames("confirm-dialog-style");
         dialog.setHeader(headerContainer);

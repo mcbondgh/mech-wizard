@@ -10,12 +10,14 @@ public class TransactionLogs {
     private int userId, recordId;
     private Timestamp transactionDate;
     private double amount;
+    private int customerId;
 
     public TransactionLogs() {
         // Default constructor
     }
-    public TransactionLogs(String transactionId, String transactionType, String paymentMethod, String notes, int userId, int recordId, Timestamp transactionDate, double amount) {
+    public TransactionLogs(int customerId, String transactionId, String transactionType, String paymentMethod, String notes, int userId, int recordId, Timestamp transactionDate, double amount) {
         this.transactionId = transactionId;
+        this.customerId = customerId;
         this.transactionType = transactionType;
         this.paymentMethod = paymentMethod;
         this.notes = notes;
@@ -69,6 +71,14 @@ public class TransactionLogs {
 
     public int getRecordId() {
         return recordId;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public void setRecordId(int recordId) {
