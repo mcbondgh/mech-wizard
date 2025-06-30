@@ -33,7 +33,7 @@ import java.util.List;
 
 @PageTitle("Transactions")
 @Route(value = "transactions", layout = MainLayout.class)
-@Menu(order = 6, icon = LineAwesomeIconUrl.DOLLAR_SIGN_SOLID)
+//@Menu(order = 6, icon = LineAwesomeIconUrl.DOLLAR_SIGN_SOLID)
 public class TransactionsView extends Composite<VerticalLayout> {
 
     private final Grid<TransactionsDataProvider.transactionRecord> transactionGrid = new Grid<>();

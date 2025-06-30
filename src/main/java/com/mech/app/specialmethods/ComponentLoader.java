@@ -1,5 +1,7 @@
 package com.mech.app.specialmethods;
 
+import com.mech.app.dataproviders.dao.DAO;
+import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
@@ -10,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ComponentLoader {
+    private static DAO DATA_ACCESS_MODEL = new DAO();
 
     public static void loadMechanicSkill(ComboBox<String> comboBox) {
         var items = List.of(
@@ -52,18 +55,10 @@ public class ComponentLoader {
         return div;
     }
 
-    public static void setServiceTypes(ComboBox<String> comboBox) {
-        var items = List.of(
-                "Oil and Filter Change",
-                "Brake Repair and Service",
-                "Tire Rotation and Alignment",
-                "Engine Diagnostics and Repair",
-                "Electrical Works", "Other",
-                "Air Conditioning (A/C) Repair",
-                "Exhaust System Repair",
-                "General Vehicle Inspection"
-        );
-        comboBox.setItems(items.stream().sorted().toList());
+    public static void setServiceTypes(ComboBox<String> comboBox, int shopId) {
+        // Sort the items alphabetically before setting them
+        var result = DATA_ACCESS_MODEL.getServiceTypeByShopId(shopId).stream().map(ServiceTypesRecord::name).toList();
+        comboBox.setItems(result);
     }
 
     public static List<String> getJobStatusList() {
@@ -76,19 +71,19 @@ public class ComponentLoader {
 
     public static void enableOrDisableComponent(Component target, boolean condition) {
         if (condition) {
-                target.getElement().setEnabled(false);
-                target.setClassName("disable-button-style");
-            } else {
-                target.removeClassName("disable-button-style");
-                target.getElement().setEnabled(true);
+            target.getElement().setEnabled(false);
+            target.setClassName("disable-button-style");
+        } else {
+            target.removeClassName("disable-button-style");
+            target.getElement().setEnabled(true);
         }
     }
 
     public static void setStatusTypes(ComboBox<String> comboBox) {
         var items = List.of(
-            "Active",
-            "Suspended",
-            "On Leave"
+                "Active",
+                "Suspended",
+                "On Leave"
         );
         comboBox.setItems(items);
     }
@@ -111,4 +106,7 @@ public class ComponentLoader {
     }
 
 
+    public static void setUrgencyLevel(ComboBox<String> urgencyLevel) {
+        urgencyLevel.setItems(List.of("Normal", "Important", "Very Urgent"));
+    }
 }//end fo class...

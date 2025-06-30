@@ -178,7 +178,7 @@ vaadin-form-layout[empty] {
 }
 
 .payment-header-card-layout h4 {
-  color: var(--header-text-color green blue);
+  color: var(--header-text-color);
   text-align: center;
 }
 
@@ -186,7 +186,7 @@ vaadin-form-layout[empty] {
   color: var(--header-text-color);
   /* font-size: 1.5em; */
   margin-right: 5px;
-  text-align: baseline;
+  align-items: baseline;
 }
 
 .payment-header-card-layout p {
@@ -223,10 +223,12 @@ vaadin-form-layout[empty] {
 .check-box-style {
   /* border: 1px solid var(--lumo-contrast-40pct); */
   border-radius: 5px;
-  padding:5px;
-  background-color: #d9f0f4cc;
-  font-weight: 600;
+  padding:8px;
+  background-color: #eef9ff;
+  font-weight: 500;
   color:#1d5375;
+  box-sizing: border-box;
+  margin: 5px;
   /* box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); */
 }
 

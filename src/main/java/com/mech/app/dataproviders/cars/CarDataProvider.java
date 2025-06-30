@@ -1,7 +1,7 @@
 package com.mech.app.dataproviders.cars;
 
 public class CarDataProvider {
-    private int recordIId, customerId;
+    private int recordId, customerId;
     private String brand, model, plateNumber;
     private String carYear;
     private boolean isDeleted, isUpdated;
@@ -9,8 +9,8 @@ public class CarDataProvider {
     public CarDataProvider() {
     }
 
-    public CarDataProvider(int recordIId, int customerId, String brand, String model, String plateNumber, String carYear) {
-        this.recordIId = recordIId;
+    public CarDataProvider(int recordId, int customerId, String brand, String model, String plateNumber, String carYear) {
+        this.recordId = recordId;
         this.customerId = customerId;
         this.brand = brand;
         this.model = model;
@@ -26,12 +26,12 @@ public class CarDataProvider {
     }
 
 
-    public int getRecordIId() {
-        return recordIId;
+    public int getRecordId() {
+        return recordId;
     }
 
-    public void setRecordIId(int recordIId) {
-        this.recordIId = recordIId;
+    public void setRecordId(int recordId) {
+        this.recordId = recordId;
     }
 
     public int getCustomerId() {

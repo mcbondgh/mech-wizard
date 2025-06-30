@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @PageTitle("Employees")
 @Route(value = "employees", layout = MainLayout.class)
-@Menu(order = 7, icon = LineAwesomeIconUrl.USER_PLUS_SOLID)
+//@Menu(order = 7, icon = LineAwesomeIconUrl.USER_PLUS_SOLID)
 public class EmployeesView extends Composite<VerticalLayout> implements BeforeEnterObserver, AfterNavigationObserver {
 
     private final Grid<EmployeesDataProvider.EmployeesRecord> employeesGrid = new Grid<>();

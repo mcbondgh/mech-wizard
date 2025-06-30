@@ -46,7 +46,7 @@ import java.util.List;
 
 @PageTitle("Job Cards")
 @Route(value = "view/job-cards", layout = MainLayout.class)
-@Menu(order = 3, icon = LineAwesomeIconUrl.ADDRESS_CARD)
+//@Menu(order = 3, icon = LineAwesomeIconUrl.ADDRESS_CARD)
 public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
     private final Button jobCardButton = new Button("Create Job Card");
     private final Grid<JobCardDataProvider> jobCardGrid = new Grid<>();

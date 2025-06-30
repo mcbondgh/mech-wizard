@@ -2,7 +2,7 @@ package com.mech.app.views.jobcards;
 
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.transactions.TransactionDialogs;
-import com.mech.app.dataproviders.servicesrequest.ServiceRequestDataProvider;
+import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
 import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -10,7 +10,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.BoxSizing;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,32 +17,29 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.*;
 import org.vaadin.lineawesome.LineAwesomeIcon;
-import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.util.List;
 import java.util.Objects;
 
 @PageTitle("Completed Jobs")
 @Route(value = "/view/completed-job", layout = MainLayout.class)
-@Menu(title = "Completed Jobs", order = 4, icon = LineAwesomeIconUrl.CHECK_CIRCLE_SOLID)
+//@Menu(title = "Completed Jobs", order = 4, icon = LineAwesomeIconUrl.CHECK_CIRCLE_SOLID)
 public class CompletedJobView extends Composite<VerticalLayout> implements BeforeEnterObserver, AfterNavigationObserver {
 
     private record serviceRecords() {
     }
 
-    private Div loader = new Div(new Text("Page Loading...."));
-    private final Grid<ServiceRequestDataProvider.completedServicesRecord> grid = new Grid<>();
+    private final Grid<ServicesDataProvider.CompletedServicesRecord> grid = new Grid<>();
 
     public CompletedJobView() {
         getContent().setBoxSizing(BoxSizing.BORDER_BOX);
         getContent().setWidthFull();
         getContent().setHeightFull();
-        getContent().add(loader, pageHeader(), pageBody());
+        getContent().add(pageHeader(), pageBody());
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        loader.setVisible(true);
     }
 
     @Override
@@ -66,7 +62,7 @@ public class CompletedJobView extends Composite<VerticalLayout> implements Befor
     /*******************************************************************************************************************
      REFERENCE METHODS IMPLEMENTATION
      *******************************************************************************************************************/
-    private List<ServiceRequestDataProvider.completedServicesRecord> sampleData() {
+    private List<ServicesDataProvider.CompletedServicesRecord> sampleData() {
         // Sample data for the grid
         var parts = List.of("Oil Filter", "Air Filter", "Brake Pads", "Spark Plugs", "Battery");
         var parts2 = List.of("Oil Filter", "Brake Pads", "Battery");
@@ -76,19 +72,19 @@ public class CompletedJobView extends Composite<VerticalLayout> implements Befor
                 "Checked and replaced faulty spark plugs.",
                 "Tested and replaced the car battery.");
 
-        var record1 = new ServiceRequestDataProvider.completedServicesRecord(
+        var record1 = new ServicesDataProvider.CompletedServicesRecord(
                 "J123", "Oil Change", "2023-10-01", "Star 5", "John Doe",
                 "ABC123", "Engine oil change and filter replacement.", parts, notes, "Ghc150.00");
-        var record2 = new ServiceRequestDataProvider.completedServicesRecord(
+        var record2 = new ServicesDataProvider.CompletedServicesRecord(
                 "J124", "Brake Inspection", "2023-10-02", "No rating", "Jane Smith",
                 "XYZ456", "Brake inspection and pad replacement.", parts2, notes, "Ghc200.00");
-        var record3 = new ServiceRequestDataProvider.completedServicesRecord(
+        var record3 = new ServicesDataProvider.CompletedServicesRecord(
                 "J125", "Tire Rotation", "2023-10-03", "Star 4", "Alice Johnson",
                 "LMN789", "Tire rotation and alignment.", parts, notes, "Ghc100.00");
-        var record4 = new ServiceRequestDataProvider.completedServicesRecord(
+        var record4 = new ServicesDataProvider.CompletedServicesRecord(
                 "J126", "Battery Replacement", "2023-10-04", "No rating", "Bob Brown",
                 "DEF012", "Battery replacement and electrical system check.", parts, notes, "Ghc250.00");
-        var record5 = new ServiceRequestDataProvider.completedServicesRecord(
+        var record5 = new ServicesDataProvider.CompletedServicesRecord(
                 "J127", "Fluid Check", "2023-10-05", "Star 2", "Charlie Green",
                 "GHI345", "Checked and topped up all fluids.", parts2, notes, "Ghc80.00");
         return List.of(record1, record2, record3, record4, record5);
@@ -195,15 +191,15 @@ public class CompletedJobView extends Composite<VerticalLayout> implements Befor
         grid.setItems(sampleData());
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.setColumnReorderingAllowed(true);
-        grid.addColumn(ServiceRequestDataProvider.completedServicesRecord::jobNo).setHeader("Job No").setFlexGrow(0).setWidth("100px");
-        grid.addColumn(ServiceRequestDataProvider.completedServicesRecord::serviceType).setHeader("Service Type");
-        grid.addColumn(ServiceRequestDataProvider.completedServicesRecord::date).setHeader("Date");
+        grid.addColumn(ServicesDataProvider.CompletedServicesRecord::jobNo).setHeader("Job No").setFlexGrow(0).setWidth("100px");
+        grid.addColumn(ServicesDataProvider.CompletedServicesRecord::serviceType).setHeader("Service Type");
+        grid.addColumn(ServicesDataProvider.CompletedServicesRecord::date).setHeader("Date");
         grid.addColumn(rateRenderer()).setHeader("Rate");
         grid.setItems(sampleData());
         return grid;
     }
 
-    private Renderer<ServiceRequestDataProvider.completedServicesRecord> rateRenderer() {
+    private Renderer<ServicesDataProvider.CompletedServicesRecord> rateRenderer() {
         return new ComponentRenderer<>(dataProvider -> {
             Div layout = new Div(dataProvider.rateStatus());
             layout.addClassNames("completed-service-details-renderer-box");

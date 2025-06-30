@@ -4,9 +4,8 @@ import com.mech.app.configfiles.ErrorLoggerTemplate;
 import com.mech.app.dataproviders.cars.CarDataProvider;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.dataproviders.dao.DAO;
-import com.mech.app.dataproviders.transactions.CustomerAccountRecord;
+import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
 import com.mech.app.dataproviders.transactions.TransactionLogs;
-import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
 import com.mech.app.dataproviders.users.UsersDataProvider;
 
 import java.sql.SQLException;
@@ -123,6 +122,33 @@ public class CustomerModel extends DAO {
             ex.printStackTrace();
             new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "logCustomerTransaction()").logErrorToFile();
             logError(ex, "logCustomerTransaction");
+        }
+        return 0;
+    }
+
+    public int  bookServiceRequest(ServicesDataProvider.ServiceRequestRecord requestDataProvider) {
+        String query = """
+                INSERT INTO service_requests(customer_id, vehicle_id, service_type_id, service_cost,\s
+                service_desc, preferred_date, urgency_level, pickup_or_dropoff, service_status, user_id)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, requestDataProvider.customerId());
+            prepare.setInt(2, requestDataProvider.vehicleId());
+            prepare.setInt(3, requestDataProvider.serviceId());
+            prepare.setDouble(4, requestDataProvider.serviceCost());
+            prepare.setString(5, requestDataProvider.desc());
+            prepare.setDate(6, requestDataProvider.preferredDate());
+            prepare.setString(7, requestDataProvider.urgencyLevel());
+            prepare.setBoolean(8, requestDataProvider.allowPickup());
+            prepare.setString(9, requestDataProvider.status());
+            prepare.setInt(10, requestDataProvider.userId());
+            return prepare.executeUpdate();
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "bookServiceRequest()").logErrorToFile();
+            logError(ex, "bookServiceRequest");
         }
         return 0;
     }

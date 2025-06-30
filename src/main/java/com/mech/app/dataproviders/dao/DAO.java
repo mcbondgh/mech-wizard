@@ -7,6 +7,8 @@ import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.dataproviders.employees.EmployeesDataProvider;
 import com.mech.app.dataproviders.logs.ErrorLogsDataProvider;
 import com.mech.app.dataproviders.logs.NotificationRecords;
+import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
+import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
 import com.mech.app.dataproviders.transactions.CustomerAccountRecord;
 import com.mech.app.dataproviders.transactions.TransactionLogs;
 import com.mech.app.dataproviders.users.UsersDataProvider;
@@ -227,7 +229,7 @@ public class DAO extends AppConnection {
         return data;
     }
 
-    public List<TransactionLogs> fetchCustomerTransactionLogsById( int customerId) {
+    public List<TransactionLogs> fetchCustomerTransactionLogsById(int customerId) {
         List<TransactionLogs> data = new ArrayList<>();
         String query = """
                 SELECT * FROM transaction_logs WHERE customer_id = ?
@@ -260,5 +262,77 @@ public class DAO extends AppConnection {
         return data;
     }
 
+    public List<ServiceTypesRecord> getServiceTypeByShopId(int shopId) {
+        List<ServiceTypesRecord> data = new ArrayList<>();
+        try {
+            String query = """
+                    SELECT record_id, service_type, service_desc, service_cost
+                    FROM service_types
+                    WHERE shop_id = ? AND is_deleted = FALSE;
+                    """;
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, shopId);
+            resultSet = prepare.executeQuery();
+
+            while (resultSet.next()) {
+                data.add(new ServiceTypesRecord(
+                        resultSet.getInt("record_id"),
+                        resultSet.getString("service_type"),
+                        resultSet.getString("service_desc"),
+                        resultSet.getDouble("service_cost")
+                ));
+            }
+            prepare.close();
+            resultSet.close();
+        } catch (Exception ex) {
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "getShopServiceTypeByShopId").logErrorToFile();
+            logError(ex, "getShopServiceTypeByShopId");
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    public ArrayList<ServicesDataProvider.BookedServicesRecord> fetchAllServiceRequestsNotDeleted(int shopId) {
+        var data = new ArrayList<ServicesDataProvider.BookedServicesRecord>();
+        String query = """
+                SELECT\s
+                	id, customer_name, brand, plate_number,
+                    service_type, sr.service_cost, sr.service_desc, urgency_level, preferred_date,
+                    pickup_or_dropoff, service_status, full_name AS assigned_mechanic, logged_date
+                FROM service_requests AS sr
+                INNER JOIN customers AS c\s
+                ON sr.customer_id = c.record_id
+                INNER JOIN customer_vehicles AS cv\s
+                	ON sr.vehicle_id = cv.record_id
+                INNER JOIN service_types AS st
+                	ON sr.service_type_id = st.record_id
+                LEFT JOIN employees AS e\s
+                	ON assigned_mechanic = e.record_id
+                WHERE sr.is_deleted = FALSE AND c.shop_id = ? AND service_status != 'completed';
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, shopId);
+            resultSet = prepare.executeQuery();
+            while (resultSet.next()) {
+                data.add(new ServicesDataProvider.BookedServicesRecord(
+                        resultSet.getInt("id"),
+                        resultSet.getString("customer_name"), resultSet.getString("brand"),
+                        resultSet.getString("plate_number"), resultSet.getString("service_type"),
+                        resultSet.getDouble("service_cost"), resultSet.getString("service_desc"),
+                        resultSet.getString("urgency_level"), resultSet.getDate("preferred_date").toString(),
+                        resultSet.getBoolean("pickup_or_dropoff"), resultSet.getString("service_status"),
+                        resultSet.getString("assigned_mechanic"), resultSet.getTimestamp("logged_date")
+                ));
+            }
+            resultSet.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "fetchAllServiceRequestsNotDeleted").logErrorToFile();
+            logError(ex, "fetchAllServiceRequestsNotDeleted");
+        }
+
+        return data;
+    }
 
 }//end of class...

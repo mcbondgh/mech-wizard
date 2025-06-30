@@ -37,7 +37,7 @@ public class ErrorLoggerTemplate {
             writer.newLine();
             writer.write("--------------------------------------------------");
             writer.newLine();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

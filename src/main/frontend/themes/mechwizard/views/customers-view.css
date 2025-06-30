@@ -163,7 +163,7 @@
 
 .dialog-content-layout {
     box-sizing: border-box;
-    height:500px;
+    /*height:500px;*/
     border:1px solid #dddddd;
     border-radius: 5px;
 }

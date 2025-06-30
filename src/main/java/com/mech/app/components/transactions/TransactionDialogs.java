@@ -1,12 +1,10 @@
 package com.mech.app.components.transactions;
 
-import com.mech.app.dataproviders.servicesrequest.ServiceRequestDataProvider;
 import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;

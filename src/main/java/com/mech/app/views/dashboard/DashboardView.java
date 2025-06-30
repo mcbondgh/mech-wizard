@@ -22,7 +22,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @PageTitle("Dashboard")
 @Route(value = "/dashboard", layout = MainLayout.class)
 @PermitAll
-@Menu(order = 0, icon = LineAwesomeIconUrl.CHALKBOARD_SOLID)
+//@Menu(order = 0, icon = LineAwesomeIconUrl.DESKTOP_SOLID)
 public class DashboardView extends Composite<VerticalLayout> implements BeforeEnterObserver{
 
     public DashboardView() {

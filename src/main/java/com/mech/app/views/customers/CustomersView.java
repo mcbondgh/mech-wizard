@@ -36,6 +36,7 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
 import org.vaadin.lineawesome.LineAwesomeIcon;
@@ -52,11 +53,9 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
 
     private final CustomerModel DATA_MODEL = new CustomerModel();
     private static CustomDialog DIALOG_BOX;
-
     private final Button addCustomerButton = new Button("Add Customer", LineAwesomeIcon.PLUS_SOLID.create());
-    private final VerticalLayout pageLoadIndicator = new VerticalLayout();
     private final Grid<CustomersDataProvider> customersRecordGrid = new Grid<>();
-    private final TextField filterField = new TextField("", "Search by name, mobile number or plate number");
+    private final TextField filterField = new TextField("", "Search by name, mobile numbers or ID Number");
 
 
     public CustomersView() {
@@ -77,7 +76,6 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
     @Override
     public void onAttach(AttachEvent event) {
         setComponentProperties();
-        getContent().remove(pageLoadIndicator);
     }
 
 
@@ -89,10 +87,8 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
         layout.addClassNames("customers-filter-and-grid-layout");
         layout.setSizeUndefined();
         layout.setBoxSizing(BoxSizing.BORDER_BOX);
-
         return layout;
     }
-
 
     /*******************************************************************************************************************
      REFERENCE METHODS SECTION
@@ -100,7 +96,6 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
     private void setComponentProperties() {
         addCustomerButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
         addCustomerButton.addClassNames("add-customer-button", "default-button-style");
-        pageLoadIndicator.getStyle().setZIndex(100);
 
         //add navigation event to the add-customer-button
         addCustomerButton.addSingleClickListener(event -> UI.getCurrent().navigate(AddCustomerView.class));
@@ -136,6 +131,24 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
         customersRecordGrid.setItems(sampleData());
         customersRecordGrid.setItemDetailsRenderer(customerUpdateForm());
         customersRecordGrid.setDetailsVisibleOnClick(false);
+
+        //ADD FILTERING FUNCTIONALITY
+        filterField.setValueChangeMode(ValueChangeMode.EAGER);
+        filterField.setClearButtonVisible(true);
+        filterField.addValueChangeListener(event -> {
+            String filterText = event.getValue().trim();
+            if (filterText.isEmpty()) {
+                customersRecordGrid.setItems(sampleData());
+            } else {
+                List<CustomersDataProvider> filteredData = sampleData().stream()
+                        .filter(customer ->
+                                customer.getName().toLowerCase().contains(filterText.toLowerCase())
+                                || customer.getMobileNumber().contains(filterText)
+                                || customer.getOtherNumber().toLowerCase().contains(filterText.toLowerCase()))
+                        .toList();
+                customersRecordGrid.setItems(filteredData);
+            }
+        });
         return customersRecordGrid;
     }
 
@@ -203,8 +216,7 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
                     .setBackgroundColor("transparent")
                     .setTextDecoration("none")
                     .setWidth("auto")
-                    .setPadding("0")
-                    .setWhiteSpace(Style.WhiteSpace.INITIAL);
+                    .setPadding("0");
 
             var IconsList = List.of(LineAwesomeIcon.PENCIL_ALT_SOLID.create(),
                     LineAwesomeIcon.CAR_SOLID.create(), LineAwesomeIcon.ID_CARD.create(), LineAwesomeIcon.TRASH_SOLID.create());
@@ -213,10 +225,11 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
             var updateButton = menuBar.addItem(new FlexLayout(LineAwesomeIcon.PENCIL_ALT_SOLID.create(), new Span("Update")));
             var addCarButton = menuBar.addItem(new FlexLayout(LineAwesomeIcon.CAR_SOLID.create(), new Span("Add Car")));
             var accountButton = menuBar.addItem(new FlexLayout(LineAwesomeIcon.WALLET_SOLID.create(), new Span("Wallet")));
+            var serviceButton = menuBar.addItem(new FlexLayout(LineAwesomeIcon.TOOLBOX_SOLID.create(), new Span("Request Service")));
             var deleteButton = menuBar.addItem(new FlexLayout(LineAwesomeIcon.TRASH_SOLID.create(), new Span("Delete")));
             deleteButton.addClassName("item-delete-button");
 
-            var buttonList = List.of(updateButton, addCarButton, accountButton, deleteButton);
+            var buttonList = List.of(updateButton, addCarButton, accountButton, serviceButton, deleteButton);
 
             for (MenuItem flexLayout : buttonList) {
                 flexLayout.addClassNames("customers-action-button-container");
@@ -238,6 +251,9 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
             updateButton.addSingleClickListener(e -> {
                 customersRecordGrid.setDetailsVisible(dataProvider, !customersRecordGrid.isDetailsVisible(dataProvider));
             });
+
+            serviceButton.addClickListener( e -> new CustomerComponents().serviceRequestDialog(dataProvider));
+
             return menuBar;
         });
     }

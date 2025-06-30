@@ -2,6 +2,7 @@ package com.mech.app.views.servicerequests;
 
 import com.mech.app.components.CustomDialog;
 import com.mech.app.components.HeaderComponent;
+import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
@@ -49,10 +50,12 @@ public class CustomerServiceView extends VerticalLayout implements BeforeEnterOb
     private final Button addServiceButton = new Button("New Service", LineAwesomeIcon.PLUS_SOLID.create());
     private final Checkbox priorityCheckbox = new Checkbox("Urgent Attention");
 
+    private static int SHOP_ID, USER_ID;
     public CustomerServiceView() {
         setHeightFull();
         setWidthFull();
-        add(pageBody());
+        SHOP_ID = SessionManager.DEFAULT_SHOP_ID;
+        USER_ID = SessionManager.DEFAULT_USER_ID;
     }
 
     @Override
@@ -67,9 +70,11 @@ public class CustomerServiceView extends VerticalLayout implements BeforeEnterOb
         costField.setPrefixComponent(new H4("Ghc "));
         costField.setReadOnly(true);
         costField.addClassNames("input-style");
-        ComponentLoader.setServiceTypes(serviceSelector);
+        ComponentLoader.setServiceTypes(serviceSelector, SHOP_ID);
         ComponentLoader.setCarBrands(vehicleSelector);
         addServiceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        add(pageBody());
     }
 
     /*******************************************************************************************************************

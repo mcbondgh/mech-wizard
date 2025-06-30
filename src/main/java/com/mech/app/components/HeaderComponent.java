@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.hilla.BrowserCallable;
 import com.vaadin.hilla.Endpoint;
 
@@ -42,6 +43,7 @@ public class HeaderComponent {
         fieldLayout.addClassNames("search-field-component-box");
         fieldLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
         fieldLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        field.setValueChangeMode(ValueChangeMode.LAZY);
         field.setSizeUndefined();
         field.setPrefixComponent(VaadinIcon.SEARCH.create());
         field.getStyle().setPadding("14px");

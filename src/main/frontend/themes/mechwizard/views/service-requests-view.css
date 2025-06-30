@@ -1,494 +1,587 @@
 .service-requests-view {
-  padding: 2px;
-  box-sizing: border-box;
-  display: block;
-  position: relative;
-  height: 100%;
-  overflow-y: auto;
-  --cv-blue: 212 96% 54%;
-  --cv-purple: 259 97% 66%;
-  --cv-dropzone-border-color: hsl(var(--cv-blue) / 0.5);
-  --cv-dropzone-bg-color: hsl(var(--cv-blue) / 0.2);
-  --cv-droptarget-border-color: hsl(var(--cv-purple) / 1);
-  --cv-droptarget-bg-color: hsl(var(--cv-purple) / 0.4);
-  --cv-stripe-width: 1.5px;
-  --cv-stripe-gap: 9px;
-  --cv-stripe-color: hsl(var(--cv-blue) / 0.2);
-  --cv-layout-border-color: var(--lumo-contrast-40pct);
-  --cv-checkerboard-color1: hsl(0 0% 0% / 0.05);
-  --cv-checkerboard-color2: hsl(0 0% 100% / 0.05);
-  --cv-checkerboard-size: 16px;
+    padding: 2px;
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+    --cv-blue: 212 96% 54%;
+    --cv-purple: 259 97% 66%;
+    --cv-dropzone-border-color: hsl(var(--cv-blue) / 0.5);
+    --cv-dropzone-bg-color: hsl(var(--cv-blue) / 0.2);
+    --cv-droptarget-border-color: hsl(var(--cv-purple) / 1);
+    --cv-droptarget-bg-color: hsl(var(--cv-purple) / 0.4);
+    --cv-stripe-width: 1.5px;
+    --cv-stripe-gap: 9px;
+    --cv-stripe-color: hsl(var(--cv-blue) / 0.2);
+    --cv-layout-border-color: var(--lumo-contrast-40pct);
+    --cv-checkerboard-color1: hsl(0 0% 0% / 0.05);
+    --cv-checkerboard-color2: hsl(0 0% 100% / 0.05);
+    --cv-checkerboard-size: 16px;
 }
 
 .service-requests-view[dragging] {
-  --cv-checkerboard-color1: hsl(var(--cv-blue) / 0.2);
-  --cv-checkerboard-color2: hsl(var(--cv-blue) / 0.1);
-  --cv-layout-border-color: var(--cv-dropzone-border-color);
+    --cv-checkerboard-color1: hsl(var(--cv-blue) / 0.2);
+    --cv-checkerboard-color2: hsl(var(--cv-blue) / 0.1);
+    --cv-layout-border-color: var(--cv-dropzone-border-color);
 }
 
 .service-requests-view .preview-container {
-  display: contents;
+    display: contents;
 }
 
 /* The root layout is not necessarily inside a flex box so width/height needs to be used */
 .service-requests-view .preview-container > .layout[style*='align-self: stretch'] {
-  width: 100%;
+    width: 100%;
 }
+
 .service-requests-view .preview-container > .layout[style*='flex-grow: 1'] {
-  height: 100%;
+    height: 100%;
 }
 
 /* Apply some default gap and padding to layouts that don't have inline styles for them while dragging. */
 .service-requests-view[dragging] .layout:not([style*='gap:']) {
-  gap: 8px;
+    gap: 8px;
 }
 
 .service-requests-view[dragging] .layout:not([style*='padding:'], [empty]) {
-  padding: 8px;
+    padding: 8px;
 }
 
 .service-requests-view .cover-overlay {
-  position: absolute;
-  border-radius: 1px;
+    position: absolute;
+    border-radius: 1px;
 }
 
 .service-requests-view:not([starting-drag]) .cover-overlay.editable-hovering {
-  outline: 2px solid hsl(var(--cv-blue) / 1);
-  outline-offset: -1px;
+    outline: 2px solid hsl(var(--cv-blue) / 1);
+    outline-offset: -1px;
 }
 
 .service-requests-view:not([starting-drag]) .cover-overlay.editable-editing {
-  outline: 1px solid hsl(var(--cv-blue) / 1);
-  outline-offset: -1px;
-  box-shadow: inset 0 0 0 2px var(--lumo-base-color);
+    outline: 1px solid hsl(var(--cv-blue) / 1);
+    outline-offset: -1px;
+    box-shadow: inset 0 0 0 2px var(--lumo-base-color);
 }
 
 .service-requests-view .overlays,
 .service-requests-view .drop-zones {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
 .service-requests-view:not([dragging]) .drop-zones {
-  pointer-events: none;
+    pointer-events: none;
 }
 
 .service-requests-view .drop-zone {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 1px;
-  min-height: 10px;
-  min-width: 10px;
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 1px;
+    min-height: 10px;
+    min-width: 10px;
 }
 
 .service-requests-view[dragging] .drop-zone:not([empty-layout]) {
-  outline: 1px dashed var(--cv-dropzone-border-color);
-  outline-offset: -2px;
-  background-color: var(--cv-dropzone-bg-color);
+    outline: 1px dashed var(--cv-dropzone-border-color);
+    outline-offset: -2px;
+    background-color: var(--cv-dropzone-bg-color);
 }
 
 .service-requests-view .drop-zone[remaining-space] {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--cv-stripe-color),
-    var(--cv-stripe-color) var(--cv-stripe-width),
-    transparent var(--cv-stripe-width),
-    transparent var(--cv-stripe-gap)
-  );
+    background: repeating-linear-gradient(
+            -45deg,
+            var(--cv-stripe-color),
+            var(--cv-stripe-color) var(--cv-stripe-width),
+            transparent var(--cv-stripe-width),
+            transparent var(--cv-stripe-gap)
+    );
 }
 
 .service-requests-view[dragging] .drop-zone[drag-over] {
-  background: var(--cv-droptarget-bg-color);
-  outline: 1px solid var(--cv-droptarget-border-color);
-  outline-offset: -1px;
-  box-shadow: inset 0 0 0 2px var(--lumo-base-color);
+    background: var(--cv-droptarget-bg-color);
+    outline: 1px solid var(--cv-droptarget-border-color);
+    outline-offset: -1px;
+    box-shadow: inset 0 0 0 2px var(--lumo-base-color);
 }
 
 .drop-zone[empty-layout] {
-  z-index: -1;
+    z-index: -1;
 }
 
 .service-requests-view:not([readonly]) .layout[empty],
 vaadin-form-layout[empty] {
-  border-radius: 1px;
-  background: repeating-conic-gradient(var(--cv-checkerboard-color1) 0% 25%, var(--cv-checkerboard-color2) 0% 50%) 50% /
+    border-radius: 1px;
+    background: repeating-conic-gradient(var(--cv-checkerboard-color1) 0% 25%, var(--cv-checkerboard-color2) 0% 50%) 50% /
     var(--cv-checkerboard-size) var(--cv-checkerboard-size);
-  background-clip: content-box;
-  outline: 1px dashed var(--cv-layout-border-color);
-  outline-offset: -2px;
+    background-clip: content-box;
+    outline: 1px dashed var(--cv-layout-border-color);
+    outline-offset: -2px;
 }
+
 .service-requests-view[dragging]:not([readonly]) vaadin-form-layout[empty] {
-  background: transparent;
+    background: transparent;
 }
 
 .service-requests-view .layout[empty]::before {
-  content: '';
-  display: block;
-  min-width: 64px;
-  min-height: 32px;
+    content: '';
+    display: block;
+    min-width: 64px;
+    min-height: 32px;
 }
 
 .service-requests-view[readonly] .drop-zones,
 .service-requests-view[readonly] .overlays {
-  display: none;
+    display: none;
 }
 
 .service-requests-view[inline-editing] .drop-zones,
 .service-requests-view[inline-editing] .overlays {
-  display: none;
+    display: none;
 }
+
 .service-requests-view .content-wrapper[contenteditable='true'] {
-  display: inline-block;
-  overflow: hidden;
-  width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
 }
 
 .service-requests-view[dragging] vaadin-form-layout {
-  padding: 8px;
+    padding: 8px;
 }
+
 .service-requests-view vaadin-form-layout[empty]::before {
-  content: '';
-  display: block;
-  min-width: 64px;
-  min-height: 32px;
+    content: '';
+    display: block;
+    min-width: 64px;
+    min-height: 32px;
 }
 
 .service-requests-view[dragging] vaadin-form-layout:not([empty])::after {
-  content: '';
-  display: block;
-  min-width: 64px;
-  min-height: 32px;
+    content: '';
+    display: block;
+    min-width: 64px;
+    min-height: 32px;
 }
 
 .service-request-body-box {
-  /* display: grid;
-  grid-template-columns: 35% 64%; */
-  width:100%;
-  
+    /* display: grid;
+    grid-template-columns: 35% 64%; */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .service-request-form-layout {
-  background-color: #fff;
-  height:max-content;
+    background-color: #fff;
+    height: max-content;
+    width: 600px;
 }
 
-.request-form-scroll-layout {
-  width:45%;
-  border:1px solid rgb(221, 221, 255);
-  border-radius:8px;
-  background-color:#fff
-}
 
- .service-request-list-layout{
-  border:1px solid rgb(221, 221, 255);
-  border-radius:8px;
-  background-color:#fff;
-  width:100%;
-  /* padding:10px; */
+.service-request-list-layout {
+    background-color: #fff;
+    width: 100%;
+    /*height:100vh;*/
+    box-sizing: border-box;
+    box-shadow: var(--lumo-box-shadow-xs);
+    /* padding:10px; */
 
 }
 
 .service-request-form-layout .buttons-box {
-  width:100%;
-}
-
-.service-request-button-box {
-  box-sizing: border-box;
-  padding-left: 200px;
-  background-color:rgb(255, 255, 255);
-  display: flex;
-  justify-content: end;
+    width: 100%;
 }
 
 .view-header {
-  display: flex;
-  color: var(--subtitle-color);
-  width: 100%;
-  border-bottom: 1px solid rgb(231, 231, 231);
-  padding: 10px;
-  background-color: #fff;
-  box-sizing: border-box;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    color: var(--subtitle-color);
+    width: 100%;
+    border-bottom: 1px solid rgb(231, 231, 231);
+    padding: 10px;
+    background-color: #fff;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.view-header h4{
-  /* background-color:rgb(255, 255, 255); */
-  color: var(--subtitle-color);
-  width:100%;
-}
-
-.list-box-component {
-  border:1px solid rgb(206, 200, 200);
-  height:150px;
-  padding:0;
-  overflow:auto;
-}
-.section2 {
-  background-color: #fff;
-
-}
-
-.section2 vaadin-text-field::part(input-field){
-  background-color: rgb(255, 255, 255);
-  border: 1px solid #ddd;
-  border-radius: 5px;
+.view-header h4 {
+    /* background-color:rgb(255, 255, 255); */
+    color: var(--subtitle-color);
+    width: 100%;
 }
 
 .search-field-component-box {
-  border:1px solid rgb(234, 224, 224);
-  border-radius: 5px;
-  border-radius: 3px;
+    border: 1px solid rgb(234, 224, 224);
+    border-radius: 5px;
+    background-color: #fff;
 }
 
 .service-request-list {
-  width:100%;
-  border:1px solid #ddd;
-  border-radius: 2px;
-  padding:2px;
+    width: 100%;
+    border-radius: 2px;
+    padding: 2px;
 }
 
 .customers-list-item-renderer-box {
-  /* border-bottom: 1px solid #ddd; */
-  padding: 5px 0 5px 5px;
-  border-radius: 5px;
-  box-sizing: border-box;
-  border-left: 3px solid #ddd;
+    /* border-bottom: 1px solid #ddd; */
+    padding: 5px 0 5px 5px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border-left: 3px solid #ddd;
 }
 
 .customers-list-item-renderer-box p {
-  color: var(--header-text-color);
-  font-size: medium;
-  font-weight: 500;
-  margin-bottom: 2px;
+    color: var(--header-text-color);
+    font-size: medium;
+    font-weight: 500;
+    margin-bottom: 2px;
 }
+
 .customers-list-item-renderer-box span {
-  font-size: small;
-  color: var(--subtitle-color);
+    font-size: small;
+    color: var(--subtitle-color);
 }
 
-.service-selector-box {
-  box-sizing: border-box;
-  /* border: 1px solid red; */
-  padding: 0 10px;
-  gap: 10px;
-  width: 100%;
-}
-
-.service-selector-box .combo-box-style{
-  width:60%;
-}
-.service-selector-box .input-style {
-  width:40%;
-}
 
 .default-check-box-style {
-  border: 1px solid rgb(231, 225, 225);
-  width:100%;
-  border-radius: 5px;
-  padding:2px;
-  box-sizing: border-box;
+    border: 1px solid rgb(231, 225, 225);
+    width: 100%;
+    border-radius: 5px;
+    padding: 2px;
+    box-sizing: border-box;
 }
 
 
 /* SERVICE REQUEST CONTENT COMPONENT STYLING */
 .service-operation-buttons {
-  /* border: 1px solid rgb(151, 39, 199); */
-  
-}
-
-.add-service-request-header {
-  display:flex; color:var(--subtitle-color);
-  gap:5px;
-}
-
-.add-service-request-header h4 {
-  color: var(--subtitle-color);
+     /*border: 1px solid rgb(151, 39, 199); */
+    width: fit-content;
 }
 
 .service-operation-buttons vaadin-button {
-  width:fit-content;
+    width: fit-content;
+    font-size: smaller;
+    padding:5px 8px;
+    border: 1px solid #dddddd;
+    cursor: pointer;
+}
+
+.service-operation-buttons .item-update-style {
+    background-color: var(--lumo-success-color);
+    color:#fff;
+}
+.service-operation-buttons vaadin-icon {
+    font-size: smaller;
 }
 
 .content-blocks {
-  border-bottom: 1px solid rgb(225, 239, 225);
-  width:100%;
-  justify-content: space-between;
-  align-items:center;
-  padding:5px;
-  align-content: baseline;
+    border-bottom: 1px solid rgb(225, 239, 225);
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    align-content: baseline;
 }
+
 .request-icon-and-service-box {
-  /* border: 1px solid blue; */
-  display:flex;
-  padding:5px;
-  /* width:90%; */
+     /*border: 1px solid blue;*/
+    display: flex;
+    padding: 5px;
+    line-height: 30px;
+    /* width:90%; */
+}
+.service-no-and-status-box span {
+    font-size: 10px;
+}
+.service-type-and-date-box {
+    line-height: 30px;
 }
 
-.request-icon-and-service-box .request-icon{
-  margin-right: 5px;
-  color: var(--subtitle-color);
-  /* background-color: #ddd; */
+
+.request-icon-and-service-box .request-icon {
+    margin-right: 5px;
+    color: var(--subtitle-color);
+    /* background-color: #ddd; */
 }
 
-.request-icon-and-service-box h3{
-  color: var(--header-text-color);
+.request-icon-and-service-box h3 {
+    color: var(--header-text-color);
 }
 
-.block-on{
-  box-sizing:border-box;
-  padding:0 20px;
+.block-on {
+    box-sizing: border-box;
+    padding: 0 20px;
 
 }
+
 .block-on h4 {
-  color:var(--header-text-color);
+    color: var(--header-text-color);
 }
+
 .block-on span {
-  color: var(--subtitle-color);
+    color: var(--subtitle-color);
 }
 
 .block-two {
-  background-color: #f4f4f4;
-  box-sizing:border-box;
-  padding:10px 20px;
-  border-radius: 5px;
-  /* border: 1px solid #ecdfdf; */
+    background-color: #eee;
+    color: var(--text-color);
+    box-sizing: border-box;
+    padding: 10px 20px;
+    border-radius: 5px;
+    /* border: 1px solid #ecdfdf; */
+}
+
+.block-four-layout, .urgency-box {
+    align-items: center;
+    font-size: smaller;
+    padding:3px;
+
+}
+.block-four-layout span, .urgency-box span {
+    color:var(--subtitle-color);
+}
+.block-four-layout h6, .urgency-box h6 {
+    color: var(--lumo-primary-color);
+}
+
+.block-four-layout vaadin-icon, .urgency-box vaadin-icon {
+    color: var(--subtitle-color);
 }
 
 .service-request-component-layout {
-  background-color: #fff;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  box-sizing:border-box;
-  margin:6px auto;
-  max-width:98%;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    margin: 6px auto;
+    max-width: 98%;
 }
 
 .service-request-component-layout:hover {
-  box-shadow: 1px 1px 2px 2px #ddd;
-  transform:scale(1.01);
-  transition: 0.3s ease;
+    box-shadow: var(--lumo-box-shadow-s);
+    transform: scale(1.00);
+    transition: 0.3s ease;
 
 }
+.service-component-form-layout{
+    background-color: rgba(238, 249, 255, 0.72);
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding:10px;
+    box-sizing: border-box;
+}
+.mechanic-dialog-inner-bbox {
+    background-color: #ffffff;
+    border:1px solid #ddd;
+    margin: 5px auto;
+    align-content: center;
+    border-radius:5px;
+}
+.mechanic-dialog-inner-bbox div{
+    align-items: baseline;
+    justify-content: flex-start;
+}
 
-/* CUSTOMERS SERVICE REQUEST VIEW STYLING */
+.mechanic-dialog-inner-bbox div span {
+    color: var(--subtitle-color);
+}
+.mechanic-dialog-inner-bbox div h6 {
+    margin: 0 10px;
+    color: var(--header-text-color);
+}
+
+.mechanic-dialog-inner-bbox .default-button-style {
+    width:100%;
+}
+.update-service-request-form-layout {
+    width:500px;
+}
+
+
+    /* CUSTOMERS SERVICE REQUEST VIEW STYLING */
 .page-body-layout {
-  /* height:100vh; */
-  width:100%;
-  /* border:1px solid red; */
+    /* height:100vh; */
+    width: 100%;
+    /* border:1px solid red; */
 }
 
 .customer-add-service-button-box {
-  width:100%;
-  justify-content: flex-end;
+    width: 100%;
+    justify-content: flex-end;
 }
 
 .customer-add-service-button-box vaadin-button {
-  min-width:min-content;
-  font-size: smaller;
+    min-width: min-content;
+    font-size: smaller;
 }
 
 .customer-service-request-details-box {
-  border:1px solid #ddd;
-  border-radius: 5px;
-  padding:10px;
-  box-sizing:border-box;
-  margin:10px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 10px auto;
 }
 
 .customer-service-request-details-box h3 {
-  color:var(--subtitle-color);
-  /* font-size: medium; */
+    color: var(--subtitle-color);
+    /* font-size: medium; */
 }
 
 .customer-service-booking-dialog::part(content) {
-  width:600px;
-  height:fit-content;
+    width: 600px;
+    height: fit-content;
 }
 
 .customer-service-booking-dialog h2 {
-  color:var(--header-text-color);
-  padding:10px;
-  font-size: large;
+    color: var(--header-text-color);
+    padding: 10px;
+    font-size: large;
 }
 
 .book-service-layout {
-  border:1px solid #ddd;
-  margin:10px auto;
-  border-radius:7px;
-  padding:10px;
+    border: 1px solid #ddd;
+    margin: 10px auto;
+    border-radius: 7px;
+    padding: 10px;
 }
+
 .book-service-layout h3 {
-  color:var(--subtitle-color);
-  margin:10px auto;
-  border-bottom: 1px solid #ddd;
-  /* width:100%; */
+    color: var(--subtitle-color);
+    margin: 10px auto;
+    border-bottom: 1px solid #ddd;
+    /* width:100%; */
 }
 
 .book-service-layout vaadin-text-area {
-  /* margin:10px auto; */
-  height:90px;
+    /* margin:10px auto; */
+    height: 90px;
 }
 
 .book-service-layout .default-btn-style {
-  background-color: var(--lumo-primary-color);
-  color:#fff;
-  margin: 10px 0;
+    background-color: var(--lumo-primary-color);
+    color: #fff;
+    width: fit-content;
+    font-size: smaller;
+    padding: 10px 20px;
 }
+
 .book-service-layout .combo-box::part(input-field) {
-  /* height:40px; */
+    /* height:40px; */
 }
 
 
 /* SECONDARY LAYOUT STYLING */
 
 .secondary-booking-header-section {
-    align-items:center;
+    align-items: center;
     text-align: center;
-    margin:auto;
+    margin: auto;
 }
 
 .secondary-booking-header-section h3 {
-  color:var(--header-text-color);
-  font-size:30px;
-}
-.secondary-booking-header-section p {
-  color:var(--subtitle-color);
-  font-size: medium;
+    color: var(--header-text-color);
+    font-size: 30px;
 }
 
-.secondary-booking-header-section .book-service-confirm-icon{
-  width:50px;
-  background-color: rgb(0, 255, 34);
-  border-radius:100%;
-  padding:5px;
+.secondary-booking-header-section p {
+    color: var(--subtitle-color);
+    font-size: medium;
 }
+
+.secondary-booking-header-section .book-service-confirm-icon {
+    width: 50px;
+    background-color: rgb(0, 255, 34);
+    border-radius: 100%;
+    padding: 5px;
+}
+
+/*CUSTOMER  SERVICE REQUEST DIALOG STYLING...*/
+.service-request-dialog {
+    max-width:800px;
+    margin: auto;
+}
+.request-name-and-label-layout {
+    background-color: #eef9ff;
+    box-sizing: border-box;
+    padding:5px 10px;
+    align-items: baseline;
+    border-radius: 5px;
+    justify-content: flex-start;
+    box-shadow: var(--lumo-box-shadow-xs);
+    color: var(--subtitle-color);
+    margin-bottom: 1%;
+}
+
+.request-name-and-label-layout h4 {
+    color: var(--lumo-primary-color);
+}
+.service-request-dialog-form-layout {
+    border:1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding:10px 15px;
+
+    margin:5px 0;
+    box-shadow: var(--lumo-box-shadow-xs);
+}
+
+.service-request-dialog-form-layout span {
+    font-size: medium;
+    color:var(--subtitle-color);
+    margin-bottom: 10px;
+}
+
+.money-field::part(input-field) {
+    color:var(--lumo-success-text-color);
+    background-color:var(--lumo-success-color-50pct);
+}
+
 
 /* RESPONSIVE VIEW STYLING */
 @media screen and (max-width: 768px) {
-  .service-request-body-box {
-    display: block;
-    grid-template-columns: repeat(1, 1fr);
-  }
-  .request-form-scroll-layout  {
-    width:100%;
-    margin-bottom: 10px;
-  }
+    /*.service-request-body-box {*/
+    /*  display: block;*/
+    /*  grid-template-columns: repeat(1, 1fr);*/
+    /*}*/
+    .service-request-form-layout {
+        width: fit-content;
+    }
+    .service-selector-box, .content-blocks {
+        flex-direction: column;
+        width: 100%;
+    }
+    .service-selector-box .combo-box-style,
+    .service-selector-box .input-style {
+        width: 100%;
+    }
+    .customer-service-booking-dialog::part(content) {
+        max-width: 100%;
+    }
+    .service-request-dialog {
+        max-width:fit-content;
+    }
+}
 
-  .service-selector-box, .content-blocks {
-    flex-direction: column;
-    width:100%;
-  }
-  .service-selector-box .combo-box-style,
-  .service-selector-box .input-style {
-    width:100%;
-  }
-  .customer-service-booking-dialog::part(content) {
-    max-width:100%;
-  }
-  
+@media screen and (max-width: 480px) {
+    .service-request-list-header {
+        display: none;
+        width: 100%;
+    }
+    .service-request-list-layout {
+        height:100vh;
+    }
+    /*.service-operation-buttons {*/
+    /*    display: flex;*/
+    /*    width:100%;*/
+    /*    flex-direction: column;*/
+    /*    line-height: 20px;*/
+    /*}*/
+    .service-operation-buttons vaadin-button {
+
+    }
 }

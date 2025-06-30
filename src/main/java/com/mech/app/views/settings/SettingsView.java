@@ -1,12 +1,19 @@
 package com.mech.app.views.settings;
 
+import com.mech.app.components.CustomDialog;
 import com.mech.app.components.FormColumns;
 import com.mech.app.components.HeaderComponent;
+import com.mech.app.configfiles.MessageLoaders;
+import com.mech.app.configfiles.secutiry.SessionManager;
+import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
+import com.mech.app.models.settings.SettingsModel;
+import com.mech.app.specialmethods.ComponentLoader;
 import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -25,21 +32,27 @@ import com.vaadin.flow.router.*;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 @PageTitle("Settings")
 @Route(value = "settings", layout = MainLayout.class)
-@Menu(order = 10, icon = LineAwesomeIconUrl.TOOLS_SOLID)
+//@Menu(order = 10, icon = LineAwesomeIconUrl.TOOLS_SOLID)
 public class SettingsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     private final TabSheet tabSheet = new TabSheet();
     private FormColumns responsiveForm;
     private final Grid<ServiceTypesRecord> serviceTypesGrid = new Grid<>();
-
+    private static SettingsModel SETTINGS_MODE = new SettingsModel();
+    private AtomicInteger SHOP_ID = new AtomicInteger(0);
+    private AtomicInteger USER_ID = new AtomicInteger(0);
 
     public SettingsView() {
         getContent().setHeightFull();
         getContent().setWidthFull();
         getContent().addClassName("page-body");
-        getContent().add(headerSection(), bodySection());
+        SHOP_ID.set(SessionManager.DEFAULT_SHOP_ID);
+        USER_ID.set(SessionManager.DEFAULT_USER_ID);
     }
 
     @Override
@@ -51,6 +64,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
     public void onAttach(AttachEvent attachEvent) {
         tabSheet.addClassNames("tab-sheet-style");
         tabSheet.addThemeVariants(TabSheetVariant.LUMO_BORDERED, TabSheetVariant.LUMO_TABS_SMALL, TabSheetVariant.LUMO_TABS_MINIMAL);
+        getContent().add(headerSection(), bodySection());
     }
 
     /*******************************************************************************************************************
@@ -211,7 +225,9 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
         var addButton = new Button(LineAwesomeIcon.PLUS_CIRCLE_SOLID.create());
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addButton.addClassNames("default-button-style", "add-service-button");
-        addButton.getStyle().setFontSize("large");
+
+        costField.setRequired(true);
+        nameField.setRequired(true);
 
         HorizontalLayout formLayout = new HorizontalLayout(nameField, descriptionField, costField, addButton);
         formLayout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -255,14 +271,12 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
         serviceTypesGrid.addComponentColumn(this::deleteServiceButton);
         serviceTypesGrid.getColumns().forEach(col -> col.setAutoWidth(true));
         serviceTypesGrid.setSizeFull();
-        serviceTypesGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
+        serviceTypesGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_COLUMN_BORDERS);
 
-        var emptyGridText = new Span("No data to display at the moment");
-        serviceTypesGrid.setEmptyStateComponent(emptyGridText);
-        emptyGridText.getStyle().setColor("var(-subtitle-color")
-                .setFontSize("large")
-                .setFontWeight(600);
+        serviceTypesGrid.setEmptyStateComponent(ComponentLoader.emptyGridComponent("No service type is found"));
+
         serviceTypesGrid.getEmptyStateComponent().getStyle().setTextAlign(Style.TextAlign.CENTER);
+        serviceTypesGrid.setItems(loadGridData());
 
         return serviceTypesGrid;
     }
@@ -277,12 +291,22 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
         return deleteButton;
     }
 
-
     /*******************************************************************************************************************
      REFERENCE METHODS
-     *******************************************************************************************************************/
+     ******************************************************************************************************************
+
+     * @return*/
+    private List<ServiceTypesRecord> loadGridData() {
+        return SETTINGS_MODE.getServiceTypeByShopId(SHOP_ID.get());
+    }
+
     private void addToServiceGrid(String name, String description, double cost) {
-        var dataProvider = new ServiceTypesRecord(name, description, cost);
-        serviceTypesGrid.getListDataView().addItem(dataProvider);
+        int response = SETTINGS_MODE.createNewServiceType(SHOP_ID.get(), name, description, cost, USER_ID.get());
+        String message = name + " has been added your list of services";
+        if(response > 0) {
+            NotificationRecords notify = new NotificationRecords("SERVICE TYPE", message, USER_ID.get(), SHOP_ID.get());
+            SETTINGS_MODE.logNotification(notify);
+            serviceTypesGrid.setItems(loadGridData());
+        }else new CustomDialog().showErrorNotification(MessageLoaders.errorMessage("Failed to add service type."));
     }
 }//end of class...

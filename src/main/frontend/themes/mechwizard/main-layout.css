@@ -1,5 +1,6 @@
 vaadin-scroller[slot="drawer"] {
   padding: var(--lumo-space-s);
+  background-color: var(--lumo-primary-color);
 }
 
 vaadin-side-nav-item vaadin-icon {
@@ -22,13 +23,13 @@ vaadin-side-nav-item vaadin-icon {
 
 
 .header {
-  /* background-color:green; */
+   /*background-color:green;*/
   width:100%;
   justify-content: space-between;
-  padding:10px;
+  padding:5px;
   box-sizing: border-box;
-  /*background-color: #fff;*/
-  border-radius: 10px;
+  background-color: #fff;
+  border-radius: 5px;
   cursor:pointer;
 }
 
@@ -55,7 +56,7 @@ vaadin-side-nav-item vaadin-icon {
   padding:10px;
   width:100%;
   /*background-color: var(--page-body-color);*/
-  /*background-color: var(--lumo-primary-color-50pct);*/
+  background-color: var(--lumo-primary-color);
 }
 
 .drawer-footer .header {
@@ -78,15 +79,18 @@ vaadin-side-nav-item vaadin-icon {
 .drawer-scroller .menu-item-link:hover {
   background-color: rgb(255, 255, 255);
   cursor:pointer;
-  transition:0.5ms;
+  transition:0.5ms ease-in;
 }
 .drawer-scroller .menu-item-link[current] {
-  background-color: rgba(255, 255, 255, 0.44);
-    color: var(--lumo-primary-color);
+  background-color: rgba(255, 255, 255, 0.99);
+}
+
+.drawer-scroller .menu-item-link[current] vaadin-icon {
+  color: var(--lumo-primary-color);
 }
 
 .drawer-scroller {
-  background-color: #1d5375;
+  /*background-color: #1d5375;*/
 }
 
 .page-body {
@@ -149,7 +153,8 @@ vaadin-side-nav-item vaadin-icon {
 }
 
 .add-employee-dialog-component span {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: normal;
   color:var(--subtitle-color);
 }
 .add-employee-dialog-component div {
@@ -232,8 +237,16 @@ vaadin-side-nav-item vaadin-icon {
   color: var(--subtitle-color);
 }
 
+.alternative-grid-style .item-delete-button {
+  width:fit-content;
+}
+
 .combo-box-style{
   width:100%;
+}
+
+.notification-counter {
+  font-size: large;
 }
 
 @media screen and (max-width: 768px) {
