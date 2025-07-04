@@ -2,6 +2,8 @@ package com.mech.app.dataproviders.transactions;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 public class TransactionsDataProvider {
     private int customerId, recordId;
@@ -13,7 +15,17 @@ public class TransactionsDataProvider {
     private String transactionType;
     private Timestamp transactionDate;
 
-    public record transactionRecord(String jobNo, String customerName, String service, String car, Date serviceDate, String amount, String status){}
+    public record TransactionRecord(int jobId, String customerName, String serviceType, Date serviceDate, double account_balance, double serviceCost, double itemsCost, String status){
+
+        public String jobNo() {
+            int month = serviceDate.toLocalDate().getMonthValue();
+            return String.format("JC/%d/%d", month, jobId);
+        }
+        public String formattedDate() {
+            return serviceDate.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+        }
+
+    }
 
 
     public TransactionsDataProvider() {

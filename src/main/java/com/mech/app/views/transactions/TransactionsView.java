@@ -4,6 +4,7 @@ import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.transactions.CardComponent;
 import com.mech.app.components.transactions.TransactionDialogs;
 import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
+import com.mech.app.models.TransactionsModel;
 import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -21,22 +22,20 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.lineawesome.LineAwesomeIcon;
-import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @PageTitle("Transactions")
 @Route(value = "transactions", layout = MainLayout.class)
 //@Menu(order = 6, icon = LineAwesomeIconUrl.DOLLAR_SIGN_SOLID)
 public class TransactionsView extends Composite<VerticalLayout> {
 
-    private final Grid<TransactionsDataProvider.transactionRecord> transactionGrid = new Grid<>();
+    private final Grid<TransactionsDataProvider.TransactionRecord> transactionGrid = new Grid<>();
+    private static final TransactionsModel DAO_OBJECT = new TransactionsModel();
 
     public TransactionsView() {
         getContent().setHeightFull();
@@ -48,17 +47,8 @@ public class TransactionsView extends Composite<VerticalLayout> {
     /*******************************************************************************************************************
      REFERENCE METHODS
      *******************************************************************************************************************/
-    private List<TransactionsDataProvider.transactionRecord> sampleData() {
-        var first = new TransactionsDataProvider.transactionRecord("J0043", "John Atsu", "Toyota Corolla", "Oil Change", Date.valueOf(LocalDate.now()), "1,942.32", "paid");
-        return List.of(
-                first,
-                new TransactionsDataProvider.transactionRecord("J001", "John Doe", "Toyota Corolla", "Oil Change", Date.valueOf(LocalDate.now()), "192.32", "paid"),
-                new TransactionsDataProvider.transactionRecord("J002", "Jane Smith", "Honda Civic", "Brake Repair", Date.valueOf(LocalDate.now().minusDays(1)), "402.00", "unpaid"),
-                new TransactionsDataProvider.transactionRecord("J003", "Mike Johnson", "Ford Focus", "Tire Replacement", Date.valueOf(LocalDate.now().minusDays(2)), "200.03", "paid"),
-                new TransactionsDataProvider.transactionRecord("J004", "Emily Davis", "Chevrolet Malibu", "Battery Replacement", Date.valueOf(LocalDate.now().minusDays(3)), "102.22", "unpaid"),
-                new TransactionsDataProvider.transactionRecord("J005", "Chris Brown", "Nissan Altima", "Engine Repair", Date.valueOf(LocalDate.now().minusDays(4)), "454.00", "paid"),
-                new TransactionsDataProvider.transactionRecord("J006", "Sarah Wilson", "Mazda CX-5", "Transmission Repair", Date.valueOf(LocalDate.now().minusDays(5)), "2,343.00", "unpaid")
-        );
+    private List<TransactionsDataProvider.TransactionRecord> sampleData() {
+        return DAO_OBJECT.fetchPaidAndUnpaidTransactions();
     }
 
     /*******************************************************************************************************************
@@ -88,9 +78,18 @@ public class TransactionsView extends Composite<VerticalLayout> {
     }
 
     private Component cardHeaderLayout() {
-        var sectionOne = new CardComponent().paymentTransactionsDashboardCard("Awaiting Payment", "5", "total jobs");
-        var sectionTwo = new CardComponent().paymentTransactionsDashboardCard("Total Unpaid", "Ghc1,500.00", "outstanding balance");
-        var sectionThree = new CardComponent().paymentTransactionsDashboardCard("Collected", "12", "paid amount");
+        var dataObject = DAO_OBJECT.fetchTransactionsMetaData();
+
+        //extract data objects
+        var awaitingPayment = dataObject.getOrDefault("awaiting_payment", "0");
+        var itemsCost = dataObject.getOrDefault("purchased_items_cost", "0.00");
+        var paymentCount = dataObject.getOrDefault("payment_count", "0");
+        var serviceCost = dataObject.getOrDefault("service_cost" , "0.00");
+        var totalAmount = dataObject.getOrDefault("total_amount", "0.00");
+
+        var sectionOne = new CardComponent().paymentTransactionsDashboardCard("Awaiting Payment", awaitingPayment, "Total Completed Jobs");
+        var sectionTwo = new CardComponent().paymentTransactionsDashboardCard("Total Unpaid", totalAmount, "Outstanding Balance Without Labour Cost");
+        var sectionThree = new CardComponent().paymentTransactionsDashboardCard("Collected", paymentCount, "Paid Amount");
         HorizontalLayout layout = new HorizontalLayout(sectionOne, sectionTwo, sectionThree);
         layout.setWidthFull();
         layout.addClassNames("payment-header-card-layout");
@@ -116,7 +115,7 @@ public class TransactionsView extends Composite<VerticalLayout> {
                         if (input.getValue().isEmpty()) return true;
                         var matchesName = filter.customerName().toLowerCase().contains(input.getValue().toLowerCase());
                         var matchesJobNo = filter.jobNo().toLowerCase().contains(input.getValue().toLowerCase());
-                        var matchesServiceType = filter.service().toLowerCase().contains(input.getValue().toLowerCase());
+                        var matchesServiceType = filter.serviceType().toLowerCase().contains(input.getValue().toLowerCase());
 
                         return matchesName || matchesJobNo || matchesServiceType;
                     });
@@ -126,18 +125,16 @@ public class TransactionsView extends Composite<VerticalLayout> {
     }
 
     //GRID CONFIGURATION WITH COMPONENT RENDERERS
-    private Grid<TransactionsDataProvider.transactionRecord> transactionsGridConfiguration() {
+    private Grid<TransactionsDataProvider.TransactionRecord> transactionsGridConfiguration() {
         transactionGrid.addClassNames("alternative-grid-style");
         transactionGrid.setSizeUndefined();
         transactionGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_COLUMN_BORDERS);
         transactionGrid.setColumnReorderingAllowed(true);
 
-        transactionGrid.addColumn(TransactionsDataProvider.transactionRecord::jobNo).setHeader("Job ID").setSortable(true);
-        transactionGrid.addColumn(TransactionsDataProvider.transactionRecord::customerName).setHeader("Customer");
-        transactionGrid.addColumn(TransactionsDataProvider.transactionRecord::car).setHeader("Vehicle");
+        transactionGrid.addColumn(TransactionsDataProvider.TransactionRecord::jobNo).setHeader("Job ID").setSortable(true);
+        transactionGrid.addColumn(TransactionsDataProvider.TransactionRecord::customerName).setHeader("Customer");
         transactionGrid.addColumn(new LocalDateRenderer<>(data -> data.serviceDate().toLocalDate())).setHeader("Booked Date");
-        transactionGrid.addColumn(TransactionsDataProvider.transactionRecord::service).setHeader("Service Type");
-        transactionGrid.addColumn(TransactionsDataProvider.transactionRecord::amount).setHeader("Amount(Ghc)");
+        transactionGrid.addColumn(TransactionsDataProvider.TransactionRecord::serviceType).setHeader("Service Type");
         transactionGrid.addColumn(transactionStatusRenderer()).setHeader("Status");
         transactionGrid.addColumn(gridActionButtonRenderer()).setHeader("Action");
         transactionGrid.getColumns().forEach(
@@ -152,12 +149,13 @@ public class TransactionsView extends Composite<VerticalLayout> {
     }
 
     //GRID COMPONENT RENDERERS
-    private Renderer<TransactionsDataProvider.transactionRecord> transactionStatusRenderer() {
+    private Renderer<TransactionsDataProvider.TransactionRecord> transactionStatusRenderer() {
         return new ComponentRenderer<>(
                 data -> {
-                    Span badge = new Span(data.status());
+                    var statusValue = Objects.equals("completed", data.status()) ? "unpaid" : data.status();
+                    Span badge = new Span(statusValue);
                     badge.addClassName("badge");
-                    if (data.status().equals("paid")) {
+                    if (statusValue.equals("paid")) {
                         badge.getElement().getThemeList().add("badge success pill small");
                     } else {
                         badge.getElement().getThemeList().add("badge error pill small");
@@ -167,7 +165,7 @@ public class TransactionsView extends Composite<VerticalLayout> {
                 });
     }
 
-    private Renderer<TransactionsDataProvider.transactionRecord> gridActionButtonRenderer() {
+    private Renderer<TransactionsDataProvider.TransactionRecord> gridActionButtonRenderer() {
         return new ComponentRenderer<>(
                 data -> {
                     Button actionButton;

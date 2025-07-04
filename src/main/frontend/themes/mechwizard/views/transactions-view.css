@@ -232,6 +232,10 @@ vaadin-form-layout[empty] {
   /* box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); */
 }
 
+.receipt-detail {
+  border: 1px solid #d55a5a;
+}
+
 .print-receipt-button{
   background-color:transparent; /* Bootstrap primary color */
   color: var(--lumo-primary-text-color);

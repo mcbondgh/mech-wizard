@@ -18,6 +18,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TransactionDialogs {
     private Dialog dialog;
@@ -31,7 +32,7 @@ public class TransactionDialogs {
     private final TextField accountNumberField = new TextField("Account Number");
     private Button actionButton;
 
-    private TransactionsDataProvider.transactionRecord data;
+    private TransactionsDataProvider.TransactionRecord data;
     private final RadioButtonGroup<String> paymentMethodSelector = new RadioButtonGroup<>("Select Payment Method");
 
     public TransactionDialogs() {
@@ -52,7 +53,7 @@ public class TransactionDialogs {
         dialogContent.addClassNames("transaction-dialog-content-box");
     }
 
-    public TransactionDialogs(TransactionsDataProvider.transactionRecord data) {
+    public TransactionDialogs(TransactionsDataProvider.TransactionRecord data) {
         this.data = data;
         dialogContent = new VerticalLayout();
         dialog = new Dialog(dialogContent);
@@ -112,8 +113,9 @@ public class TransactionDialogs {
         actionButton.addClassNames("default-btn-style");
 
         //section four
+        double totalAmount = data.itemsCost() + data.serviceCost();
         var amountLabel = new H3("Total Amount");
-        var amountValue = new H3(String.format("Ghc%s", data.amount()));
+        var amountValue = new H3(String.format("Ghc%s", totalAmount));
         var sectionFour = new FlexLayout(amountLabel, amountValue);
         sectionFour.addClassNames("transaction-amount-box");
         sectionFour.setWidthFull();
@@ -135,13 +137,13 @@ public class TransactionDialogs {
         dialog.getHeader().add(headerComponent("Transaction Receipt For"));
 
         // Receipt Details
+        double billSum = data.serviceCost() + data.itemsCost();
         var customerName = new Paragraph(String.format("Customer Name: %s", data.customerName()));
-        var serviceType = new Paragraph(String.format("Service Type: %s", data.service()));
-        var vehicle = new Paragraph(String.format("Vehicle: %s", data.car()));
+        var serviceType = new Paragraph(String.format("Service Type: %s", data.serviceType()));
         var technician = new Paragraph("Technician: John Smith"); // Example technician name
         var carParts = new Paragraph("Car Parts Bought: Oil Filter - Ghc50.00, Air Filter - Ghc30.00");
         var paymentMethod = new Paragraph("Payment Method: Cash"); // Example payment method
-        var totalAmount = new Paragraph(String.format("Total Amount Paid: Ghc%s", data.amount()));
+        var totalAmount = new Paragraph(String.format("Total Amount Paid: Ghc%s", billSum));
         var discountApplied = new Paragraph("Discount Applied: Ghc10.00"); // Example discount
         var receiptNo = new Paragraph("Receipt No: RCT-2025-001"); // Example receipt number
         var labourCost = new Paragraph("Labour Cost: Ghc100.00"); // Example labour cost
@@ -150,7 +152,6 @@ public class TransactionDialogs {
         // Styling
         customerName.addClassNames("receipt-detail");
         serviceType.addClassNames("receipt-detail");
-        vehicle.addClassNames("receipt-detail");
         technician.addClassNames("receipt-detail");
         carParts.addClassNames("receipt-detail");
         paymentMethod.addClassNames("receipt-detail");
@@ -163,7 +164,6 @@ public class TransactionDialogs {
         var receiptLayout = new VerticalLayout(
             customerName,
             serviceType,
-            vehicle,
             technician,
             carParts,
             paymentMethod,
@@ -181,7 +181,7 @@ public class TransactionDialogs {
         dialog.open();
     }
 
-    public void feedbackDialog(String jobNumber) {
+    public void feedbackDialog(String jobNumber, int jobId) {
         dialog.getHeader().add("Share Your Feedback For " + jobNumber);
         TextArea textArea = new TextArea("Please enter your comments here", "Your may choose to leave this field empty.");
         textArea.addClassNames("feedback-comment-field");
