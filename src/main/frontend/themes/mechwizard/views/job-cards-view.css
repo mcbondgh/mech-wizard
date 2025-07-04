@@ -1,277 +1,347 @@
 .job-cards-view {
-  padding: 2px;
-  box-sizing: border-box;
-  display: block;
-  position: relative;
-  height: 100%;
-  overflow-y: auto;
-  --cv-blue: 212 96% 54%;
-  --cv-purple: 259 97% 66%;
-  --cv-dropzone-border-color: hsl(var(--cv-blue) / 0.5);
-  --cv-dropzone-bg-color: hsl(var(--cv-blue) / 0.2);
-  --cv-droptarget-border-color: hsl(var(--cv-purple) / 1);
-  --cv-droptarget-bg-color: hsl(var(--cv-purple) / 0.4);
-  --cv-stripe-width: 1.5px;
-  --cv-stripe-gap: 9px;
-  --cv-stripe-color: hsl(var(--cv-blue) / 0.2);
-  --cv-layout-border-color: var(--lumo-contrast-40pct);
-  --cv-checkerboard-color1: hsl(0 0% 0% / 0.05);
-  --cv-checkerboard-color2: hsl(0 0% 100% / 0.05);
-  --cv-checkerboard-size: 16px;
+    padding: 2px;
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+    --cv-blue: 212 96% 54%;
+    --cv-purple: 259 97% 66%;
+    --cv-dropzone-border-color: hsl(var(--cv-blue) / 0.5);
+    --cv-dropzone-bg-color: hsl(var(--cv-blue) / 0.2);
+    --cv-droptarget-border-color: hsl(var(--cv-purple) / 1);
+    --cv-droptarget-bg-color: hsl(var(--cv-purple) / 0.4);
+    --cv-stripe-width: 1.5px;
+    --cv-stripe-gap: 9px;
+    --cv-stripe-color: hsl(var(--cv-blue) / 0.2);
+    --cv-layout-border-color: var(--lumo-contrast-40pct);
+    --cv-checkerboard-color1: hsl(0 0% 0% / 0.05);
+    --cv-checkerboard-color2: hsl(0 0% 100% / 0.05);
+    --cv-checkerboard-size: 16px;
 }
 
 .job-cards-view[dragging] {
-  --cv-checkerboard-color1: hsl(var(--cv-blue) / 0.2);
-  --cv-checkerboard-color2: hsl(var(--cv-blue) / 0.1);
-  --cv-layout-border-color: var(--cv-dropzone-border-color);
+    --cv-checkerboard-color1: hsl(var(--cv-blue) / 0.2);
+    --cv-checkerboard-color2: hsl(var(--cv-blue) / 0.1);
+    --cv-layout-border-color: var(--cv-dropzone-border-color);
 }
 
 .job-cards-view .preview-container {
-  display: contents;
+    display: contents;
 }
 
 /* The root layout is not necessarily inside a flex box so width/height needs to be used */
 .job-cards-view .preview-container > .layout[style*='align-self: stretch'] {
-  width: 100%;
+    width: 100%;
 }
+
 .job-cards-view .preview-container > .layout[style*='flex-grow: 1'] {
-  height: 100%;
+    height: 100%;
 }
 
 /* Apply some default gap and padding to layouts that don't have inline styles for them while dragging. */
 .job-cards-view[dragging] .layout:not([style*='gap:']) {
-  gap: 8px;
+    gap: 8px;
 }
 
 .job-cards-view[dragging] .layout:not([style*='padding:'], [empty]) {
-  padding: 8px;
+    padding: 8px;
 }
 
 .job-cards-view .cover-overlay {
-  position: absolute;
-  border-radius: 1px;
+    position: absolute;
+    border-radius: 1px;
 }
 
 .job-cards-view:not([starting-drag]) .cover-overlay.editable-hovering {
-  outline: 2px solid hsl(var(--cv-blue) / 1);
-  outline-offset: -1px;
+    outline: 2px solid hsl(var(--cv-blue) / 1);
+    outline-offset: -1px;
 }
 
 .job-cards-view:not([starting-drag]) .cover-overlay.editable-editing {
-  outline: 1px solid hsl(var(--cv-blue) / 1);
-  outline-offset: -1px;
-  box-shadow: inset 0 0 0 2px var(--lumo-base-color);
+    outline: 1px solid hsl(var(--cv-blue) / 1);
+    outline-offset: -1px;
+    box-shadow: inset 0 0 0 2px var(--lumo-base-color);
 }
 
 .job-cards-view .overlays,
 .job-cards-view .drop-zones {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
 .job-cards-view:not([dragging]) .drop-zones {
-  pointer-events: none;
+    pointer-events: none;
 }
 
 .job-cards-view .drop-zone {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 1px;
-  min-height: 10px;
-  min-width: 10px;
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 1px;
+    min-height: 10px;
+    min-width: 10px;
 }
 
 .job-cards-view[dragging] .drop-zone:not([empty-layout]) {
-  outline: 1px dashed var(--cv-dropzone-border-color);
-  outline-offset: -2px;
-  background-color: var(--cv-dropzone-bg-color);
+    outline: 1px dashed var(--cv-dropzone-border-color);
+    outline-offset: -2px;
+    background-color: var(--cv-dropzone-bg-color);
 }
 
 .job-cards-view .drop-zone[remaining-space] {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--cv-stripe-color),
-    var(--cv-stripe-color) var(--cv-stripe-width),
-    transparent var(--cv-stripe-width),
-    transparent var(--cv-stripe-gap)
-  );
+    background: repeating-linear-gradient(
+            -45deg,
+            var(--cv-stripe-color),
+            var(--cv-stripe-color) var(--cv-stripe-width),
+            transparent var(--cv-stripe-width),
+            transparent var(--cv-stripe-gap)
+    );
 }
 
 .job-cards-view[dragging] .drop-zone[drag-over] {
-  background: var(--cv-droptarget-bg-color);
-  outline: 1px solid var(--cv-droptarget-border-color);
-  outline-offset: -1px;
-  box-shadow: inset 0 0 0 2px var(--lumo-base-color);
+    background: var(--cv-droptarget-bg-color);
+    outline: 1px solid var(--cv-droptarget-border-color);
+    outline-offset: -1px;
+    box-shadow: inset 0 0 0 2px var(--lumo-base-color);
 }
 
 .drop-zone[empty-layout] {
-  z-index: -1;
+    z-index: -1;
 }
 
 .job-cards-view:not([readonly]) .layout[empty],
 vaadin-form-layout[empty] {
-  border-radius: 1px;
-  background: repeating-conic-gradient(var(--cv-checkerboard-color1) 0% 25%, var(--cv-checkerboard-color2) 0% 50%) 50% /
+    border-radius: 1px;
+    background: repeating-conic-gradient(var(--cv-checkerboard-color1) 0% 25%, var(--cv-checkerboard-color2) 0% 50%) 50% /
     var(--cv-checkerboard-size) var(--cv-checkerboard-size);
-  background-clip: content-box;
-  outline: 1px dashed var(--cv-layout-border-color);
-  outline-offset: -2px;
+    background-clip: content-box;
+    outline: 1px dashed var(--cv-layout-border-color);
+    outline-offset: -2px;
 }
+
 .job-cards-view[dragging]:not([readonly]) vaadin-form-layout[empty] {
-  background: transparent;
+    background: transparent;
 }
 
 .job-cards-view .layout[empty]::before {
-  content: '';
-  display: block;
-  min-width: 64px;
-  min-height: 32px;
+    content: '';
+    display: block;
+    min-width: 64px;
+    min-height: 32px;
 }
 
 .job-cards-view[readonly] .drop-zones,
 .job-cards-view[readonly] .overlays {
-  display: none;
+    display: none;
 }
 
 .job-cards-view[inline-editing] .drop-zones,
 .job-cards-view[inline-editing] .overlays {
-  display: none;
+    display: none;
 }
+
 .job-cards-view .content-wrapper[contenteditable='true'] {
-  display: inline-block;
-  overflow: hidden;
-  width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
 }
 
 .job-cards-view[dragging] vaadin-form-layout {
-  padding: 8px;
+    padding: 8px;
 }
+
 .job-cards-view vaadin-form-layout[empty]::before {
-  content: '';
-  display: block;
-  min-width: 64px;
-  min-height: 32px;
+    content: '';
+    display: block;
+    min-width: 64px;
+    min-height: 32px;
 }
 
 .job-cards-view[dragging] vaadin-form-layout:not([empty])::after {
-  content: '';
-  display: block;
-  min-width: 64px;
-  min-height: 32px;
+    content: '';
+    display: block;
+    min-width: 64px;
+    min-height: 32px;
 }
 
 
-.job-card-page-layout{
-  /* border:1px solid red; */
-  min-height:100vh;
+.job-card-page-layout {
+    /* border:1px solid red; */
+    min-height: 100vh;
 }
 
-.job-card-page-layout .grid-and-filter-box{
- min-height:500px;
+.job-card-page-layout .grid-and-filter-box {
+    min-height: 500px;
 
 }
+
 .job-car-details-layout {
-  border:1px solid #ddd;
-  border-radius: 5px;
-  margin:10px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px auto;
 }
 
-.job-card-selector-and-button-box {
-  border:1px solid #ddd;
-  width:100%;
-  margin: auto;
-  padding:5px 20px;
-  border-radius: 5px;
-  box-sizing: border-box;
-  align-items: baseline;
-}
 .progress-value-box {
-  color:var(--header-text-color);
-  font-weight: 600;
-  width: min-content;
+    color: var(--header-text-color);
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
 }
 
 .job-card-grid-customer-info h4 {
-  color:var(--header-text-color);
+    color: var(--header-text-color);
 }
 
 .job-card-grid-customer-info p {
-  color:var(--subtitle-color);
+    color: var(--subtitle-color);
 }
 
 .job-card-details-section1 {
-  /* border:1px solid red; */
-  width:100%;
+    /* border:1px solid red; */
+    width: 100%;
 }
 
 .radio-buttons-group-style {
-  width:100%;
-  /* border: 1px solid #eee; */
-  border-radius: 5px;
-  /* padding:5px; */
-  box-sizing: border-box;
-  margin-bottom: 5px;
+    width: 100%;
+    /*border: 1px solid #eee;*/
+    background-color: #eee;
+    border-radius: 5px;padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
 }
 
 .progress-bar-and-label {
-  
-}
 
-.add-part-header-container {
-  /* border:1px solid red; */
-  padding:5px;
-  width:100%;
-}
-
-.add-part-header-container h4{
-  color: var(--header-text-color);
-  margin-bottom: 5px;
-}
-.add-part-header-container span {
-  color: var(--subtitle-color);
 }
 
 .add-part-fields-box {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border:1px solid #ddd;
-  border-radius: 5px;
-  padding:10px;
-  width:96%;
-  /* line-height: 100px; */
-  align-items:baseline;
-  margin: auto;
+    /*display: grid;*/
+    /*grid-template-columns: repeat(3, 1fr);*/
+    /*border: 1px solid #ddd;*/
+    /*border-radius: 5px;*/
+    /*padding: 10px;*/
+    /*width: 100%;*/
+    /*align-items: baseline;*/
+    /*align-self: baseline;*/
+    /*margin: auto;*/
 }
 
 .add-part-fields-box vaadin-button {
-
+    align-self: baseline;
 }
 
 .add-part-fields-box vaadin-text-field {
-  grid-column:span 3;
+    grid-column: span 3;
 }
 
 .add-part-table-box {
-  /* border:1px solid rgb(255, 249, 249); */
-  /* background-color: #eee; */
-  border-radius: 5px;
-  margin:5px auto;
-  box-sizing: border-box;
-  /* display: flex; */
-  justify-content: space-between;
-  width: 100%;
-  height: 200px;
+    /* border:1px solid rgb(255, 249, 249); */
+    /* background-color: #eee; */
+    border-radius: 5px;
+    margin: 5px auto;
+    box-sizing: border-box;
+    /* display: flex; */
+    justify-content: space-between;
+    width: 100%;
+    height: 500px;
 }
 
+/*JOB CARD NOTES AND DN STYLING*/
+.job-card-details-layout {
+    border:1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin:10px 0;
+    padding:10px;
+}
+.client-desc-div {
+    background-color: #eef9ff;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    margin:5px 0;
+}
+.client-desc-div h5 {
+    color:var(--lumo-primary-color);
+    font-size: medium;
+    width:100%;
+}
+.client-desc-div p {
+    color: var(--subtitle-color);
+}
 
+.job-desc-div {
+    border: 1px solid #ddd;
+    margin: 8px 0;
+    border-radius: 10px;
+    box-shadow: var(--lumo-box-shadow-xs);
+    padding:10px;
+    box-sizing:  border-box;
+}
+.job-desc-div vaadin-text-area::part(label) {
+    color: #d55a5a;
+}
 
-/* RESPONSIVE MOBILE VIEW */ 
-@media screen and (max-width:768px) {
-  .add-part-fields-box {
-    display: block;
-  }
+.job-desc-div vaadin-text-area {
+    margin-top: 5px;
+}
+.job-details-parent-layout {
+    background-color: #fff;
+    padding:20px;
+    gap: 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+.items-parent-layout {
+    border:1px solid #ddd;
+    border-radius: 5px;
+    box-sizing:  border-box;
+    padding:10px;
+    height: max-content;
+    box-shadow: var(--lumo-box-shadow-xs);
+    margin-top: 8px;
+}
+.job-details-items-grid-layout {
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding:8px;
+    margin:5px 0;
+}
+
+.job-details-items-grid-layout h6 {
+    color:var(--lumo-primary-color);
+    font-size: medium;
+}
+.job-details-items-grid-layout span {
+    color: var(--subtitle-color);
+}
+.purchase-item-name {
+    margin: 5px 0;
+    font-size: smaller;
+}
+.items-parent-layout h5 {
+    width: 100%;
+    font-size: medium;
+    color: var(--lumo-primary-color);
+}
+
+/* RESPONSIVE MOBILE VIEW */
+@media screen and (max-width: 768px) {
+    .add-part-fields-box {
+        display: block;
+    }
+
+    .add-part-table-box {
+        height: 600px;
+    }
+    .job-details-parent-layout {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
 }

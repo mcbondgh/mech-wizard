@@ -15,142 +15,38 @@ public class JobCardDataProvider {
     private Timestamp dateCreated;
     private Timestamp serviceDate;
 
-    public record partsDataProvider(String jobNo, String itemName, int quantity, double amount){}
+    public record VehiclePartsRecord(int jobNo, String itemName, int quantity, double amount){}
+
+    public record JobDescptionRecord(int recordId, int jobId, int serviceId, String serviceDesc, String jobDesc, Timestamp noteDate, Timestamp loggedDate){
+        public String jobNo() {
+            return String.format("JC/%d/%d", loggedDate.getMonth(), jobId);
+        }
+    }
+
+    public record JobCardRecords(int jobId, int serviceId, String customerName, String vehicleName, String mechanic,
+                                 String VIN, String serviceType, String serviceDesc, Timestamp loggedDate, String jobStatus, String progressValue) {
+        private int serviceMonth() {
+            return loggedDate.toLocalDateTime().toLocalDate().getMonthValue();
+        }
+        public String jobNo() {
+            return String.format("JC/%d/%d", serviceMonth(), jobId);
+        }
+        public String serviceNo() {
+            return String.format("SVR/%d/%d", serviceMonth(), serviceId);
+        }
+        public String jobStatusValue() {
+            return switch (jobStatus) {
+                case "new" -> "New";
+                case "awaiting" -> "Awaiting parts";
+                case "progress" -> "In progress";
+                case "on_hold" -> "On hold";
+                default -> "Completed";
+            };
+        }
+    }
+
+    public record JobCardPurchasesItems(int itemId, int jobId, String name, int qty, double price, Timestamp date){}
+
     public JobCardDataProvider() {}
 
-    public JobCardDataProvider(int recordId, String jobNumber, String serviceType, String problemDescription, String technicianNote, String jobStatus, double progressValue, String assignedTechnician, String customerName, String car, String plateNumber, Map<String, Object> carPartsAndCost, Timestamp serviceDate) {
-        this.recordId = recordId;
-        this.jobNumber = jobNumber;
-        this.serviceType = serviceType;
-        this.problemDescription = problemDescription;
-        this.technicianNote = technicianNote;
-        this.jobStatus = jobStatus;
-        this.progressValue = progressValue;
-        this.assignedTechnician = assignedTechnician;
-        this.customerName = customerName;
-        this.car = car;
-        this.plateNumber = plateNumber;
-        this.carPartsAndCost = carPartsAndCost;
-        this.serviceDate = serviceDate;
-    }
-
-    public int getRecordId() {
-        return recordId;
-    }
-
-    public void setRecordId(int recordId) {
-        this.recordId = recordId;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public String getJobNumber() {
-        return jobNumber;
-    }
-
-    public void setJobNumber(String jobNumber) {
-        this.jobNumber = jobNumber;
-    }
-
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
-    public String getProblemDescription() {
-        return problemDescription;
-    }
-
-    public void setProblemDescription(String problemDescription) {
-        this.problemDescription = problemDescription;
-    }
-
-    public String getTechnicianNote() {
-        return technicianNote;
-    }
-
-    public void setTechnicianNote(String technicianNote) {
-        this.technicianNote = technicianNote;
-    }
-
-    public String getJobStatus() {
-        return jobStatus;
-    }
-
-    public void setJobStatus(String jobStatus) {
-        this.jobStatus = jobStatus;
-    }
-
-    public double getProgressValue() {
-        return progressValue;
-    }
-
-    public void setProgressValue(double progressValue) {
-        this.progressValue = progressValue;
-    }
-
-    public String getAssignedTechnician() {
-        return assignedTechnician;
-    }
-
-    public void setAssignedTechnician(String assignedTechnician) {
-        this.assignedTechnician = assignedTechnician;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCar() {
-        return car;
-    }
-
-    public void setCar(String car) {
-        this.car = car;
-    }
-
-    public String getPlateNumber() {
-        return plateNumber;
-    }
-
-    public void setPlateNumber(String plateNumber) {
-        this.plateNumber = plateNumber;
-    }
-
-    public Map<String, Object> getCarPartsAndCost() {
-        return carPartsAndCost;
-    }
-
-    public void setCarPartsAndCost(Map<String, Object> carPartsAndCost) {
-        this.carPartsAndCost = carPartsAndCost;
-    }
-
-    public Timestamp getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Timestamp dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Timestamp getServiceDate() {
-        return serviceDate;
-    }
-
-    public void setServiceDate(Timestamp serviceDate) {
-        this.serviceDate = serviceDate;
-    }
 }//end of class...

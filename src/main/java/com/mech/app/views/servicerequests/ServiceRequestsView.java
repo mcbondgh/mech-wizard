@@ -2,12 +2,15 @@ package com.mech.app.views.servicerequests;
 
 import com.mech.app.components.CustomDialog;
 import com.mech.app.components.HeaderComponent;
+import com.mech.app.configfiles.MessageLoaders;
 import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.components.service_requests.ServiceRequestComponents;
 import com.mech.app.dataproviders.dao.DAO;
 import com.mech.app.dataproviders.employees.EmployeesDataProvider;
+import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
+import com.mech.app.models.ServiceRequestModel;
 import com.mech.app.views.MainLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
@@ -16,15 +19,19 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dependency.JavaScript;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.shared.communication.PushMode;
 import org.jetbrains.annotations.NotNull;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -218,6 +225,13 @@ public class ServiceRequestsView extends Composite<VerticalLayout> implements Be
         return new ComponentRenderer<>(dataProvider -> {
             VerticalLayout layout = new VerticalLayout();
 
+            H6 cancelHeader = new H6("Reason For Cancellation");
+            Paragraph noteText = new Paragraph();
+            Div cancellationNoteSection = new Div(cancelHeader, noteText);
+            cancellationNoteSection.setWidthFull();
+            cancellationNoteSection.addClassName("cancel-div");
+            cancellationNoteSection.setVisible(false);
+
             var cancelButton = new Button("Cancel", LineAwesomeIcon.TIMES_SOLID.create());
             var updateButton = new Button("Update", LineAwesomeIcon.PENCIL_RULER_SOLID.create());
             var assignButton = new Button("Assign Mechanic", LineAwesomeIcon.CHECK_CIRCLE.create());
@@ -230,7 +244,7 @@ public class ServiceRequestsView extends Composite<VerticalLayout> implements Be
             assignButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
             deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
 
-//            assignButton.addClassNames("button-style", "default-button-style");
+//          assignButton.addClassNames("button-style", "default-button-style");
             updateButton.addClassNames("button-style", "item-update-style");
             cancelButton.addClassNames("button-style");
             deleteButton.addClassNames("button-style");
@@ -238,10 +252,30 @@ public class ServiceRequestsView extends Composite<VerticalLayout> implements Be
             //ADD CLICK EVENT LISTENERS TO THE BUTTONS...
             assignButton.addSingleClickListener(e -> ServiceRequestComponents
                     .assignMechanicDialog(dataProvider.serviceId(), USER_ID.get(), SHOP_ID.get()));
+
+            //update Button click event implementation...
             updateButton.addSingleClickListener(e -> ServiceRequestComponents
                     .updateServiceDialog(dataProvider, USER_ID.get(), SHOP_ID.get()));
-//            deleteButton.addSingleClickListener(e -> ServiceRequestComponents.deleteServiceProcess(dataProvider.serviceId()));
-//            cancelButton.addSingleClickListener(e -> ServiceRequestComponents.cancelServiceProcess(dataProvider.serviceId()));
+
+            //delete Button click event implementation...
+            deleteButton.addSingleClickListener(e -> {
+                var deleteDialog = new CustomDialog().showDeleteDialog("Delete Request", MessageLoaders.confirmationMessage("to delete this service"));
+                deleteDialog.addConfirmListener(event -> {
+                    var dataModel = new ServiceRequestModel();
+                    int responseStatus = dataModel.deleteServiceRequest(dataProvider.serviceId());
+                    if (responseStatus > 0) {
+                        String logMsg = String.format("Service request no %s has been deleted from your the of services cancelled", dataProvider.serviceNo());
+                        NotificationRecords recordsObj = new NotificationRecords("DELETED SERVICE", logMsg, USER_ID.get(), SHOP_ID.get());
+                        dataModel.logNotification(recordsObj);
+                        UI.getCurrent().refreshCurrentRoute(false);
+                    }
+                });
+            });
+
+            //cancel button click implementation...
+            cancelButton.addSingleClickListener(e ->
+                    ServiceRequestComponents
+                            .serviceTerminationDialog(dataProvider.serviceId(), dataProvider.serviceNo(), USER_ID.get(), SHOP_ID.get()));
 //
             Span statusIndicator = new Span(dataProvider.statusValue());
             switch (dataProvider.serviceStatus()) {
@@ -258,6 +292,8 @@ public class ServiceRequestsView extends Composite<VerticalLayout> implements Be
                 case "cancelled" -> {
                     statusIndicator.getElement().getThemeList().add("badge error primary pill small");
                     assignButton.setVisible(false);
+                    noteText.setText(dataProvider.terminationNote());
+                    cancellationNoteSection.setVisible(true);
                     updateButton.setVisible(false);
                     deleteButton.setVisible(true);
                     cancelButton.setVisible(false);
@@ -311,9 +347,11 @@ public class ServiceRequestsView extends Composite<VerticalLayout> implements Be
 
             blockFour.add(scheduleDateBox, mechanicBox, pickupBox, urgencyBox);
 
-            layout.add(blockOne, blockTwo, blockFour, blockThree);
+            layout.add(blockOne, blockTwo, blockFour, cancellationNoteSection, blockThree);
             layout.setWidthFull();
             layout.addClassNames("service-request-component-layout");
+
+
             return layout;
         });
     }

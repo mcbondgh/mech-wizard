@@ -24,8 +24,8 @@
 }
 
 .completed-service-details-renderer-box {
-    background-color: rgb(225, 255, 56);
-    padding:1px 10px; 
+    /*background-color: rgb(225, 255, 56);*/
+    padding:1px 10px;
     border-radius:10px;
     width:max-content;
     /* font-weight: 400; */
@@ -33,14 +33,32 @@
     /* margin:auto; */
 }
 
-.completed-job-record-layout ul{
-    background-color:rgb(241, 241, 241);
-    width:100%;
-    box-sizing:border-box;
-    padding:10px;
-    color:#120f0f;
-    font-size:small;
+.total-bill-container {
+    background: #daffda;
+    align-items: center;
+    padding:15px;
+    border-radius: 20px;
 }
+.total-bill-container h3, .total-bill-container h6 {
+    color: #00af00;
+}
+.completed-jobs-details-section {
+    border: 1px solid #ddd;
+    padding:10px;
+    box-sizing: border-box;
+    border-radius:5px;
+    margin: 8px auto;
+    background-color: rgba(242, 249, 255, 0.6);
+    align-items: center;
+}
+
+.completed-jobs-details-section span {
+    color:var(--subtitle-color);
+}
+.completed-jobs-details-section h5 {
+    color:var(--header-text-color);
+}
+
 .completed-service-component-header {
     color:var(--header-text-color);
     font-size:medium;
@@ -93,13 +111,6 @@
     font-size:medium;
 }
 
-.details-container-filter {
-    display:flex;
-    box-sizing:border-box;
-    /* border:1px solid green; */
-    line-height: 3px;
-}
-
 .details-container-filter vaadin-icon {
     align-self: center;
     font-size: medium;
@@ -110,25 +121,6 @@
     background-color: #e8f1fb;
     border-radius:100%;
     padding:5px;
-}
-
-.details-container-filter-amount p{
-    line-height:1px;
-    /* background-color:blue; */
-    font-weight: 600;
-}
-
-.list-and-header-section {
-    box-sizing: border-box;
-    padding:10px;
-    border-radius:5px;
-    margin:5px 0;
-    /* border:1px solid var(--subtitle-color); */
-
-}
-
-.list-and-header-section h5 {
-    color:var(--header-text-color);
 }
 
 .details-container-filter .detail-card-content{

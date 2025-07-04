@@ -7,6 +7,7 @@ import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
 import com.mech.app.models.CustomerModel;
+import com.mech.app.models.ServiceRequestModel;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -168,8 +169,9 @@ public class CustomerComponents {
                         saveDialog.addConfirmListener(event -> {
                             UI.getCurrent().access(() -> {
 
-                                //make a call to the data model
+                                //make a call to the data model to create service request...
                                 int response = DATA_MODEL.bookServiceRequest(requestDataProvider);
+
                                 if (response > 0) {
                                     dialog.showSuccessNotification(MessageLoaders.successMessage());
                                     String msgBody = "New service request booked for " + dataProvider.getName() +

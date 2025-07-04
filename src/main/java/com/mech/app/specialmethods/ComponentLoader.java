@@ -62,7 +62,7 @@ public class ComponentLoader {
     }
 
     public static List<String> getJobStatusList() {
-        return List.of("New", "In Progress", "Waiting for parts", "Completed");
+        return List.of("On hold", "In Progress", "Awaiting parts", "Completed");
     }
 
     public static List<String> getPaymentMethods() {

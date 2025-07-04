@@ -5,20 +5,20 @@ import com.mech.app.configfiles.database.AppConnection;
 import com.mech.app.dataproviders.cars.CarDataProvider;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.dataproviders.employees.EmployeesDataProvider;
+import com.mech.app.dataproviders.jobcards.JobCardDataProvider;
 import com.mech.app.dataproviders.logs.ErrorLogsDataProvider;
 import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
 import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
 import com.mech.app.dataproviders.transactions.CustomerAccountRecord;
 import com.mech.app.dataproviders.transactions.TransactionLogs;
+import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
 import com.mech.app.dataproviders.users.UsersDataProvider;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class DAO extends AppConnection {
     // This class serves as a base class for data access objects (DAOs).
@@ -298,7 +298,7 @@ public class DAO extends AppConnection {
                 SELECT\s
                 	id, customer_name, brand, plate_number,
                     service_type, sr.service_cost, sr.service_desc, urgency_level, preferred_date,
-                    pickup_or_dropoff, service_status, full_name AS assigned_mechanic, logged_date
+                    pickup_or_dropoff, service_status, termination_note, full_name AS assigned_mechanic, logged_date
                 FROM service_requests AS sr
                 INNER JOIN customers AS c\s
                 ON sr.customer_id = c.record_id
@@ -322,7 +322,8 @@ public class DAO extends AppConnection {
                         resultSet.getDouble("service_cost"), resultSet.getString("service_desc"),
                         resultSet.getString("urgency_level"), resultSet.getDate("preferred_date").toString(),
                         resultSet.getBoolean("pickup_or_dropoff"), resultSet.getString("service_status"),
-                        resultSet.getString("assigned_mechanic"), resultSet.getTimestamp("logged_date")
+                        resultSet.getString("assigned_mechanic"), resultSet.getTimestamp("logged_date"),
+                        resultSet.getString("termination_note")
                 ));
             }
             resultSet.close();
@@ -331,7 +332,254 @@ public class DAO extends AppConnection {
             new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "fetchAllServiceRequestsNotDeleted").logErrorToFile();
             logError(ex, "fetchAllServiceRequestsNotDeleted");
         }
+        return data;
+    }
 
+    public List<JobCardDataProvider.JobCardRecords> fetchAllActiveJobCards() {
+        List<JobCardDataProvider.JobCardRecords> data = new ArrayList<>();
+        String query = """
+                SELECT job_id, sr.id AS service_id, c.customer_name, brand, plate_number, full_name AS mechanic, service_type, sr.service_desc, logged_date,
+                job_status, job_progress, sr.service_cost FROM service_requests AS sr
+                INNER JOIN customers AS c\s
+                	ON sr.customer_id = c.record_id
+                INNER JOIN job_cards AS j
+                	ON sr.id = j.service_id
+                INNER JOIN customer_vehicles AS cv
+                	ON sr.vehicle_id = cv.record_id
+                INNER JOIN service_types AS st
+                	ON sr.service_type_id = st.record_id
+                INNER JOIN employees AS e
+                	ON sr.assigned_mechanic = e.record_id
+                WHERE service_status = 'assigned';
+                """;
+
+        try {
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            while (resultSet.next()) {
+                data.add(new JobCardDataProvider.JobCardRecords(
+                        resultSet.getInt("job_id"), resultSet.getInt("service_id"),
+                        resultSet.getString("customer_name"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("mechanic"),
+                        resultSet.getString("plate_number"),
+                        resultSet.getString("service_type"),
+                        resultSet.getString("service_desc"),
+                        resultSet.getTimestamp("logged_date"),
+                        resultSet.getString("job_status"),
+                        resultSet.getString("job_progress")
+                ));
+            }
+            resultSet.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    public List<JobCardDataProvider.JobDescptionRecord> fetchJobDescription(int jobId) {
+        List<JobCardDataProvider.JobDescptionRecord> data = new ArrayList<>();
+        String query = """
+                SELECT jn.record_id, jc.job_id, sr.id as service_id, sr.service_desc, jn.notes, jn.entry_date, logged_date  FROM job_cards AS jc
+                INNER JOIN job_notes AS jn
+                	ON jc.job_id = jn.job_id
+                INNER JOIN service_requests AS sr
+                    ON jc.service_id = sr.id
+                WHERE jc.job_id = ?;
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, jobId);
+            resultSet = prepare.executeQuery();
+            while (resultSet.next()) {
+                data.add(new JobCardDataProvider.JobDescptionRecord(
+                        resultSet.getInt("record_id"),
+                        resultSet.getInt("job_id"),
+                        resultSet.getInt("service_id"),
+                        resultSet.getString("service_desc"),
+                        resultSet.getString("notes"),
+                        resultSet.getTimestamp("entry_date"),
+                        resultSet.getTimestamp("logged_date")
+                ));
+            }
+            prepare.close();
+            resultSet.close();
+        } catch (Exception ex) {
+
+        }
+        return data;
+    }
+
+    public List<JobCardDataProvider.JobCardPurchasesItems> fetchJobPurchasedItemsData(int jobId) {
+        String query = "SELECT * FROM auto_mechanics.purchased_job_item WHERE job_id = '" + jobId + "';";
+        List<JobCardDataProvider.JobCardPurchasesItems> data = new ArrayList<>();
+        try {
+            resultSet = getCon().prepareStatement(query).executeQuery();
+
+            while (resultSet.next()) {
+                data.add(new JobCardDataProvider.JobCardPurchasesItems(
+                        resultSet.getInt("record_id"),
+                        resultSet.getInt("job_id"),
+                        resultSet.getString("item_name"),
+                        resultSet.getInt("qty"),
+                        resultSet.getDouble("price"),
+                        resultSet.getTimestamp("entry_date")
+                ));
+            }
+            resultSet.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    public List<CustomersDataProvider.FeedbackRecords> fetchAllFeedbacksByJobId(int jobId) {
+        List<CustomersDataProvider.FeedbackRecords> data = new ArrayList<>();
+
+        return data;
+    }
+
+    public List<ServicesDataProvider.CompletedServicesRecord> fetchCompletedJobs() {
+        List<ServicesDataProvider.CompletedServicesRecord> data = new ArrayList<>();
+        String query = """
+                SELECT  jc.job_id, job_status, service_type, customer_name,\s
+                full_name AS mechanic,\s
+                DATE(logged_date) AS service_date,
+                brand, plate_number, sr.service_cost,
+                (SELECT COUNT(*) FROM purchased_job_item AS pji WHERE pji.job_id = jc.job_id) items_count,
+                (SELECT SUM(price) FROM purchased_job_item AS pji WHERE pji.job_id = jc.job_id) AS total_items_cost,
+                stars, comments, DATE(cf.entry_date) as feedback_date, jc.last_updated AS date_completed
+                FROM job_cards AS jc
+                INNER JOIN service_requests AS sr
+                	ON jc.service_id = sr.id
+                INNER JOIN customers AS c\s
+                	ON c.record_id = sr.customer_id
+                INNER JOIN service_types AS st
+                	ON sr.service_type_id = st.record_id
+                INNER JOIN employees AS e\s
+                	ON sr.assigned_mechanic = e.record_id
+                INNER JOIN customer_vehicles AS cv\s
+                	ON sr.vehicle_id = cv.record_id
+                LEFT JOIN customer_feedbacks AS cf
+                	ON jc.job_id = cf.job_id
+                WHERE job_status = 'completed'
+                """;
+        try {
+//job_id, job_status, service_type, mechanic, service_date, brand, plate_number, service_cost, items_count, total_items_cost
+            //stars, comments, DATE(cf.entry_date) as feedback_date
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            while (resultSet.next()) {
+                data.add(new ServicesDataProvider.CompletedServicesRecord(
+                        resultSet.getInt("job_id"),
+                        resultSet.getString("job_status"),
+                        resultSet.getString("service_type"),
+                        resultSet.getString("customer_name"),
+                        resultSet.getTimestamp("service_date"),
+                        resultSet.getTimestamp("date_completed"),
+                        resultSet.getString("mechanic"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("plate_number"),
+                        resultSet.getDouble("service_cost"),
+                        resultSet.getInt("items_count"),
+                        resultSet.getDouble("total_items_cost"),
+                        resultSet.getString("stars"),
+                        resultSet.getString("comments"),
+                        resultSet.getTimestamp("feedback_date")
+                ));
+            }
+            resultSet.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    public Map<String, String> fetchTransactionsMetaData() {
+        var data = new HashMap<String, String>();
+        String query = """
+                SELECT\s
+                    awaiting_payment,
+                    payment_count,
+                    service_cost,
+                    purchased_items_cost,
+                    (service_cost + purchased_items_cost) AS total_amount
+                FROM (
+                    SELECT\s
+                        (SELECT COUNT(id) FROM service_requests WHERE service_status = 'completed') AS awaiting_payment,
+                        (SELECT COUNT(id) FROM service_requests WHERE service_status = 'paid') AS payment_count,
+                        (
+                            SELECT SUM(service_cost) FROM service_requests AS sr
+                            INNER JOIN job_cards AS jc ON sr.id = jc.service_id
+                            WHERE service_status = 'completed'
+                        ) AS service_cost,
+                        (
+                            SELECT SUM(price) FROM purchased_job_item AS pji
+                                INNER JOIN job_cards AS jc USING(job_id)
+                                INNER JOIN service_requests AS sr\s
+                        			ON jc.service_id = sr.id
+                                WHERE service_status = 'completed'
+                        ) AS purchased_items_cost
+                ) AS derived;
+                """;
+
+        try {
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            if (resultSet.next()) {
+                data.put("awaiting_payment", resultSet.getString("awaiting_payment"));
+                data.put("payment_count", resultSet.getString("payment_count"));
+                data.put("service_cost", resultSet.getString("service_cost"));
+                data.put("purchased_items_cost", resultSet.getString("purchased_items_cost"));
+                data.put("total_amount", resultSet.getString("total_amount"));
+            }
+            resultSet.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return data;
+    }
+
+    public List<TransactionsDataProvider.TransactionRecord> fetchPaidAndUnpaidTransactions() {
+        List<TransactionsDataProvider.TransactionRecord> data = new ArrayList<>();
+        try {
+            String query =  """
+                    SELECT\s
+                        jc.job_id,\s
+                        c.customer_name,\s
+                        ca.account_balance,
+                        sr.logged_date,\s
+                        st.service_type,\s
+                        sr.service_cost,
+                        COALESCE(pji_sum.items_cost, 0) AS items_cost,
+                        sr.service_status
+                    FROM service_requests AS sr
+                    INNER JOIN customers AS c ON sr.customer_id = c.record_id
+                    INNER JOIN customer_account AS ca ON c.record_id = ca.customer_id
+                    INNER JOIN job_cards AS jc ON sr.id = jc.service_id
+                    INNER JOIN service_types AS st ON sr.service_type_id = st.record_id
+                    LEFT JOIN (
+                        SELECT job_id, SUM(price) AS items_cost
+                        FROM purchased_job_item
+                        GROUP BY job_id
+                    ) AS pji_sum ON jc.job_id = pji_sum.job_id
+                    WHERE sr.service_status IN ('completed', 'paid');
+                    """;
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            while(resultSet.next()) {
+                data.add(new TransactionsDataProvider.TransactionRecord(
+                        resultSet.getInt("job_id"),
+                        resultSet.getString("customer_name"),
+                        resultSet.getString("service_type"),
+                        resultSet.getDate("logged_date"),
+                        resultSet.getDouble("account_balance"),
+                        resultSet.getDouble("service_cost"),
+                        resultSet.getDouble("items_cost"),
+                        resultSet.getString("service_status")
+                ));
+            }
+            resultSet.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return data;
     }
 

@@ -1,8 +1,8 @@
 package com.mech.app.dataproviders.customers;
 
-import com.mech.app.dataproviders.cars.CarDataProvider;
-
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 public class CustomersDataProvider {
@@ -13,6 +13,12 @@ public class CustomersDataProvider {
     private Timestamp dateJoined;
 
     public record CustomersRecord(String name, String mobileNumber, String otherNumber, String email, List<String> cars, boolean status){}
+    public record FeedbackRecords(int recordId, int jobId, byte stars, String comment, Timestamp timestamp) {
+
+        public String entryDate() {
+            return timestamp.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+        }
+    }
 
     public CustomersDataProvider(){}
     public CustomersDataProvider(int customerId, int userId, int shopId, String name, String mobileNumber,

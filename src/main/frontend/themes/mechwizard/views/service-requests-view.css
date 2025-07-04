@@ -401,6 +401,16 @@ vaadin-form-layout[empty] {
     width:500px;
 }
 
+.cancel-div {
+    background-color: #fad9d9;
+    border-radius: 5px;
+    padding:10px 10px 0 10px;
+    box-sizing: border-box;
+}
+
+.cancel-div h6 {
+    color: #c21d1d;
+}
 
     /* CUSTOMERS SERVICE REQUEST VIEW STYLING */
 .page-body-layout {

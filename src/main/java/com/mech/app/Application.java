@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 @SpringBootApplication
 @Theme(value = "mechwizard")
 @Push()
-@PWA(name = "Auto Mechanic", shortName = "Auto-Mech", offlineResources = {"frontend/offline.html"})
+@PWA(name = "Auto Mechanic", shortName = "Auto-Mech", themeColor = "#4A6FA5", offlineResources = {"frontend/offline.html"})
 public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {

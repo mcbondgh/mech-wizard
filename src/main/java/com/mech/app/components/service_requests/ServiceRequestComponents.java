@@ -15,12 +15,14 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -36,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class ServiceRequestComponents {
 
@@ -160,6 +163,8 @@ public class ServiceRequestComponents {
             ui.access(() -> {
                 int responseStatus = DATA_MODEL.assignMechanicModel(mechanicId, serviceId);
                 if (responseStatus > 0) {
+                    //create a job card for this service after the request is booked...
+                    new ServiceRequestModel().createJobCard(serviceId);
                     dialog.showSuccessNotification(MessageLoaders.successMessage());
                     DATA_MODEL.logNotification(logRecord);
                     ui.refreshCurrentRoute(false);
@@ -169,7 +174,6 @@ public class ServiceRequestComponents {
         });
 
     }
-
 
     public static void updateServiceDialog(@NotNull ServicesDataProvider.BookedServicesRecord dataObj, int userId, int shopId) {
         dialog = new CustomDialog();
@@ -227,7 +231,7 @@ public class ServiceRequestComponents {
                     });
         });
 
-        Button updateButton = new Button("Submit Form", LineAwesomeIcon.RECYCLE_SOLID.create(), e -> {
+        Button updateButton = new Button("Update Service", LineAwesomeIcon.RECYCLE_SOLID.create(), e -> {
             boolean checkFields = serviceSelector.isEmpty() || textArea.isEmpty();
             if (checkFields) {
                 new CustomDialog().showWarningNotification("Kindly fill out all required fields");
@@ -264,8 +268,7 @@ public class ServiceRequestComponents {
         var userId = Integer.parseInt(dataObj.get("userId").toString());
         var shopId = Integer.parseInt(dataObj.get("shopId").toString());
 
-
-        String logMsg = String.format("Service request for service number %s has been updated today ", serviceNo);
+        String logMsg = String.format("Service request for service number %s has been updated today", serviceNo);
         dialog = new CustomDialog();
         var confirmDialog = dialog.showUpdateDialog("UPDATE SERVICE", MessageLoaders.confirmationMessage("update service details"));
 
@@ -275,8 +278,42 @@ public class ServiceRequestComponents {
                 NotificationRecords records = new NotificationRecords("SERVICE REQUEST UPDATED", logMsg, userId, shopId);
                 DATA_MODEL.logNotification(records);
                 ui.refreshCurrentRoute(false);
-            }else dialog.showErrorNotification(MessageLoaders.errorMessage("Failed to update service request data."));
+            } else dialog.showErrorNotification(MessageLoaders.errorMessage("Failed to update service request data."));
         });
+    }
+
+    public static void serviceTerminationDialog(int serviceId, String serviceNo, int userId, int shopId) {
+        dialog = new CustomDialog();
+        String title = String.format("Terminate Service Request: %s", serviceNo);
+        String subtitle = "Terminate Service request by providing your reason for termination.";
+
+        TextArea textArea = new TextArea("Provide your reason *", "Kindly provide your reason for terminating this service request.");
+        textArea.setRequired(true);
+        textArea.setInvalid(textArea.isEmpty());
+        textArea.setMinRows(5);
+        textArea.setWidthFull();
+
+        var parentLayout = new VerticalLayout();
+        parentLayout.addClassNames("cancel-dialog-parent-layout");
+        parentLayout.setWidth("500px");
+
+        var cancelButton = new Button("Terminate Request", VaadinIcon.CLOSE_SMALL.create(), e -> {
+            dialog = new CustomDialog();
+            if (!textArea.isInvalid()) {
+                if (DATA_MODEL.cancelServiceRequest(serviceId, textArea.getValue()) > 0) {
+                    String logMsg = String.format("Service request no. %s has been terminated with reasons for the operation.", serviceNo);
+                    NotificationRecords recordObj = new NotificationRecords("REQUEST TERMINATION", logMsg, userId, shopId);
+                    DATA_MODEL.logNotification(recordObj);
+                    UI.getCurrent().refreshCurrentRoute(false);
+                } else dialog.showErrorNotification("Failed to cancel this service request.");
+            }
+
+        });
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
+
+        parentLayout.add(textArea, new Hr(), cancelButton);
+        parentLayout.expand(textArea, cancelButton);
+        dialog.defaultDialogBox(parentLayout, title, subtitle);
     }
 
 }//end of class.
