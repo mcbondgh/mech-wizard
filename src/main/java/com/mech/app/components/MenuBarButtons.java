@@ -24,6 +24,17 @@ public class MenuBarButtons{
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
     }
+    public MenuBarButtons(String label) {
+        Span span = new Span(label);
+        span.addClassName("menuitem-label");
+        span.getStyle().setFontSize("small");
+
+        layout = new HorizontalLayout(span);
+        layout.addClassNames("menuitem-layout");
+        layout.setWidthFull();
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+    }
 
     public HorizontalLayout createMenuButton() {
         return layout;

@@ -163,3 +163,40 @@ vaadin-form-layout[empty] {
   min-width: 64px;
   min-height: 32px;
 }
+
+/*NOTIFICATION VIEW STYLING...*/
+.notification-message-list {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 8px;
+  margin: 8px;
+  align-items: center ;
+}
+.notification-message-list:hover {
+  box-shadow: var(--lumo-box-shadow-s);
+  cursor: pointer;
+  transition: 0.1s ease-in-out all;
+}
+.notification-message-list::part(name) {
+  font-weight: 700;
+  color:var(--lumo-primary-color);
+}
+.notification-message-list::part(time) {
+  color: var(--lumo-error-color);
+}
+.notification-message-list::part(icon) {
+  width:20px;
+  padding:5px;
+  color:var(--subtitle-color);
+}
+.notification-message-list::part(header) {
+  /*background-color: lightcyan;*/
+}
+.notification-message-list::part(message) {
+  background-color: rgb(246, 250, 255);
+  padding: 8px;
+  border-radius: 4px;
+  color:var(--subtitle-color);
+}

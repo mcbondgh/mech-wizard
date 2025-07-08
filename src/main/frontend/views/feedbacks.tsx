@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useSignal } from '@vaadin/hilla-react-signals';
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { Button } from '@vaadin/react-components';
+import { useNavigate } from 'react-router';
  
 export const config: ViewConfig = {
   route: "views/feedbacks",
@@ -14,10 +15,11 @@ export const config: ViewConfig = {
 export default function FeedbackView() {
     const [getFeedbacks, setFeedbacks] = useState();
     const allFeedbacks = useSignal();
+    const navigate = useNavigate();
 
-    function backToDashboard() {
+    function backToDashboard()  {
       // @ts-ignore
-      window.location = "http://localhost:8005/dashboard"
+      navigate("/dashboard");
     }
 
   return (

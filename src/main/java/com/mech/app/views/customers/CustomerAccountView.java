@@ -139,7 +139,6 @@ public class CustomerAccountView extends VerticalLayout implements BeforeEnterOb
      *******************************************************************************************************************/
 
     // This method creates the customer account box that displays customer information and balance.
-
     private Component customerAccountBox() {
         //retrieve customer data from the data model by customer ID
         double accountBalance;
@@ -266,7 +265,7 @@ public class CustomerAccountView extends VerticalLayout implements BeforeEnterOb
                             var ACCOUNT_DATA = new TransactionLogs();
                             ACCOUNT_DATA.setCustomerId(CUSTOMER_ID.get());
                             ACCOUNT_DATA.setUserId(USER_ID.get());
-                            ACCOUNT_DATA.setTransactionId(referenceEmpty ? "none": referenceField.getValue());
+                            ACCOUNT_DATA.setTransactionId(referenceEmpty ? "none" : referenceField.getValue());
                             ACCOUNT_DATA.setTransactionType("deposit");
                             ACCOUNT_DATA.setPaymentMethod(paymentMethod.getValue());
                             ACCOUNT_DATA.setNotes(textArea.getValue());
@@ -278,11 +277,11 @@ public class CustomerAccountView extends VerticalLayout implements BeforeEnterOb
 
                             if (response > 0) {
                                 String content = CUSTOMER_NAME.get() + " with mobile number " + MOBILE_NUMBER.get() + " has been credited with an amount of " + amountField.getValue() + ".";
-                                var notificationLog = new NotificationRecords("CUSTOMER ACCOUNT LOADED", content , USER_ID.get(), SHOP_ID.getPlain());
+                                var notificationLog = new NotificationRecords("CUSTOMER ACCOUNT LOADED", content, USER_ID.get(), SHOP_ID.getPlain());
                                 DATA_MODEL.logNotification(notificationLog);
                                 DIALOG_BOX.showSuccessNotification(MessageLoaders.successMessage());
                                 ui.refreshCurrentRoute(false);
-                            }else  {
+                            } else {
                                 DIALOG_BOX.showErrorNotification(MessageLoaders.errorMessage("Unable to save transaction. Please try again."));
                             }
                         });
@@ -344,8 +343,12 @@ public class CustomerAccountView extends VerticalLayout implements BeforeEnterOb
     private Component gridPaymentTypeComponent(TransactionLogs transaction) {
         // This method creates a component to display the payment type in the transaction grid.
         Span paymentType = new Span(transaction.getTransactionType());
-        paymentType.getElement().getThemeList().add("badge success primary small pill");
         paymentType.addClassName("transaction-logs-payment-type");
+        if ("deposit".equalsIgnoreCase(paymentType.getText())) {
+            paymentType.getElement().getThemeList().add("badge success primary small pill");
+        } else {
+            paymentType.getElement().getThemeList().add("badge error primary small pill");
+        }
         return paymentType;
     }
 

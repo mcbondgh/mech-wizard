@@ -1,74 +1,270 @@
 .login-view {
-    position: relative;
-    padding: 10px;
-    background: url("images/mechanic_shop_background.jpg") no-repeat center center;
-    background-size: cover;
-    margin: 10px;
-    color: white; /* Adjust text color for better contrast */
-    height:100%;
+  position: relative;
+  padding: 10px;
+  background: url('images/mechanic_shop_background.jpg') no-repeat center center;
+  background-size: cover;
+  margin: 0;
+  color: white; /* Adjust text color for better contrast */
+  height: 100%;
 }
 
 .login-view::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
-    z-index: 1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  z-index: 1;
 }
 
 .login-view > * {
-    position: relative;
-    z-index: 2; /* Ensure content is above the overlay */
+  position: relative;
+  z-index: 2; /* Ensure content is above the overlay */
 }
 
 .login-form-layout {
-    /*border:1px solid #eaeaea;*/
-    background-color: #ffffff;
-    /*opacity: 0.3;*/
-    border-radius:10px;
-    padding:10px;
-    box-sizing: border-box;
-    margin:auto;
-    /*background-image: url("images/mechanic_shop_background.jpg");*/
+  /*border:1px solid #eaeaea;*/
+  background-color: #ffffff;
+  /*opacity: 0.3;*/
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  margin: auto;
+  /*background-image: url("images/mechanic_shop_background.jpg");*/
 }
 
 .login-form-layout .login-title {
-    text-align: center;
-    box-sizing: border-box;
-    width:100%;
-    padding-top:15px;
-    color: var(--lumo-primary-color);
-    font-size: 18px;
-    border-bottom: 1px solid #dddddd;
-    padding-bottom: 2px;
+  text-align: center;
+  box-sizing: border-box;
+  width: 100%;
+  margin:8px auto;
+  color: var(--lumo-primary-color);
+  font-size: 18px;
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 2px;
 }
 
 .input-section .login-button {
-    padding:18px;
-    margin: 8px 0;
+  padding: 18px;
+  margin: 8px 0;
 }
 
-.input-section vaadin-text-field::part(input-field), .input-section vaadin-password-field::part(input-field) {
-    padding:5px;
-    border-radius: 20px;
+.input-section vaadin-text-field::part(input-field),
+.input-section vaadin-password-field::part(input-field) {
+  padding: 5px;
+  border-radius: 20px;
 }
 
 .login-button:hover {
-    background-color: #248ad3;
-    transition: background-color 0.2s ease-in-out,
+  background-color: #248ad3;
+  transition:
+    background-color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.logo-section, .input-section {
-    /*border:1px solid #eee;*/
-    margin: auto;
-    padding:10px;
+.logo-section,
+.input-section {
+  /*border:1px solid #eee;*/
+  margin: auto;
+  padding: 10px;
 }
 
 .logo-section {
-    width:100px;
+  width: 100px;
+}
+
+/*LANDING PAGE VIEW STYLING...*/
+.home-page-body {
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+}
+.landing-page-parent-layout {
+  border: 1px solid #cce2e8;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 20px;
+  align-content: center;
+  align-items: center;
+  margin: 0;
+}
+.landing-text-div {
+  width: 100%;
+  grid-column: span 2;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  line-height: 20px;
+}
+.landing-text-div h1 {
+  font-size: 50px;
+  text-align: center;
+  color: var(--lumo-primary-color);
+}
+.landing-text-div h3 {
+  font-size: 30px;
+}
+.landing-text-div p {
+  font-size: medium;
+  color: var(--subtitle-color);
+}
+.landing-text-div > * {
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  align-self: center;
+}
+.landing-hero-image {
+  width: 50%;
+  margin: auto;
+}
+
+.landing-hero-section {
+  width: 100%;
+  align-items: center;
+  background-color: white;
+  padding: 50px;
+  box-sizing: border-box;
+  margin: 0;
+}
+.landing-image-and-login-div {
+  box-sizing: border-box;
+}
+.landing-buttons-div {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  box-sizing: border-box;
+  margin: 5px 0;
+  line-height: 30px;
+  /* height: 100%; */
+  width: 100%;
+  align-items: center;
+}
+.landing-buttons-div:hover {
+  border: 1px solid #248ad3;
+  transition: 0.2s ease-in;
+}
+
+.landing-buttons-div span {
+  width: fit-content;
+  align-items: center;
+}
+.landing-login-client-title-div {
+  text-align: center;
+  padding: 8px;
+}
+.landing-buttons-div vaadin-button {
+  cursor: pointer;
+  padding: 22px;
+}
+.landing-buttons-div vaadin-button:hover {
+  scale: 0.99;
+  transition: 0.3s ease-out;
+}
+
+.landing-buttons-div .landing-buttons-icon {
+  display: block;
+  background-color: #cce2e8;
+  font-size: 28px;
+  border-radius: 100%;
+  padding: 5px;
+  align-items: center;
+  margin: 15px auto;
+}
+.landing-contact-layout {
+  border: none;
+  text-align: center;
+}
+.landing-contact-layout .landing-contact-div h3 {
+  font-size: 30px;
+}
+.landing-contact-div {
+  margin-bottom: 20px;
+}
+.landing-contact-layout img {
+  width: 50px;
+  background-color: #cce2e8;
+  border-radius: 100%;
+  padding: 10px;
+}
+
+.landing-services-layout {
+  background-color: rgb(238, 254, 255);
+  border: none;
+  
+}
+.landing-services-layout h3 {
+  margin: 20px auto;
+  text-align: center;
+  font-size: 30px;
+}
+.landing-services-card {
+  background-color: #fff;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  margin: 50px auto;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+.landing-services-card:hover {
+  box-shadow: none;
+  scale: 1.01;
+  transition: 0.2s ease-out;
+}
+.landing-services-card h4 {
+  margin: 10px auto;
+}
+.landing-buttons-div:nth-child(1),
+.landing-buttons-div:nth-child(1) h4 {
+  background-color: #248ad3;
+  border-radius: 5px;
+  color: #fff;
+}
+.landing-buttons-div:nth-child(1) vaadin-button {
+  background-color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .landing-image-and-login-div {
+    flex-direction: column;
+  }
+  .landing-hero-image {
+    width: 100%;
+  }
+  .landing-text-div h1 {
+    font-size: 45px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Optional: slight upward movement */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0; /* Start hidden, will be set to 1 after animation */
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.fade-in.delay-1 {
+  animation-delay: 0.2s;
+}
+.fade-in.delay-2 {
+  animation-delay: 0.4s;
+}
+.fade-in.delay-3 {
+  animation-delay: 0.6s;
 }

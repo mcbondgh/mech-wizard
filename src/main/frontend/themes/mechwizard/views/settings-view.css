@@ -303,6 +303,7 @@ vaadin-form-layout[empty] {
   background-color: #eee;
   padding:5px;
   box-sizing: border-box;
+  border-radius:5px;
 }
 
 .company-time-header-container h5{
@@ -387,6 +388,68 @@ vaadin-form-layout[empty] {
   font-size: smaller;
   cursor: pointer;
 }
+
+
+/*REPORTS STYLING SECTION*/
+.report-section {
+  background-color: #ffffff;
+  box-sizing:  border-box;
+  border-radius: 5px;
+  border:1px solid #eee;
+  margin:auto;
+  padding:10px;
+  position: static;
+  height:min-content;
+}
+.report-filter-div {
+
+}
+.report-filter-div .default-button-style {
+  margin: 10px 0;
+  width: 100%;
+}
+.tabs-section {
+  margin: 0;
+}
+.tabs-section vaadin-tabsheet::part(tabs-container) {
+  background-color: rgba(241, 247, 255, 0.77);
+  padding:8px 0;
+
+
+}
+.tabs-section vaadin-tab[selected] {
+  background-color: #fff;
+  font-weight: bold;
+  border:1px solid #eee;
+  border-radius: 3px;
+}
+
+.tabs-section vaadin-tabsheet {
+  margin-top: 8px;
+}
+
+.report-filter-div vaadin-date-picker {
+  width:100%;
+}
+
+.trans-report-card {
+  background-color: rgb(45, 189, 155);
+  border-radius: 10px;
+  padding:10px 20px;  
+  color:#efefef;
+  align-items: center;
+}
+
+.trans-report-card h2 {
+  color: #fff;
+  font-size: 30px;
+  margin: -5px auto;
+}
+.trans-report-card h4 {
+  color: #fff;
+  margin: -5px auto;
+}
+
 
 
 /* Responsive adjustments */

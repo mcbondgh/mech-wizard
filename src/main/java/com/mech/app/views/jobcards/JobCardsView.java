@@ -161,8 +161,8 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
                 var matchesServiceId = filter.serviceNo().toLowerCase().contains(userInput);
                 var matchesServiceType = filter.serviceType().toLowerCase().contains(userInput);
                 var matchesCustomer = filter.customerName().toLowerCase().contains(userInput);
-
-                return matchesServiceId || matchesServiceType || matchesCustomer;
+                var matchesId = filter.jobNo().toLowerCase().contains(userInput);
+                return matchesServiceId || matchesServiceType || matchesCustomer || matchesId;
             });
         });
 
@@ -397,7 +397,7 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
         TextField partName = new TextField("Part Or item Name", "eg Bread Pad Set");
         IntegerField qtyField = new IntegerField("Quantity");
         BigDecimalField amountField = new BigDecimalField("Amount");
-        Button saveButton = new Button("Save Date", LineAwesomeIcon.SAVE.create());
+        Button saveButton = new Button("Save", LineAwesomeIcon.SAVE.create());
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
         Button addItemButton = new Button("Add", LineAwesomeIcon.PLUS_SOLID.create());
         addItemButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);

@@ -14,10 +14,15 @@ import com.mech.app.dataproviders.transactions.CustomerAccountRecord;
 import com.mech.app.dataproviders.transactions.TransactionLogs;
 import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
 import com.mech.app.dataproviders.users.UsersDataProvider;
+import com.vaadin.flow.component.messages.MessageListItem;
+import com.vaadin.flow.component.notification.Notification;
+import org.springframework.cglib.core.Local;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class DAO extends AppConnection {
@@ -233,7 +238,7 @@ public class DAO extends AppConnection {
         List<TransactionLogs> data = new ArrayList<>();
         String query = """
                 SELECT * FROM transaction_logs WHERE customer_id = ?
-                AND transaction_type = 'deposit'
+                AND (transaction_type = 'deposit' OR transaction_type = 'service payment')
                 ORDER BY record_id DESC LIMIT 5;
                 """;
         try {
@@ -544,7 +549,9 @@ public class DAO extends AppConnection {
             String query =  """
                     SELECT\s
                         jc.job_id,\s
-                        c.customer_name,\s
+                        sr.customer_id,
+                        jc.service_id,
+                        c.customer_name,
                         ca.account_balance,
                         sr.logged_date,\s
                         st.service_type,\s
@@ -567,6 +574,8 @@ public class DAO extends AppConnection {
             while(resultSet.next()) {
                 data.add(new TransactionsDataProvider.TransactionRecord(
                         resultSet.getInt("job_id"),
+                        resultSet.getInt("service_id"),
+                        resultSet.getInt("customer_id"),
                         resultSet.getString("customer_name"),
                         resultSet.getString("service_type"),
                         resultSet.getDate("logged_date"),
@@ -575,6 +584,85 @@ public class DAO extends AppConnection {
                         resultSet.getDouble("items_cost"),
                         resultSet.getString("service_status")
                 ));
+            }
+            resultSet.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    public ArrayList<TransactionsDataProvider.Payments> getPaymentDetails() {
+        ArrayList<TransactionsDataProvider.Payments> data = new ArrayList<>();
+        String query = "SELECT * FROM payments;";
+        try {
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            while(resultSet.next()) {
+                data.add(new TransactionsDataProvider.Payments(
+                        resultSet.getInt("record_id"),
+                        resultSet.getInt("job_id"),
+                        resultSet.getTimestamp("entry_date"),
+                        resultSet.getString("pay_reference"),
+                        resultSet.getString("pay_method"),
+                        resultSet.getString("service_items_cost"),
+                        resultSet.getString("discount_amount"),
+                        resultSet.getString("labour_cost"),
+                        resultSet.getString("collected_amount")
+                ));
+            }
+            resultSet.close();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            logError(ex, "getPaymentDetails");
+        }
+
+        return data;
+    }
+
+    public List<NotificationRecords.LogsRecord> fetchSystemNotificationLogs(int shopId) {
+        List<NotificationRecords.LogsRecord> items = new ArrayList<>();
+        try {
+            String query = """
+                    SELECT * FROM notification_logs
+                    WHERE SHOP_ID = ?
+                    ORDER BY log_id DESC LIMIT 15;
+                    """;
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, shopId);
+            resultSet = prepare.executeQuery();
+            while(resultSet.next()) {
+                items.add(new NotificationRecords.LogsRecord(
+                        resultSet.getInt("log_id"),
+                        resultSet.getString("title"),
+                        resultSet.getString("content"),
+                        resultSet.getTimestamp("date_logged"),
+                        resultSet.getInt("shop_id")
+                ));
+            }
+            prepare.close();
+            resultSet.close();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            logError(ex, "notificationLogs");
+        }
+        return items;
+    }
+
+    public Map<String, String> shopInformation(int id) {
+        Map<String, String> data = new HashMap<>();
+        String query = "SELECT * FROM auto_mechanics.mechanic_shops WHERE record_id = '"+id+"';";
+        //record_id, shop_name, address, mobile_number, other_number, slogan, email, sms_id, date_created, is_active, activation_key
+        try {
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            if(resultSet.next()) {
+                data.put("id", resultSet.getString("record_id"));
+                data.put("shop_name", resultSet.getString("shop_name"));
+                data.put("address", resultSet.getString("address"));
+                data.put("mobile_number", resultSet.getString("mobile_number"));
+                data.put("email", resultSet.getString("email"));
+                data.put("description", resultSet.getString("slogan"));
+                data.put("weekdays", resultSet.getString("weekdays"));
+                data.put("weekends", resultSet.getString("weekends"));
             }
             resultSet.close();
         } catch (Exception e) {

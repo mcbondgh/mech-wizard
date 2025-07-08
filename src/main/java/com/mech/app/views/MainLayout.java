@@ -1,5 +1,6 @@
 package com.mech.app.views;
 
+import com.mech.app.components.MenuBarButtons;
 import com.mech.app.specialmethods.ImageLoader;
 import com.mech.app.views.customers.CustomersView;
 import com.mech.app.views.dashboard.CustomerDashboardView;
@@ -8,11 +9,13 @@ import com.mech.app.views.employees.EmployeesView;
 import com.mech.app.views.jobcards.CompletedJobView;
 import com.mech.app.views.jobcards.JobCardsView;
 import com.mech.app.views.notifications.NotificationsView;
+import com.mech.app.views.reports.ReportsView;
 import com.mech.app.views.servicerequests.CustomerServiceView;
 import com.mech.app.views.servicerequests.ServiceRequestsView;
 import com.mech.app.views.settings.SettingsView;
 import com.mech.app.views.transactions.TransactionsView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
@@ -23,6 +26,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
@@ -104,16 +108,16 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         var feedbacks = new SideNavItem("Feedback", "views/feedbacks", LineAwesomeIcon.STAR.create());
         var settings = new SideNavItem("Settings", SettingsView.class, LineAwesomeIcon.TOOLS_SOLID.create());
         var employees = new SideNavItem("Employees", EmployeesView.class, LineAwesomeIcon.USER_ALT_SOLID.create());
-        var inventory = new SideNavItem("Inventory", "/dashboard", LineAwesomeIcon.BOOK_SOLID.create());
-        var report = new SideNavItem("Reports", "/dashboard", VaadinIcon.INVOICE.create());
+//        var inventory = new SideNavItem("Inventory", "/dashboard", LineAwesomeIcon.BOOK_SOLID.create());
+        var report = new SideNavItem("Reports", ReportsView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
 
-        Span alertCounter = new Span("5");
+        Span alertCounter = new Span("15");
         alertCounter.addClassName("notification-counter");
-        alertCounter.getElement().getThemeList().add("badge small primary");
+        alertCounter.getElement().getThemeList().add("badge small error primary");
         notification.setSuffixComponent(alertCounter);
 
         return List.of(dashboard, notification, customer, jobCard, completedJobs,
-                serviceRequests, transactions, employees, feedbacks, inventory, report, settings);
+                serviceRequests, transactions, employees, feedbacks, report, settings);
     }
 
     private List<SideNavItem> customerMenuItems() {
@@ -159,27 +163,23 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         NotificationIcon.setSize("24px");
 
         H5 popoverHeader = new H5("Properties");
+        popoverHeader.getStyle().setPadding("5px");
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.setOpenOnClick(true);
 
+        var profileLink = new MenuBarButtons("Profile", LineAwesomeIcon.USER_CIRCLE).createMenuButton();
+        var singoutLink = new MenuBarButtons("Sign Out", LineAwesomeIcon.SIGN_OUT_ALT_SOLID).createMenuButton();
+
         contextMenu.add(popoverHeader, new Hr());
         contextMenu.setClassName("notification-icon-context-menu");
-        var profileLink = contextMenu.addItem("Profile", e -> {
-            Notification.show("Notification 1 clicked");
+        contextMenu.addItem(profileLink, e -> {
+            UI.getCurrent().navigate("/user-profile");
         });
-        var settingsLink = contextMenu.addItem("Settings", e -> {
-            Notification.show("Notification 2 clicked");
+        contextMenu.addItem(singoutLink, e -> {
+           UI.getCurrent().getPage().setLocation("/");
         });
 
-        var signoutLink = new Anchor();
-        signoutLink.setText(" Sign Out");
-        signoutLink.addComponentAsFirst(LineAwesomeIcon.SIGN_OUT_ALT_SOLID.create());
-        signoutLink.getStyle().setColor("black").setTextDecoration("none").setFontSize("small");
-        signoutLink.getElement().addEventListener("click", e -> {
-            signoutLink.setHref("/");
-            contextMenu.setVisible(false);
-        });
-        contextMenu.addItem(signoutLink);
+        
 
         H4 username = new H4("Admin");
         FlexLayout header = new FlexLayout(NotificationIcon, username);

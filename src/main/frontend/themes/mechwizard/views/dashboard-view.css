@@ -185,7 +185,7 @@ vaadin-form-layout[empty] {
 }
 
 .dashboard-card-section:hover {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--item-layout-shadow);
     transition: box-shadow 0.3s ease;
     /*border:1px solid #4A6FA5;*/
     cursor: pointer;

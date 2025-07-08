@@ -19,4 +19,14 @@ public class CardComponent {
         return layout;
     }
 
+    public Component transactionReportCard(String title, String value, String subTitle) {
+        var h4 = new H4(title);
+        var h2 = new H2(value);
+        var sub = new Paragraph(subTitle);
+        h4.addComponentAsFirst(LineAwesomeIcon.MONEY_BILL_ALT_SOLID.create());
+        VerticalLayout layout = new VerticalLayout(h4, h2, sub);
+        layout.addClassNames("transactions-report-card");
+        return layout;
+    }
+
 }

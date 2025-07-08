@@ -233,9 +233,22 @@ vaadin-form-layout[empty] {
 }
 
 .receipt-detail {
-  border: 1px solid #d55a5a;
+  border-bottom: 1px solid #dddddd;
+  width:100%;
+  padding-bottom: 5px;
+  box-sizing: border-box;
 }
-
+.receipt-layout h4 {
+  padding: 5px;
+  color:#fff;
+  border-radius: 5px;
+  margin: 5px auto;
+  background-color: var(--lumo-success-color);
+  text-align: center;
+}
+.receipt-layout h6 {
+  padding: 5px;
+}
 .print-receipt-button{
   background-color:transparent; /* Bootstrap primary color */
   color: var(--lumo-primary-text-color);
@@ -273,6 +286,10 @@ vaadin-form-layout[empty] {
 }
 
 /* PAYMENT DIALOG STYLING SECTION */
+.transaction-dialog-content-box {
+  border:1px solid #ddd;
+  border-radius: 5px;
+}
 .dialog-header-box {
   box-sizing: border-box;
   width:100%;
@@ -285,50 +302,10 @@ vaadin-form-layout[empty] {
   /* font-size: 1.5em; */
   margin: 0;
 }
-
-.transaction-dialog::part(header) {
-  /* margin:auto; */
-}
-.transaction-dialog::part(content) {
-  width:400px;
-  height: fit-content;
-}
-.transaction-dialog-content-box {
-  border: 1px solid var(--lumo-contrast-40pct);
-  border-radius: 10px;
-  box-sizing: border-box;
-  margin: 10px auto;
-  height:fit-content;
-}
-
-.transaction-dialog-content-box section {
-  width:100%;
-}
-
 .transactions-grid-layout {
   background-color: #fff;
 }
 
-.transaction-amount-box {
-  background:#daffdf;
-  margin: 5px 0;
-  padding:15px ;
-  box-sizing: border-box;
-  border-radius:3px;
-}
-
-.transaction-amount-box h3 {
-  color: rgb(0, 168, 0);
-}
-
-.payment-section-box {
-  border:1px solid #ddd;
-  border-radius:5px;
-  margin:5px 0;
-}
-.payment-section-box h5 {
-  color:var(--subtitle-color);
-}
 
 .close-button {
   /* border:1px solid var(--lumo-contrast-40pct); */
@@ -339,16 +316,55 @@ vaadin-form-layout[empty] {
 
 /* PAYMENT TABS STYLING */
 .payment-tab {
-  /* background-color:#efefef; */
+  background-color:#efefef;
   width:100%;
+  border-radius:5px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.payment-inner-divs {
+  border:1px solid #ddd;
+  background-color: #f4fbff;
+  width:100%;
+  border-radius: 5px;
+  padding:10px;
+  box-sizing: border-box;
+}
+
+.payable-field::part(input-field) {
+  background-color: #d4ffd4;
+  color:var(--lumo-success-color);
+  font-size: 24px;
+  font-weight: 700;
+}
+.payment-inner-divs span {
+  color: var(--subtitle-color);
+}
+.payment-inner-divs h4 {
+  color:var(--lumo-primary-color);
+  margin-top: 2px;
 }
 
 .payment-item-tab {
-  font-size: large;
-  /* border:1px solid red; */
+  font-size: smaller;
+  align-items: center;
   /* margin:5px; */
 }
-
+.payment-item-tab[selected] {
+  background-color: var(--lumo-primary-color);
+  color: white;
+  border-radius: 5px;
+}
+.tabs-layout {
+  align-items: center;
+  gap: 4px;
+}
+.payment-method-selector {
+  background-color: #eee;
+  width:100%;
+  padding:8px;
+  border-radius: 5px;
+}
 .successful-payment-box {
   align-items: center;
 }

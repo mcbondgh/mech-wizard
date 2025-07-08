@@ -94,7 +94,7 @@ public class DashboardView extends Composite<VerticalLayout> implements BeforeEn
     //    PAGE BODY SECTION
     private Component pageBody() {
         VerticalLayout bodyLayout = new VerticalLayout();
-        bodyLayout.setSizeFull();
+        bodyLayout.setWidthFull();
         bodyLayout.setPadding(true);
         bodyLayout.addClassName("dashboard-body");
         bodyLayout.setAlignItems(FlexComponent.Alignment.CENTER);

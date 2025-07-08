@@ -1,5 +1,6 @@
 package com.mech.app.views.login;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -19,10 +21,10 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import java.time.temporal.ValueRange;
 
-@Route(value = "")
-@RouteAlias("/login")
+@Route(value = "/login")
+@RouteAlias("/auto-mechanic-login")
 @AnonymousAllowed
-public class LoginView extends VerticalLayout {
+public class LoginView extends VerticalLayout{
 
     private TextField usernameField;
     private PasswordField passwordField;
@@ -36,8 +38,21 @@ public class LoginView extends VerticalLayout {
         setPadding(false);
         setSpacing(false);
 
-        // Load the login form component
-        add(loginForm());
+        
+        
+    }
+    
+    @Override
+    public void onAttach(AttachEvent event) {
+        try {
+            var accessType = event.getUI().getActiveViewLocation().getQueryParameters().getParameters("access").get(0);
+            
+            // Load the login form component
+            add(loginForm(accessType));
+
+        } catch (Exception e) {
+            UI.getCurrent().getPage().setLocation("/");
+        }
     }
 
     /*******************************************************************************************************************
@@ -80,7 +95,7 @@ public class LoginView extends VerticalLayout {
     private Component logoSection() {
         // Create a logo section with an image
         var logo = new Image("images/logo-icon.png", "Company Logo");
-        logo.getStyle().setWidth("150px");
+        logo.getStyle().setWidth("100px");
 
         VerticalLayout logoSection = new VerticalLayout(logo);
         logoSection.setAlignItems(Alignment.CENTER);
@@ -91,9 +106,11 @@ public class LoginView extends VerticalLayout {
     }
 
     //Form layout for the login form
-    private Component loginForm() {
+    private Component loginForm(String accessType) {
 
-        H4 title = new H4("User Login");
+        String value = "client-portal".equalsIgnoreCase(accessType) ? "Client Portal" : "Technician Portal";
+
+        H4 title = new H4(value);
         title.addClassName("login-title");
 
         // Create the login form layout
@@ -102,7 +119,7 @@ public class LoginView extends VerticalLayout {
         formLayout.addClassNames("login-form-layout");
 
         VerticalLayout layout = new VerticalLayout(formLayout);
-        layout.addClassName("login-view");
+        layout.addClassNames("login-view", "fade-in");
         return layout;
     }
 }

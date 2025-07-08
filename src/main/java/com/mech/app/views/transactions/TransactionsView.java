@@ -69,7 +69,7 @@ public class TransactionsView extends Composite<VerticalLayout> {
             } else {
                 // Show only unpaid invoices
                 transactionGrid.setItems(sampleData().stream()
-                        .filter(record -> "unpaid".equalsIgnoreCase(record.status()))
+                        .filter(record -> !"paid".equalsIgnoreCase(record.status()))
                         .toList());
             }
         });
@@ -88,7 +88,7 @@ public class TransactionsView extends Composite<VerticalLayout> {
         var totalAmount = dataObject.getOrDefault("total_amount", "0.00");
 
         var sectionOne = new CardComponent().paymentTransactionsDashboardCard("Awaiting Payment", awaitingPayment, "Total Completed Jobs");
-        var sectionTwo = new CardComponent().paymentTransactionsDashboardCard("Total Unpaid", totalAmount, "Outstanding Balance Without Labour Cost");
+        var sectionTwo = new CardComponent().paymentTransactionsDashboardCard("Total Unpaid", totalAmount == null ? "0.00" : totalAmount, "Outstanding Balance Without Labour Cost");
         var sectionThree = new CardComponent().paymentTransactionsDashboardCard("Collected", paymentCount, "Paid Amount");
         HorizontalLayout layout = new HorizontalLayout(sectionOne, sectionTwo, sectionThree);
         layout.setWidthFull();
@@ -171,10 +171,10 @@ public class TransactionsView extends Composite<VerticalLayout> {
                     Button actionButton;
 
                     if ("paid".equalsIgnoreCase(data.status())) {
-                        actionButton = new Button("Print Receipt", LineAwesomeIcon.RECEIPT_SOLID.create());
+                        actionButton = new Button("View Receipt", LineAwesomeIcon.RECEIPT_SOLID.create());
                         actionButton.addClassNames("print-receipt-button");
                         actionButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-                        actionButton.addSingleClickListener(e -> new TransactionDialogs(data).receiptDialog());
+                        actionButton.addSingleClickListener(e -> new TransactionDialogs(data).receiptDialog(data.jobId()));
                     } else {
                         actionButton = new Button("Make Payment", LineAwesomeIcon.CREDIT_CARD.create());
                         actionButton.addClassNames("make-payment-button");

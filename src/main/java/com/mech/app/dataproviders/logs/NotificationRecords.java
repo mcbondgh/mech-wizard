@@ -1,5 +1,8 @@
 package com.mech.app.dataproviders.logs;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 public class NotificationRecords {
     private final String title;
     private final String content;
@@ -12,6 +15,13 @@ public class NotificationRecords {
         this.userId = userId;
         this.shopId = shopId;
     }
+    public record LogsRecord(int recordId, String title, String content, Timestamp entryDate, int shopId) {
+
+        public Instant formatDate() {
+            return entryDate.toInstant();
+        }
+    }
+
 
     public String title() {
         return title;

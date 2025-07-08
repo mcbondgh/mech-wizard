@@ -17,7 +17,7 @@
       --page-body-color: rgb(242, 248, 255);
       --subtitle-color:#7c8d9b;
       --header-text-color:rgb(65, 70, 86);
-      /* --lumo-primary-color: black; */
+      --item-layout-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       --lumo-primary-color-50pct: hsla(191, 100%, 41%, 0.5);
       --lumo-primary-color-10pct: hsla(191, 100%, 41%, 0.1);
       --lumo-primary-text-color: #4A6FA5;

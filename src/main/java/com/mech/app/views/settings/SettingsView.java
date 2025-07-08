@@ -5,6 +5,7 @@ import com.mech.app.components.FormColumns;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.configfiles.MessageLoaders;
 import com.mech.app.configfiles.secutiry.SessionManager;
+import com.mech.app.dataproviders.dao.DAO;
 import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
 import com.mech.app.models.settings.SettingsModel;
@@ -46,6 +47,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
     private static SettingsModel SETTINGS_MODE = new SettingsModel();
     private AtomicInteger SHOP_ID = new AtomicInteger(0);
     private AtomicInteger USER_ID = new AtomicInteger(0);
+    private static SettingsModel DAO_MODEL;
 
     public SettingsView() {
         getContent().setHeightFull();
@@ -53,6 +55,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
         getContent().addClassName("page-body");
         SHOP_ID.set(SessionManager.DEFAULT_SHOP_ID);
         USER_ID.set(SessionManager.DEFAULT_USER_ID);
+        DAO_MODEL = new SettingsModel();
     }
 
     @Override
@@ -78,6 +81,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
      BODY SECTION
      *******************************************************************************************************************/
     private VerticalLayout bodySection() {
+
         VerticalLayout layout = new VerticalLayout();
         layout.addClassNames("settings-body-container");
         layout.setWidthFull();
@@ -156,20 +160,22 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
     }
 
     private VerticalLayout companyTabComponent() {
+        var systemData = DAO_MODEL.shopInformation(SHOP_ID.get());
+
         H3 headerText = new H3("Company Settings");
         VerticalLayout layout = new VerticalLayout(headerText);
         layout.addClassNames("tab-content-container", "company-tab-content");
 
-        var nameField = new TextField("Business Name");
+        var nameField = new TextField("Business Name", systemData.get("shop_name"), "Business Name");
         var emailField = new EmailField("Business Email");
-        var numberField = new TextField("Business Number");
-        var descriptionField = new TextArea("Business Description");
-        var addressField = new TextField("Business Address");
-        var weekDayTimeField = new TextField("Weekdays", "8:00AM - 8:00PM");
-        var weekEndTimeField = new TextField("Weekends", "12:00PM -8:00PM");
+        emailField.setValue(systemData.get("email"));
+        var numberField = new TextField("Business Number", systemData.get("mobile_number"), "+233 0000000");
+        var descriptionField = new TextArea("Business Description", systemData.get("description"), "Business Description");
+        var addressField = new TextField("Business Address", systemData.get("address"), "Address");
+        var weekDayTimeField = new TextField("Weekdays", systemData.get("weekdays"), "8:00AM - 8:00PM");
+        var weekEndTimeField = new TextField("Weekends", systemData.get("weekends"),"12:00PM - 8:00PM");
         var saveButton = new Button("Save Changes", LineAwesomeIcon.SAVE.create());
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
-
 
         var timeHeaderText = new H5("Business Hours");
         var timeDescription = new Paragraph("Define When Your Shop Is Open For Service");
