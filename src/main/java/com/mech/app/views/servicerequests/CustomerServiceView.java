@@ -3,8 +3,10 @@ package com.mech.app.views.servicerequests;
 import com.mech.app.components.CustomDialog;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.configfiles.secutiry.SessionManager;
+import com.mech.app.enums.SubRoles;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -27,16 +29,19 @@ import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("My Services")
 @Route(layout = MainLayout.class, value = "view/customer-services")
 @Menu(icon = LineAwesomeIconUrl.TOOLBOX_SOLID)
+@RolesAllowed("CUSTOMER")
 public class CustomerServiceView extends VerticalLayout implements BeforeEnterObserver {
 
     private record serviceRequests(String serviceNo, String status, String desc, String date, String carInfo, String serviceTyp) {}
@@ -51,16 +56,26 @@ public class CustomerServiceView extends VerticalLayout implements BeforeEnterOb
     private final Checkbox priorityCheckbox = new Checkbox("Urgent Attention");
 
     private static int SHOP_ID, USER_ID;
+    private static AtomicReference<String> ACCESS_TYPE;
     public CustomerServiceView() {
         setHeightFull();
         setWidthFull();
-        SHOP_ID = SessionManager.DEFAULT_SHOP_ID;
-        USER_ID = SessionManager.DEFAULT_USER_ID;
+        SHOP_ID = Integer.parseInt(SessionManager.getAttribute("shopId").toString());
+        USER_ID = Integer.parseInt(SessionManager.getAttribute("userId").toString());
     }
 
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(SubRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            System.out.println("Notification view: "+ allowedRole.toLowerCase().contains(ACCESS_TYPE.get().toLowerCase()));
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
     @Override
     public void onAttach(AttachEvent event) {

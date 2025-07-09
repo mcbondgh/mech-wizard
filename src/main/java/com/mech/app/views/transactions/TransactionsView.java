@@ -3,9 +3,12 @@ package com.mech.app.views.transactions;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.transactions.CardComponent;
 import com.mech.app.components.transactions.TransactionDialogs;
+import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.dataproviders.transactions.TransactionsDataProvider;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.models.TransactionsModel;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -22,20 +25,26 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Transactions")
-@Route(value = "transactions", layout = MainLayout.class)
+@Route(value = "view/transactions", layout = MainLayout.class)
 //@Menu(order = 6, icon = LineAwesomeIconUrl.DOLLAR_SIGN_SOLID)
-public class TransactionsView extends Composite<VerticalLayout> {
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
+public class TransactionsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     private final Grid<TransactionsDataProvider.TransactionRecord> transactionGrid = new Grid<>();
     private static final TransactionsModel DAO_OBJECT = new TransactionsModel();
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public TransactionsView() {
         getContent().setHeightFull();
@@ -43,6 +52,18 @@ public class TransactionsView extends Composite<VerticalLayout> {
         getContent().add(pageBody());
     }
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
+    }
 
     /*******************************************************************************************************************
      REFERENCE METHODS

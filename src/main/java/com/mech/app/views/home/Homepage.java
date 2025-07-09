@@ -10,18 +10,35 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.BoxSizing;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.communication.PushConnection;
+
 import jakarta.annotation.security.PermitAll;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.parameters.P;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
+
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sound.sampled.Line;
 
@@ -37,6 +54,7 @@ public class Homepage extends VerticalLayout {
 
     @Override
     public void onAttach(AttachEvent event) {
+        super.onAttach(event);
         add(heroSection(), servicesSection(), contactSection());
     }
 
@@ -44,10 +62,11 @@ public class Homepage extends VerticalLayout {
      * COMPONENT SECTIONS
      *******************************************************************************************************************/
 
-    private Component heroSection() {
+     private Component heroSection() {
         VerticalLayout parentLayout = new VerticalLayout();
         parentLayout.addClassNames("landing-hero-section");
         parentLayout.setSizeUndefined();
+        
 
         H1 heroText = new H1("AUTO MECHANIC SHOP");
         H3 subText2 = new H3("Aliboat Motors");
@@ -182,4 +201,5 @@ public class Homepage extends VerticalLayout {
         return parentLayout;
     }
 
-}//
+
+}//end of class

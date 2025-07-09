@@ -1,8 +1,11 @@
 package com.mech.app.views.notifications;
 
 import com.mech.app.components.HeaderComponent;
+import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.dataproviders.dao.DAO;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -14,17 +17,21 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.BoxSizing;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Notifications")
-@Route(value = "notifications", layout = MainLayout.class)
+@Route(value = "/notifications", layout = MainLayout.class)
 @Menu(order = 1, icon = LineAwesomeIconUrl.BELL)
 @JsModule("./js/scripts.js")
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 public class NotificationsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
     private static DAO DAO_MODEL;
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public NotificationsView() {
         getContent().setClassName("page-body");
@@ -33,8 +40,16 @@ public class NotificationsView extends Composite<VerticalLayout> implements Befo
     }
 
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
     @Override
     public void onAttach(AttachEvent event) {

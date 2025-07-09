@@ -1,6 +1,8 @@
 package com.mech.app.views;
 
 import com.mech.app.components.MenuBarButtons;
+import com.mech.app.configfiles.secutiry.SessionManager;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.specialmethods.ImageLoader;
 import com.mech.app.views.customers.CustomersView;
 import com.mech.app.views.dashboard.CustomerDashboardView;
@@ -9,6 +11,7 @@ import com.mech.app.views.employees.EmployeesView;
 import com.mech.app.views.jobcards.CompletedJobView;
 import com.mech.app.views.jobcards.JobCardsView;
 import com.mech.app.views.notifications.NotificationsView;
+import com.mech.app.views.reports.CustomerReportsView;
 import com.mech.app.views.reports.ReportsView;
 import com.mech.app.views.servicerequests.CustomerServiceView;
 import com.mech.app.views.servicerequests.ServiceRequestsView;
@@ -46,7 +49,10 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 import javax.sound.sampled.Line;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -56,13 +62,22 @@ import java.util.List;
 public class MainLayout extends AppLayout implements AfterNavigationObserver {
 
     private H1 viewTitle;
+    private AtomicReference<String> ACCESS_TYPE;
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
         setClassName("page-body");
-        addDrawerContent();
-        addHeaderContent();
+        try {
+            ACCESS_TYPE = new AtomicReference<>();
+            ACCESS_TYPE.set(SessionManager.getAttribute("role").toString());
+            addDrawerContent();
+            addHeaderContent();
+        } catch (Exception e) {
+            e.printStackTrace();
+            UI.getCurrent().getPage().setLocation("/login");
+        }
     }
+
 
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
@@ -123,7 +138,8 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
     private List<SideNavItem> customerMenuItems() {
         var dashboard = new SideNavItem("My Dashboard", CustomerDashboardView.class, LineAwesomeIcon.DESKTOP_SOLID.create());
         var services = new SideNavItem("My Services", CustomerServiceView.class, LineAwesomeIcon.STAR_AND_CRESCENT_SOLID.create());
-        return List.of(dashboard, services);
+        var reports = new SideNavItem("My Reports", CustomerReportsView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
+        return List.of(dashboard, services, reports);
     }
 
     private List<SideNavItem> mechanicMenuItems() {
@@ -146,11 +162,24 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
 //        });
 
         List<SideNavItem> allMenus = new ArrayList<>();
-        allMenus.addAll(adminMenuItems());
-        allMenus.addAll(customerMenuItems());
-        allMenus.addAll(mechanicMenuItems());
-        for (var item : allMenus) {
-            nav.addItem(item);
+//        allMenus.addAll(adminMenuItems());
+//        allMenus.addAll(mechanicMenuItems());
+//        allMenus.addAll(customerMenuItems());
+
+        try {
+            var userRole = ACCESS_TYPE.get();
+            var allowedRoles = List.of(MasterRoles.values()).toString().toLowerCase();
+            if (allowedRoles.contains(userRole.toLowerCase())) {
+                allMenus.addAll(adminMenuItems());
+                allMenus.addAll(mechanicMenuItems());
+            } else allMenus.addAll(customerMenuItems());
+
+            for (var item : allMenus) {
+                nav.addItem(item);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            UI.getCurrent().getPage().setLocation("/login");
         }
         return nav;
     }
@@ -176,10 +205,10 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
             UI.getCurrent().navigate("/user-profile");
         });
         contextMenu.addItem(singoutLink, e -> {
-           UI.getCurrent().getPage().setLocation("/");
+            SessionManager.destroySession();
+            UI.getCurrent().getPage().setLocation("/");
         });
 
-        
 
         H4 username = new H4("Admin");
         FlexLayout header = new FlexLayout(NotificationIcon, username);

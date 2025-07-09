@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useSignal } from '@vaadin/hilla-react-signals';
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { Button } from '@vaadin/react-components';
 import { useNavigate } from 'react-router';
- 
+
+
 export const config: ViewConfig = {
   route: "views/feedbacks",
   // menu: { order: 9, icon: 'line-awesome/svg/feedback.svg' },
   title: 'Feedbacks',
+  // rolesAllowed: ['admin', 'mechanic', 'receptionist'],
   flowLayout: false
 };
 
@@ -16,6 +18,7 @@ export default function FeedbackView() {
     const [getFeedbacks, setFeedbacks] = useState();
     const allFeedbacks = useSignal();
     const navigate = useNavigate();
+    const [getRole, setRole] = useState('');
 
     function backToDashboard()  {
       // @ts-ignore

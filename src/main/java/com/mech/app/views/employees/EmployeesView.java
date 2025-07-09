@@ -9,9 +9,11 @@ import com.mech.app.dataproviders.employees.EmployeesDataProvider;
 import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.users.UsersDataProvider;
 import com.mech.app.enums.GenderEnums;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.models.EmployeeModel;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -37,6 +39,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
@@ -45,9 +48,11 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Employees")
-@Route(value = "employees", layout = MainLayout.class)
+@Route(value = "view/employees", layout = MainLayout.class)
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 //@Menu(order = 7, icon = LineAwesomeIconUrl.USER_PLUS_SOLID)
 public class EmployeesView extends Composite<VerticalLayout> implements BeforeEnterObserver, AfterNavigationObserver {
 
@@ -71,6 +76,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
     private CustomDialog DIALOG_BOX;
     private static final AtomicInteger USER_ID = new AtomicInteger();
     private static final AtomicInteger SHOP_ID = new AtomicInteger();
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public EmployeesView() {
         EMP_DATA_PROVIDER = new EmployeesDataProvider();
@@ -78,14 +84,26 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
         USER_DATA_PROVIDER = new UsersDataProvider();
         getContent().setHeightFull();
         getContent().setWidthFull();
-        getContent().add(
-                pageHeader(),
-                pageBody()
-        );
+
     }
 
     @Override
-    public void onAttach(AttachEvent event){
+    public void beforeEnter(BeforeEnterEvent event) {
+        USER_ID.set(SessionManager.DEFAULT_USER_ID);
+        SHOP_ID.set(SessionManager.DEFAULT_SHOP_ID);
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        } catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
+    }
+
+    @Override
+    public void onAttach(AttachEvent event) {
         ComponentLoader.loadMechanicSkill(skillSelector);
         ComponentLoader.setRoles(roleSelector);
         ComponentLoader.setCardTypes(cardSelector);
@@ -103,7 +121,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
         genderSelector.addClassNames("combo-box", "emp-gender-selector");
         cardNumberField.addClassNames("input-style", "emp-card-number-field");
         descriptionBox.addClassNames("input-style", "emp-description-field");
-        dateJoinedPicker.addClassNames("date-picker","emp-joined-date-picker");
+        dateJoinedPicker.addClassNames("date-picker", "emp-joined-date-picker");
         addEmployeeButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
         addEmployeeButton.addClassNames("default-button-style");
 
@@ -118,12 +136,13 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
         genderSelector.setRequired(true);
         dateJoinedPicker.setRequired(true);
 
+        getContent().add(
+                pageHeader(),
+                pageBody()
+        );
+
     }
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        USER_ID.set(SessionManager.DEFAULT_USER_ID);
-        SHOP_ID.set(SessionManager.DEFAULT_SHOP_ID);
-    }
+
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
 
@@ -133,7 +152,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
      HEADER SECTION
      *******************************************************************************************************************/
     private Component pageHeader() {
-        var header=  new HeaderComponent().textHeader("Employees List", "Manage your team members and their roles");
+        var header = new HeaderComponent().textHeader("Employees List", "Manage your team members and their roles");
 
         MenuBar menuBar = new MenuBar();
         menuBar.getStyle().setBackgroundColor("transparent");
@@ -146,7 +165,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
             showEmployeeFormDialog().open();
         });
 
-        FlexLayout layout = new FlexLayout( header , menuBar);
+        FlexLayout layout = new FlexLayout(header, menuBar);
         layout.addClassNames("employees-header-container");
         layout.setWidthFull();
         layout.setAlignContent(FlexLayout.ContentAlignment.CENTER);
@@ -169,12 +188,12 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
         //add filter to the table grid
         searchField.setValueChangeMode(ValueChangeMode.LAZY);
         searchField.addValueChangeListener(input -> {
-           employeesGrid.getListDataView().setFilter(filter -> {
-               if (input.getValue().isEmpty()) return true;
-               boolean matchesName = input.getValue().toLowerCase().contains(filter.name().toLowerCase());
-               boolean matchesMail = input.getValue().toLowerCase().contains(filter.email().toLowerCase());
-               return matchesName || matchesMail;
-           }).refreshAll();
+            employeesGrid.getListDataView().setFilter(filter -> {
+                if (input.getValue().isEmpty()) return true;
+                boolean matchesName = input.getValue().toLowerCase().contains(filter.name().toLowerCase());
+                boolean matchesMail = input.getValue().toLowerCase().contains(filter.email().toLowerCase());
+                return matchesName || matchesMail;
+            }).refreshAll();
         });
 
         HorizontalLayout formLayout = new HorizontalLayout(searchField, export);
@@ -229,7 +248,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
 
         //check for empty fields and enable or disable button
         formLayout.getElement().addEventListener("mouseover", e -> {
-           ComponentLoader.enableOrDisableComponent(addEmployeeButton, formHasEmptyFields());
+            ComponentLoader.enableOrDisableComponent(addEmployeeButton, formHasEmptyFields());
         });
 
         addEmployeeButton.addSingleClickListener(event -> processFormData());
@@ -272,14 +291,14 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
         if (status) {
             span.setText("Active");
             span.getElement().getThemeList().add("badge success pill small");
-        }else {
+        } else {
             span.setText("Inactive");
             span.getElement().getThemeList().add("badge error pill small");
         }
         return span;
     }
 
-    private Renderer<EmployeesDataProvider.EmployeesRecord> employeesActionButton(){
+    private Renderer<EmployeesDataProvider.EmployeesRecord> employeesActionButton() {
         return new ComponentRenderer<>(data -> {
             MenuBar menuBar = new MenuBar();
             menuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL, MenuBarVariant.LUMO_TERTIARY);
@@ -291,7 +310,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
             updateButton.addComponentAsFirst(LineAwesomeIcon.PENCIL_ALT_SOLID.create());
             updateButton.addClassNames("item-update-button");
 
-            var userButton = menuBar.addItem(" Edit User" , e -> {
+            var userButton = menuBar.addItem(" Edit User", e -> {
                 Notification.show("Edit button clicked for " + data.usersData().username());
             });
             userButton.addComponentAsFirst(LineAwesomeIcon.USER_EDIT_SOLID.create());
@@ -314,6 +333,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
     private List<EmployeesDataProvider.EmployeesRecord> employeesRecords() {
         return DATA_MODEL.fetchAllMechanics();
     }
+
     private void clearFormFields() {
         mobileNumber.clear();
         nameField.clear();
@@ -355,7 +375,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
             USER_DATA_PROVIDER.setPassword(DataEncryptor.defaultPassword());
             USER_DATA_PROVIDER.setRole(roleSelector.getValue());
             USER_DATA_PROVIDER.setShop_id(SessionManager.DEFAULT_SHOP_ID);
-            
+
             //set notification message
             String msg = "New employee " + nameField.getValue() + " has been added successfully today " +
                     "at " + LocalTime.now().toString().substring(0, 8) + " as a " + roleSelector.getValue() + ".";
@@ -363,7 +383,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
 
             UI currentUI = UI.getCurrent();
 
-            String content = MessageLoaders.confirmationMessage( "add " + nameField.getValue());
+            String content = MessageLoaders.confirmationMessage("add " + nameField.getValue());
             DIALOG_BOX = new CustomDialog();
             DIALOG_BOX.showSaveDialog("ADD EMPLOYEE", content).addConfirmListener(e -> {
                 currentUI.access(() ->
@@ -376,7 +396,7 @@ public class EmployeesView extends Composite<VerticalLayout> implements BeforeEn
                         DIALOG_BOX.showSuccessNotification(MessageLoaders.successMessage());
                         DATA_MODEL.logNotification(notificationRecords);
                         clearFormFields();
-                    }else {
+                    } else {
                         DIALOG_BOX.showErrorNotification(MessageLoaders.errorMessage("refer to Sys admin for assistance"));
                     }
                 });

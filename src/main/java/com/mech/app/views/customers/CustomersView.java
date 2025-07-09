@@ -4,12 +4,15 @@ import com.mech.app.components.CustomDialog;
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.customer.CustomerComponents;
 import com.mech.app.configfiles.MessageLoaders;
+import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.dataproviders.cars.CarDataProvider;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.enums.GenderEnums;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.models.CustomerModel;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
@@ -39,16 +42,19 @@ import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Customers")
 @Route(value = "/view/customers", layout = MainLayout.class)
 @Menu(title = "Customers", order = 2, icon = LineAwesomeIconUrl.USER_FRIENDS_SOLID)
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 public class CustomersView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     private final CustomerModel DATA_MODEL = new CustomerModel();
@@ -56,25 +62,34 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
     private final Button addCustomerButton = new Button("Add Customer", LineAwesomeIcon.PLUS_SOLID.create());
     private final Grid<CustomersDataProvider> customersRecordGrid = new Grid<>();
     private final TextField filterField = new TextField("", "Search by name, mobile numbers or ID Number");
-
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public CustomersView() {
         getContent().setSizeUndefined();
         getContent().addClassNames("page-body");
+
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
+    }
+
+    @Override
+    public void onAttach(AttachEvent event) {
         var Header = new HeaderComponent().pageHeaderWithComponent("Registered Customers",
                 "easily manage and register all your customers from here", addCustomerButton);
         getContent().add(Header);
         getContent().add(Header, pageBody());
 
-    }
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-
-    }
-
-    @Override
-    public void onAttach(AttachEvent event) {
         setComponentProperties();
     }
 
@@ -143,8 +158,8 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
                 List<CustomersDataProvider> filteredData = sampleData().stream()
                         .filter(customer ->
                                 customer.getName().toLowerCase().contains(filterText.toLowerCase())
-                                || customer.getMobileNumber().contains(filterText)
-                                || customer.getOtherNumber().toLowerCase().contains(filterText.toLowerCase()))
+                                        || customer.getMobileNumber().contains(filterText)
+                                        || customer.getOtherNumber().toLowerCase().contains(filterText.toLowerCase()))
                         .toList();
                 customersRecordGrid.setItems(filteredData);
             }
@@ -252,7 +267,7 @@ public class CustomersView extends Composite<VerticalLayout> implements BeforeEn
                 customersRecordGrid.setDetailsVisible(dataProvider, !customersRecordGrid.isDetailsVisible(dataProvider));
             });
 
-            serviceButton.addClickListener( e -> new CustomerComponents().serviceRequestDialog(dataProvider));
+            serviceButton.addClickListener(e -> new CustomerComponents().serviceRequestDialog(dataProvider));
 
             return menuBar;
         });

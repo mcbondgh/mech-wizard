@@ -24,12 +24,15 @@ public class SessionManager {
 
     public static void validateSession(BeforeEnterEvent event) {
         try {
-            SessionManager.getAttribute("activeUserId").toString();
+            SessionManager.getAttribute("userId").toString();
         } catch (NullPointerException e) {
             var currentRoute = event.getLocation();
             event.forwardTo("/login");
 //            new SessionExpiredView();
         }
+    }
+    public static String accessControl(String route, String query) {
+       return "/" + route + "?access=" + query;
     }
 
 }//end of class...

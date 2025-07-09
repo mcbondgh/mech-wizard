@@ -11,8 +11,11 @@ public class UsersDataProvider {
 
     public record usersRecord(int id, String username, String password, String role) {}
 
+    public record LoginUserRecord(int id, int shopId, String username, String role, String name, String status, String password){}
+
     public UsersDataProvider() {
     }
+
 
 
     public int getRecord_id() {

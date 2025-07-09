@@ -7,9 +7,11 @@ import com.mech.app.configfiles.MessageLoaders;
 import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.dataproviders.jobcards.JobCardDataProvider;
 import com.mech.app.dataproviders.logs.NotificationRecords;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.models.ServiceRequestModel;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -39,6 +41,7 @@ import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import org.jetbrains.annotations.NotNull;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -50,10 +53,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Job Cards")
 @Route(value = "view/job-cards", layout = MainLayout.class)
 //@Menu(order = 3, icon = LineAwesomeIconUrl.ADDRESS_CARD)
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
     private final Button jobCardButton = new Button("Create Job Card");
     private final Grid<JobCardDataProvider.JobCardRecords> jobCardGrid = new Grid<>();
@@ -61,26 +66,34 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
     private static ServiceRequestModel DATA_MODEL_OBJECT = new ServiceRequestModel();
     private AtomicInteger USER_ID, SHOP_ID;
     private static CustomDialog dialog;
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public JobCardsView() {
         getContent().setWidth("100%");
         getContent().setHeight("max-content");
         getContent().getStyle().set("flex-grow", "1");
-        USER_ID = new AtomicInteger(SessionManager.DEFAULT_USER_ID);
-        SHOP_ID = new AtomicInteger(SessionManager.DEFAULT_SHOP_ID);
-
-        getContent().add(pageBody());
+        USER_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("userId").toString()));
+        SHOP_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("shopId").toString()));
     }
 
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
 
     @Override
     public void onAttach(AttachEvent event) {
         jobCardButton.setWidth("min-content");
         jobCardButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
+        getContent().add(pageBody());
     }
 
     /*******************************************************************************************************************

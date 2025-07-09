@@ -8,6 +8,7 @@ import com.vaadin.flow.theme.Theme;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.logging.Logger;
 
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
  *
  */
 @SpringBootApplication
+@EnableScheduling
 @Theme(value = "mechwizard")
 @Push()
 @PWA(name = "Auto Mechanic", shortName = "Auto-Mech", themeColor = "#4A6FA5", offlineResources = {"frontend/offline.html"})

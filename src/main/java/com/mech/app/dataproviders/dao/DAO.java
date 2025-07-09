@@ -671,4 +671,49 @@ public class DAO extends AppConnection {
         return data;
     }
 
+    public List<UsersDataProvider.LoginUserRecord> fetchUserByUsername(String username) {
+        List<UsersDataProvider.LoginUserRecord> data = new ArrayList<>();
+        String query = """
+                SELECT\s
+                    user_id,\s
+                    username,
+                    CASE\s
+                        WHEN user_role = 'admin' THEN full_name
+                        WHEN user_role = 'mechanic' THEN full_name
+                        WHEN user_role = 'customer' THEN customer_name
+                        ELSE full_name
+                    END AS combined_name,
+                    CASE\s
+                		WHEN c.is_active = TRUE THEN 'active'
+                        WHEN e.is_active = TRUE THEN 'active'
+                    END AS active_status,
+                    user_role,\s
+                    user_password,\s
+                    u.shop_id
+                FROM users AS u
+                LEFT JOIN employees AS e ON u.reference_id = e.record_id
+                LEFT JOIN customers AS c ON u.reference_id = c.record_id
+                WHERE username = lower(?) AND (c.is_active = TRUE OR e.is_active = TRUE)
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setString(1, username.toLowerCase());
+            resultSet = prepare.executeQuery();
+            if (resultSet.next()) {
+                data.add(new UsersDataProvider.LoginUserRecord(
+                        resultSet.getInt("user_id"),
+                        resultSet.getInt("shop_id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("user_role"),
+                        resultSet.getString("combined_name"),
+                        resultSet.getString("active_status"),
+                        resultSet.getString("user_password")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
 }//end of class...

@@ -3,14 +3,17 @@ package com.mech.app.views.settings;
 import com.mech.app.components.CustomDialog;
 import com.mech.app.components.FormColumns;
 import com.mech.app.components.HeaderComponent;
+import com.mech.app.components.UserProfileComponent;
 import com.mech.app.configfiles.MessageLoaders;
 import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.dataproviders.dao.DAO;
 import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.servicesrequest.ServiceTypesRecord;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.models.settings.SettingsModel;
 import com.mech.app.specialmethods.ComponentLoader;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -30,15 +33,18 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Settings")
-@Route(value = "settings", layout = MainLayout.class)
+@Route(value = "view/settings", layout = MainLayout.class)
 //@Menu(order = 10, icon = LineAwesomeIconUrl.TOOLS_SOLID)
+@RolesAllowed({"RECEPTIONIST", "ADMIN"})
 public class SettingsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     private final TabSheet tabSheet = new TabSheet();
@@ -48,19 +54,28 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
     private AtomicInteger SHOP_ID = new AtomicInteger(0);
     private AtomicInteger USER_ID = new AtomicInteger(0);
     private static SettingsModel DAO_MODEL;
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public SettingsView() {
         getContent().setHeightFull();
         getContent().setWidthFull();
         getContent().addClassName("page-body");
-        SHOP_ID.set(SessionManager.DEFAULT_SHOP_ID);
-        USER_ID.set(SessionManager.DEFAULT_USER_ID);
+        SHOP_ID.set(Integer.parseInt(SessionManager.getAttribute("shopId").toString()));
+        USER_ID.set(Integer.parseInt(SessionManager.getAttribute("userId").toString()));
         DAO_MODEL = new SettingsModel();
     }
 
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
 
     @Override
@@ -89,7 +104,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
         Tab profileTab = new Tab("Profile");
         profileTab.addClassNames("settings-tab");
         profileTab.addComponentAsFirst(LineAwesomeIcon.USER_CLOCK_SOLID.create());
-        tabSheet.add(profileTab, profileTabComponent());
+        tabSheet.add(profileTab, new UserProfileComponent().userProfileComponent());
 
         Tab companyTab = new Tab("Company");
         companyTab.addClassNames("settings-tab");
@@ -113,51 +128,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
     /*******************************************************************************************************************
      COMPONENT RENDERING SECTION
      *******************************************************************************************************************/
-    private VerticalLayout profileTabComponent() {
-        H3 headerText = new H3("Profile Settings");
-        VerticalLayout layout = new VerticalLayout();
-        Image image = new Image(LineAwesomeIconUrl.USER, "LOGO");
-        image.addClassName("profile-image-style");
 
-        TextField nameField = new TextField("Full Name", "Ama Mohammed Selassi");
-        TextField numberField = new TextField("Mobile Number", "029999999");
-        EmailField emailField = new EmailField("Email Address", "ama1234@example.com");
-        TextField addressField = new TextField("Digital Address", "EK-0001-0001");
-        PasswordField firstPassField = new PasswordField("Password", "*********");
-        PasswordField secondPassField = new PasswordField("Confirm Password", "********");
-        Button saveButton = new Button("Save Changes", LineAwesomeIcon.SAVE.create());
-        saveButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
-
-        MemoryBuffer buffer = new MemoryBuffer();
-        Upload imageUpload = new Upload(buffer);
-
-        Section imageSection = new Section(image, imageUpload);
-
-        //add class names to components
-        nameField.addClassNames("input-style", "profile-name-field");
-        numberField.addClassNames("input-style", "profile-number-field");
-        emailField.addClassNames("input-style", "profile-email-field");
-        addressField.addClassNames("input-style", "profile-address-field");
-        saveButton.addClassNames("default-button-style");
-        imageSection.addClassName("settings-profile-container");
-        firstPassField.addClassNames("input-style", "profile-password-field");
-        secondPassField.addClassNames("input-style", "profile-password-field");
-
-//        FormLayout formLayout = new FormLayout();
-//        responsiveForm = new FormColumns(formLayout );
-//        responsiveForm.threeColumns();
-
-        Section formLayout = new Section(nameField, numberField, emailField,
-                addressField, firstPassField, secondPassField, saveButton);
-
-        formLayout.addClassName("settings-profile-formlayout");
-
-        layout.addClassNames("tab-content-container", "profile-tab-content");
-        layout.setWidthFull();
-
-        layout.add(headerText, imageSection, formLayout);
-        return layout;
-    }
 
     private VerticalLayout companyTabComponent() {
         var systemData = DAO_MODEL.shopInformation(SHOP_ID.get());

@@ -1,33 +1,30 @@
-package com.mech.app.views.dashboard;
+package com.mech.app.views.reports;
 
 import com.mech.app.configfiles.secutiry.SessionManager;
-import com.mech.app.enums.MasterRoles;
 import com.mech.app.enums.SubRoles;
 import com.mech.app.views.MainLayout;
 import com.mech.app.views.login.LoginView;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.SvgIcon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.*;
-import jakarta.annotation.security.PermitAll;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
-import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-@PageTitle("My Dashboard")
-@Route(value = "/customer-dashboard", layout = MainLayout.class)
-@Menu(title = "My Dashboard", icon = LineAwesomeIconUrl.CHART_PIE_SOLID)
+@Route(value = "my-report", layout = MainLayout.class)
+@PageTitle("My Reports")
 @RolesAllowed("CUSTOMER")
-public class CustomerDashboardView extends VerticalLayout implements BeforeEnterObserver {
-
+public class CustomerReportsView extends VerticalLayout implements BeforeEnterObserver {
+    private int USER_ID;
+    private int SHOP_ID;
     private static AtomicReference<String> ACCESS_TYPE;
-
-    public CustomerDashboardView() {
+    public CustomerReportsView() {
+        setPadding(true);
+        setSpacing(true);
         addClassName("page-body");
-        setSizeFull();
     }
 
     @Override
@@ -43,6 +40,4 @@ public class CustomerDashboardView extends VerticalLayout implements BeforeEnter
             event.rerouteTo(LoginView.class);
         }
     }
-
-
-}// end of class...
+}//END OF CLASS..

@@ -2,10 +2,13 @@ package com.mech.app.views.jobcards;
 
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.transactions.TransactionDialogs;
+import com.mech.app.configfiles.secutiry.SessionManager;
 import com.mech.app.dataproviders.jobcards.JobCardDataProvider;
 import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.models.ServiceRequestModel;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -21,6 +24,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.time.format.DateTimeFormatter;
@@ -32,11 +36,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Completed Jobs")
 @Route(value = "/view/completed-job", layout = MainLayout.class)
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 //@Menu(title = "Completed Jobs", order = 4, icon = LineAwesomeIconUrl.CHECK_CIRCLE_SOLID)
 public class CompletedJobView extends Composite<VerticalLayout> implements BeforeEnterObserver, AfterNavigationObserver {
 
     private final Grid<ServicesDataProvider.CompletedServicesRecord> grid = new Grid<>();
     private static final ServiceRequestModel SERVICE_REQUEST_MODEL = new ServiceRequestModel();
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public CompletedJobView() {
         getContent().setBoxSizing(BoxSizing.BORDER_BOX);
@@ -47,6 +53,15 @@ public class CompletedJobView extends Composite<VerticalLayout> implements Befor
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
 
     @Override

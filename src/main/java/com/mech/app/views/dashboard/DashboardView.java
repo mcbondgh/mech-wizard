@@ -1,6 +1,9 @@
 package com.mech.app.views.dashboard;
 
+import com.mech.app.configfiles.secutiry.SessionManager;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -17,13 +20,18 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Dashboard")
 @Route(value = "/dashboard", layout = MainLayout.class)
-@PermitAll
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 //@Menu(order = 0, icon = LineAwesomeIconUrl.DESKTOP_SOLID)
-public class DashboardView extends Composite<VerticalLayout> implements BeforeEnterObserver{
+public class DashboardView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     public DashboardView() {
         getContent().addClassName("page-body");
@@ -32,13 +40,21 @@ public class DashboardView extends Composite<VerticalLayout> implements BeforeEn
         getContent().getStyle().set("flex-grow", "1");
     }
 
+    AtomicReference<String> ACCESS_TYPE;
+
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        // This method can be used to perform actions before entering the view, like checking permissions
-        // or initializing data.
-        // For now, we will just set the title of the page.
-
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
+
     @Override
     public void onAttach(AttachEvent event) {
         // This method can be used to perform actions after navigation, like updating the view title.

@@ -10,8 +10,10 @@ import com.mech.app.dataproviders.dao.DAO;
 import com.mech.app.dataproviders.employees.EmployeesDataProvider;
 import com.mech.app.dataproviders.logs.NotificationRecords;
 import com.mech.app.dataproviders.servicesrequest.ServicesDataProvider;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.models.ServiceRequestModel;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -32,32 +34,44 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.shared.communication.PushMode;
+import jakarta.annotation.security.RolesAllowed;
 import org.jetbrains.annotations.NotNull;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @PageTitle("Service Requests")
 @Route(value = "/view/service-requests", layout = MainLayout.class)
 //@Menu(order = 5, icon = LineAwesomeIconUrl.TOOLBOX_SOLID)
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 public class ServiceRequestsView extends Composite<VerticalLayout> implements BeforeEnterObserver {
     private static H4 layoutHeaderText;
     private static final boolean isVisible = true;
     private AtomicInteger USER_ID;
     private AtomicInteger SHOP_ID;
+    private static AtomicReference<String> ACCESS_TYPE;
 
     public ServiceRequestsView() {
         getContent().setSizeUndefined();
         getContent().setWidthFull();
-        USER_ID = new AtomicInteger(SessionManager.DEFAULT_USER_ID);
-        SHOP_ID = new AtomicInteger(SessionManager.DEFAULT_SHOP_ID);
+        USER_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("userId").toString()));
+        SHOP_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("shopId").toString()));
     }
 
 
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
 
     @Override

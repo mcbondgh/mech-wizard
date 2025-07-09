@@ -2,7 +2,10 @@ package com.mech.app.views.reports;
 
 import com.mech.app.components.HeaderComponent;
 import com.mech.app.components.transactions.CardComponent;
+import com.mech.app.configfiles.secutiry.SessionManager;
+import com.mech.app.enums.MasterRoles;
 import com.mech.app.views.MainLayout;
+import com.mech.app.views.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -23,18 +26,21 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.vaadin.flow.component.Tag.H4;
 
 @PageTitle("Reports")
-@Route(value = "/reports", layout = MainLayout.class)
-@PermitAll
+@Route(value = "view/reports", layout = MainLayout.class)
+@RolesAllowed({"MECHANIC", "ADMIN", "RECEPTIONIST"})
 public class ReportsView extends VerticalLayout implements BeforeEnterObserver {
-
+    private static AtomicReference<String> ACCESS_TYPE;
     public ReportsView() {
         addClassName("page-view");
         setPadding(true);
@@ -42,8 +48,17 @@ public class ReportsView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+    public void beforeEnter(BeforeEnterEvent event) {
+        try {
+            var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
+            ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
 
+            if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {
+                event.forwardTo("/login");
+            }
+        }catch (NullPointerException ex) {
+            event.rerouteTo(LoginView.class);
+        }
     }
 
     @Override
