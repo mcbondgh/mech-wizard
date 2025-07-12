@@ -150,4 +150,24 @@ public class ServiceRequestModel extends DAO {
 
         return 0;
     }
+
+    public int rateService(int customerId, int jobId, int star, String feedback) {
+        String query = """
+                INSERT INTO customer_feedbacks(customer_id, job_id, stars, comments)
+                VALUES(?, ?, ?, ?);
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, customerId);
+            prepare.setInt(2, jobId);
+            prepare.setInt(3, star);
+            prepare.setString(4, feedback);
+            return prepare.executeUpdate();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "rateService()").logErrorToFile();
+            logError(ex, "rateService");
+        }
+        return 0;
+    }
 }

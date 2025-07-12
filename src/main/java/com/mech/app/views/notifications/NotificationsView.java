@@ -34,7 +34,7 @@ public class NotificationsView extends Composite<VerticalLayout> implements Befo
     private static AtomicReference<String> ACCESS_TYPE;
 
     public NotificationsView() {
-        getContent().setClassName("page-body");
+        getContent().addClassNames("page-body", "fade-in");
         DAO_MODEL = new DAO();
 
     }

@@ -81,6 +81,27 @@ public class CustomerModel extends DAO {
         return 0;
     }
 
+    public int registerCustomerCarByCustomerId(CarDataProvider obj) {
+        String query = """
+                INSERT INTO customer_vehicles(customer_id, brand, model, car_year, plate_number)
+                VALUES(?, ?, ?, ?, ?);
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, obj.getCustomerId());
+            prepare.setString(2, obj.getBrand());
+            prepare.setString(3, obj.getModel());
+            prepare.setString(4, String.valueOf(obj.getCarYear()));
+            prepare.setString(5, obj.getPlateNumber());
+            return prepare.executeUpdate();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "registerCustomerCar()").logErrorToFile();
+            logError(ex, "registerCustomerCar");
+        }
+        return 0;
+    }
+
     public int insertOrUpdateCustomerAccountByCustomerId(int customerId, double amount, int userId ) {
         String query = """
                 INSERT INTO customer_account(customer_id, account_balance, updated_by)

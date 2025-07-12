@@ -261,7 +261,7 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
         jobStatusButtons.setLabel("Job Status");
         jobStatusButtons.setItems(ComponentLoader.getJobStatusList());
         jobStatusButtons.setValue(dataProvider.jobStatusValue());
-        jobStatusButtons.setValue("In Progress");
+//        jobStatusButtons.setValue("In Progress");
 
         Section section1 = new Section(jobStatusButtons);
         section1.addClassNames("job-card-details-section1");
@@ -271,12 +271,12 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
         progressButtons.addClassNames("check-buttons-group-style");
         progressButtons.setSelectionPreservationMode(SelectionPreservationMode.PRESERVE_EXISTING);
 
-        ProgressBar progressBar = new ProgressBar();
+        ProgressBar progressBar = new ProgressBar(0, 100, 0);
         progressBar.setWidthFull();
         progressBar.setHeight("10px");
         progressBar.addThemeVariants(ProgressBarVariant.LUMO_SUCCESS);
         progressBar.addClassName("job-progress-bar");
-        progressBar.setValue((progress * 0.01));
+        progressBar.setValue(progress);
 
         progressButtons.setValue(String.valueOf(progress));
 
@@ -284,7 +284,7 @@ public class JobCardsView extends Composite<VerticalLayout> implements BeforeEnt
             try {
                 var value = Double.parseDouble(event.getSource().getValue().replace("%", ""));
                 Notification.show(String.format("Job progress updated to %s", event.getValue() + "%"));
-                progressBar.setValue((value) * 0.01);
+                progressBar.setValue(value);
             } catch (NullPointerException ignore) {
             }
 

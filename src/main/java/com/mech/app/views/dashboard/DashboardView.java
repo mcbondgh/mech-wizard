@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DashboardView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     public DashboardView() {
-        getContent().addClassName("page-body");
+        getContent().addClassNames("page-body", "fade-in");
         getContent().setWidth("100%");
         getContent().setSizeFull();
         getContent().getStyle().set("flex-grow", "1");

@@ -372,10 +372,35 @@
     height: 100px;
 }
 
+/*ADD CARS VIEW STYLING... */
+.add-car-view-layout {
+    /* border:1px solid red; */
+    box-sizing: border-box;
+    box-shadow: var(--lumo-box-shadow-xs);
+    max-width:80%;
+    margin: auto;
+    border-radius: 10px;
+    padding:20px;
+}
+.add-car-form-layout {
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:20px;
+    box-sizing: border-box;
+}
+
+.add-car-view-layout .default-button-style {
+    margin-top: 15px;
+}
+
+
+
+
+
 /*MOBILE VIEW STYLING...*/
 @media screen and (max-width:768px) {
     
-    .customers-details-renderer-box {
+    .customers-details-renderer-bo{
         display: block;
         width:100%;
         align-items: center;
@@ -392,6 +417,9 @@
     }
     .customer-account-parent-box {
        /*min-width:100px;*/
+    }
+    .add-car-view-layout  {
+        max-width: 100%;
     }
 
     .car-info-box .add-car-info-button {
