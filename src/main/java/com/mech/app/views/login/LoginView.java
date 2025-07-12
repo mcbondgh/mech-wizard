@@ -120,6 +120,7 @@ public class LoginView extends VerticalLayout {
             String status = userDetails.getFirst().status();
             int userId = userDetails.getFirst().id();
             int shopId = userDetails.getFirst().shopId();
+            int clientId = userDetails.getFirst().clientId();
 
             boolean checkPassword = DataEncryptor.verifyPassword(userPassword, hashedPassword);
             if (!checkPassword) {
@@ -145,6 +146,7 @@ public class LoginView extends VerticalLayout {
 
             SessionManager.setAttribute("fullName", fullName);
             SessionManager.setAttribute("userId", userId);
+            SessionManager.setAttribute("clientId", clientId);
             SessionManager.setAttribute("status", status);
             SessionManager.setAttribute("shopId", shopId);
             SessionManager.setAttribute("role", role);

@@ -421,7 +421,12 @@ vaadin-form-layout[empty] {
 
 .customer-add-service-button-box {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: space-between;
+    background-color:#fff;
+    box-sizing: border-box;
+    align-items: center;
+    padding:10px auto;
+    border-radius:8px;
 }
 
 .customer-add-service-button-box vaadin-button {
@@ -432,7 +437,8 @@ vaadin-form-layout[empty] {
 .customer-service-request-details-box {
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 10px;
+    padding: 20px;
+    background-color: #f9faff;
     box-sizing: border-box;
     margin: 10px auto;
 }
@@ -458,6 +464,7 @@ vaadin-form-layout[empty] {
     margin: 10px auto;
     border-radius: 7px;
     padding: 10px;
+    align-items: center;
 }
 
 .book-service-layout h3 {
@@ -470,6 +477,15 @@ vaadin-form-layout[empty] {
 .book-service-layout vaadin-text-area {
     /* margin:10px auto; */
     height: 90px;
+}
+.book-service-layout .input-style::part(input-field) {
+    background-color:rgb(210, 255, 210);
+    color:var(--lumo-success-text-color);
+    font-weight: 700;
+}
+.book-service-layout .default-button-style {
+    margin-top: 18px;
+    width: 100%;
 }
 
 .book-service-layout .default-btn-style {
@@ -505,7 +521,7 @@ vaadin-form-layout[empty] {
 
 .secondary-booking-header-section .book-service-confirm-icon {
     width: 50px;
-    background-color: rgb(0, 255, 34);
+    background-color: rgb(141, 245, 155);
     border-radius: 100%;
     padding: 5px;
 }
@@ -551,6 +567,66 @@ vaadin-form-layout[empty] {
     background-color:var(--lumo-success-color-50pct);
 }
 
+.customer-service-request-description-box {
+    background-color:#f9dede;
+    width:100%;
+    padding:10px;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.customer-service-request-description-box span {
+    color:#c21d1d;
+}
+
+.job-tracker-layout {
+    border:1px solid #ddd;
+    border-radius: 10px;
+    box-sizing: border-box;
+    min-width:900px;
+    min-height: 450px;
+}
+.progress-indicator-box {
+    background-color: rgb(13, 144, 184);
+    min-height:fit-content;
+    padding: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.progress-indicator-box > * {
+    color: #fff;
+}
+.progress-indicator-box vaadin-progress-bar::part(bar) {
+    color:#fff;
+    height:8px;
+    margin:5px auto;
+    /* background-color: #cecece5e; */
+}
+.progress-indicator-box vaadin-progress-bar::part(value) {
+    background: #ffffff;
+} 
+
+.timeline-indicator {
+    color: var(--subtitle-color);
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    width:100%;
+}
+.job-description-box {
+    border-left: 2px solid #bdb8b8;
+    padding:8px;
+    border-radius: 1px;
+    box-sizing: border-box;
+}
+.job-description-box span {
+    color:var(--subtitle-color);
+    font-size: smaller;
+    margin:5px auto;
+}
+.job-description-box p {
+    color:var(--header-text-color);
+    margin-bottom: 10px;
+}
+
 
 /* RESPONSIVE VIEW STYLING */
 @media screen and (max-width: 768px) {
@@ -558,7 +634,7 @@ vaadin-form-layout[empty] {
     /*  display: block;*/
     /*  grid-template-columns: repeat(1, 1fr);*/
     /*}*/
-    .service-request-form-layout {
+    .service-request-form-layout{
         width: fit-content;
     }
     .service-selector-box, .content-blocks {
@@ -591,7 +667,7 @@ vaadin-form-layout[empty] {
     /*    flex-direction: column;*/
     /*    line-height: 20px;*/
     /*}*/
-    .service-operation-buttons vaadin-button {
-
+    .job-tracker-layout {
+        min-width:fit-content;
     }
 }

@@ -56,14 +56,14 @@ public class ServiceRequestsView extends Composite<VerticalLayout> implements Be
     public ServiceRequestsView() {
         getContent().setSizeUndefined();
         getContent().setWidthFull();
-        USER_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("userId").toString()));
-        SHOP_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("shopId").toString()));
     }
 
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         try {
+            USER_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("userId").toString()));
+            SHOP_ID = new AtomicInteger(Integer.parseInt(SessionManager.getAttribute("shopId").toString()));
             var allowedRole = List.of(MasterRoles.values()).toString().toLowerCase();
             ACCESS_TYPE = new AtomicReference<>(SessionManager.getAttribute("role").toString());
             if (!allowedRole.contains(ACCESS_TYPE.get().toLowerCase())) {

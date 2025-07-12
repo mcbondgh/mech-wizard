@@ -17,6 +17,7 @@ import com.mech.app.dataproviders.users.UsersDataProvider;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.notification.Notification;
 import org.springframework.cglib.core.Local;
+import org.springframework.security.core.parameters.P;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.sql.SQLException;
@@ -146,7 +147,7 @@ public class DAO extends AppConnection {
                 );
             }
         } catch (Exception ex) {
-            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "fetcAllCustomers").logErrorToFile();
+            new ErrorLoggerTemplate(LocalDateTime.now().toString(), ex.getLocalizedMessage(), "fetchAllCustomers").logErrorToFile();
             logError(ex, "fetchAllCustomers");
             ex.printStackTrace();
         }
@@ -245,7 +246,7 @@ public class DAO extends AppConnection {
             prepare = getCon().prepareStatement(query);
             prepare.setInt(1, customerId);
             resultSet = prepare.executeQuery();
-            //record_id, customer_id, transaction_date, transaction_type, transaction_id, payment_method, notes, amount, user_id
+            //record_id, customerId, transaction_date, transaction_type, transaction_id, payment_method, notes, amount, user_id
             while (resultSet.next()) {
                 data.add(new TransactionLogs(
                         resultSet.getInt("customer_id"),
@@ -301,7 +302,7 @@ public class DAO extends AppConnection {
         var data = new ArrayList<ServicesDataProvider.BookedServicesRecord>();
         String query = """
                 SELECT\s
-                	id, customer_name, brand, plate_number,
+                	id, sr.customer_id, customer_name, brand, plate_number,
                     service_type, sr.service_cost, sr.service_desc, urgency_level, preferred_date,
                     pickup_or_dropoff, service_status, termination_note, full_name AS assigned_mechanic, logged_date
                 FROM service_requests AS sr
@@ -313,7 +314,8 @@ public class DAO extends AppConnection {
                 	ON sr.service_type_id = st.record_id
                 LEFT JOIN employees AS e\s
                 	ON assigned_mechanic = e.record_id
-                WHERE sr.is_deleted = FALSE AND c.shop_id = ? AND service_status != 'completed';
+                WHERE sr.is_deleted = FALSE AND c.shop_id = ? AND service_status != 'completed'
+                ORDER BY id DESC;
                 """;
         try {
             prepare = getCon().prepareStatement(query);
@@ -322,6 +324,7 @@ public class DAO extends AppConnection {
             while (resultSet.next()) {
                 data.add(new ServicesDataProvider.BookedServicesRecord(
                         resultSet.getInt("id"),
+                        resultSet.getInt("customer_id"),
                         resultSet.getString("customer_name"), resultSet.getString("brand"),
                         resultSet.getString("plate_number"), resultSet.getString("service_type"),
                         resultSet.getDouble("service_cost"), resultSet.getString("service_desc"),
@@ -546,7 +549,7 @@ public class DAO extends AppConnection {
     public List<TransactionsDataProvider.TransactionRecord> fetchPaidAndUnpaidTransactions() {
         List<TransactionsDataProvider.TransactionRecord> data = new ArrayList<>();
         try {
-            String query =  """
+            String query = """
                     SELECT\s
                         jc.job_id,\s
                         sr.customer_id,
@@ -571,7 +574,7 @@ public class DAO extends AppConnection {
                     WHERE sr.service_status IN ('completed', 'paid');
                     """;
             resultSet = getCon().prepareStatement(query).executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 data.add(new TransactionsDataProvider.TransactionRecord(
                         resultSet.getInt("job_id"),
                         resultSet.getInt("service_id"),
@@ -597,7 +600,7 @@ public class DAO extends AppConnection {
         String query = "SELECT * FROM payments;";
         try {
             resultSet = getCon().prepareStatement(query).executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 data.add(new TransactionsDataProvider.Payments(
                         resultSet.getInt("record_id"),
                         resultSet.getInt("job_id"),
@@ -611,7 +614,7 @@ public class DAO extends AppConnection {
                 ));
             }
             resultSet.close();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             logError(ex, "getPaymentDetails");
         }
@@ -630,7 +633,7 @@ public class DAO extends AppConnection {
             prepare = getCon().prepareStatement(query);
             prepare.setInt(1, shopId);
             resultSet = prepare.executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 items.add(new NotificationRecords.LogsRecord(
                         resultSet.getInt("log_id"),
                         resultSet.getString("title"),
@@ -641,7 +644,7 @@ public class DAO extends AppConnection {
             }
             prepare.close();
             resultSet.close();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             logError(ex, "notificationLogs");
         }
@@ -650,11 +653,11 @@ public class DAO extends AppConnection {
 
     public Map<String, String> shopInformation(int id) {
         Map<String, String> data = new HashMap<>();
-        String query = "SELECT * FROM auto_mechanics.mechanic_shops WHERE record_id = '"+id+"';";
+        String query = "SELECT * FROM auto_mechanics.mechanic_shops WHERE record_id = '" + id + "';";
         //record_id, shop_name, address, mobile_number, other_number, slogan, email, sms_id, date_created, is_active, activation_key
         try {
             resultSet = getCon().prepareStatement(query).executeQuery();
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 data.put("id", resultSet.getString("record_id"));
                 data.put("shop_name", resultSet.getString("shop_name"));
                 data.put("address", resultSet.getString("address"));
@@ -677,6 +680,7 @@ public class DAO extends AppConnection {
                 SELECT\s
                     user_id,\s
                     username,
+                    reference_id,
                     CASE\s
                         WHEN user_role = 'admin' THEN full_name
                         WHEN user_role = 'mechanic' THEN full_name
@@ -703,6 +707,7 @@ public class DAO extends AppConnection {
                 data.add(new UsersDataProvider.LoginUserRecord(
                         resultSet.getInt("user_id"),
                         resultSet.getInt("shop_id"),
+                        resultSet.getInt("reference_id"),
                         resultSet.getString("username"),
                         resultSet.getString("user_role"),
                         resultSet.getString("combined_name"),
@@ -710,6 +715,143 @@ public class DAO extends AppConnection {
                         resultSet.getString("user_password")
                 ));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    public UsersDataProvider fetchUserByUserId(int userId) {
+        UsersDataProvider provider = new UsersDataProvider();
+        String query = """
+                SELECT
+                    username,
+                    reference_id,
+                    CASE
+                        WHEN user_role = 'admin' THEN full_name
+                        WHEN user_role = 'mechanic' THEN full_name
+                        WHEN user_role = 'customer' THEN customer_name
+                        ELSE full_name
+                    END AS combined_name,
+                    CASE
+                        WHEN user_role = 'admin' THEN e.mobile_number
+                        WHEN user_role = 'mechanic' THEN e.mobile_number
+                        WHEN user_role = 'customer' THEN c.mobile_number
+                    END AS mobile_number,
+                    CASE
+                        WHEN user_role = 'admin' THEN e.other_number
+                        WHEN user_role = 'mechanic' THEN e.other_number
+                        WHEN user_role = 'customer' THEN c.other_number
+                    END AS other_number,
+                    CASE
+                        WHEN user_role = 'admin' THEN e.address
+                        WHEN user_role = 'mechanic' THEN e.address
+                        WHEN user_role = 'customer' THEN c.address
+                    END AS address,
+                    u.shop_id
+                FROM users AS u
+                LEFT JOIN employees AS e ON u.reference_id = e.record_id
+                LEFT JOIN customers AS c ON u.reference_id = c.record_id
+                WHERE user_id = ? AND (c.is_active = TRUE OR e.is_active = TRUE);
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, userId);
+            resultSet = prepare.executeQuery();
+            if (resultSet.next()) {
+                provider.setFullName(resultSet.getString("combined_name"));
+                provider.setUsername(resultSet.getString("username"));
+                provider.setShop_id(resultSet.getInt("shop_id"));
+                provider.setAddress(resultSet.getString("address"));
+                provider.setMobileNumber(resultSet.getString("mobile_number"));
+                provider.setOtherNumber(resultSet.getString("other_number"));
+            }
+            resultSet.close();
+        }catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return provider;
+    }
+
+    public Map<String, String> fetchCustomerDashboardValues(int customerId) {
+        var data = new HashMap<String , String>();
+        String query = """
+                SELECT\s
+                    sr_counts.total_services,
+                    sr_counts.completed_services,
+                    sr_counts.queued_services,
+                    COALESCE(ca.account_balance, 0) AS account_balance
+                FROM (
+                    SELECT\s
+                        COUNT(*) AS total_services,
+                        COUNT(CASE WHEN service_status = 'paid' THEN 1 END) AS completed_services,
+                        COUNT(CASE WHEN service_status IN ('new', 'assigned') THEN 1 END) AS queued_services
+                    FROM service_requests
+                    WHERE customer_id = ?
+                ) AS sr_counts
+                LEFT JOIN customer_account AS ca ON ca.customer_id = ?;
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, customerId);
+            prepare.setInt(2, customerId);
+            resultSet = prepare.executeQuery();
+            if (resultSet.next()) {
+                data.putIfAbsent("totalService", resultSet.getString("total_services"));
+                data.putIfAbsent("completed", resultSet.getString("completed_services"));
+                data.putIfAbsent("queued", resultSet.getString("queued_services"));
+                data.putIfAbsent("account", resultSet.getString("account_balance"));
+            }
+            prepare.close();
+            resultSet.close();
+        }catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return data;
+    }
+
+    public List<ServicesDataProvider.PaidServicesRecord> fetchPaidServicesByCustomerId(int customerId) {
+        List<ServicesDataProvider.PaidServicesRecord>data = new ArrayList<>();
+        String query = """
+                SELECT\s
+                    jc.job_id,\s
+                    st.service_type,\s
+                    sr.service_desc,
+                    sr.logged_date,
+                    jc.last_updated,
+                    cv.brand,\s
+                    cv.plate_number,
+                    p.collected_amount,
+                    COALESCE(cf.stars, 0) AS stars,
+                    COALESCE(cf.comments, "No Feedback") as feedback
+                FROM service_requests sr
+                JOIN service_types st ON sr.service_type_id = st.record_id
+                JOIN job_cards jc ON sr.id = jc.service_id
+                JOIN customer_vehicles cv ON sr.vehicle_id = cv.record_id
+                JOIN payments p ON jc.job_id = p.job_id
+                LEFT JOIN customer_feedbacks cf ON jc.job_id = cf.job_id
+                WHERE sr.customer_id IN(?) AND sr.service_status = 'paid';
+                """;
+        try {
+            prepare = getCon().prepareStatement(query);
+            prepare.setInt(1, customerId);
+            resultSet = prepare.executeQuery();
+            while (resultSet.next()) {
+                data.add(new ServicesDataProvider.PaidServicesRecord(
+                        resultSet.getInt("job_id"),
+                        resultSet.getString("service_type"),
+                        resultSet.getString("service_desc"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("plate_number"),
+                        resultSet.getString("stars"),
+                        resultSet.getString("feedback"),
+                        resultSet.getTimestamp("logged_date"),
+                        resultSet.getTimestamp("last_updated"),
+                        resultSet.getDouble("collected_amount")
+                ));
+            }
+            prepare.close();
+            resultSet.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -19,6 +19,7 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.communication.PushConnection;
 
 import jakarta.annotation.security.PermitAll;
@@ -44,6 +45,7 @@ import javax.sound.sampled.Line;
 
 @PageTitle("Homepage")
 @Route("/")
+@RouteAlias("/homepage")
 @PermitAll
 public class Homepage extends VerticalLayout {
     public Homepage() {

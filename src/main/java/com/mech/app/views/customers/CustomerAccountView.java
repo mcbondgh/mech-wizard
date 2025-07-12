@@ -64,6 +64,7 @@ public class CustomerAccountView extends VerticalLayout implements BeforeEnterOb
         CUSTOMER_DATA_PROVIDER = new CustomersDataProvider();
         USER_ID = new AtomicInteger(SessionManager.DEFAULT_USER_ID);
         SHOP_ID = new AtomicInteger(SessionManager.DEFAULT_SHOP_ID);
+        CUSTOMER_ID = new AtomicInteger(0);
     }
 
     @Override
@@ -82,11 +83,12 @@ public class CustomerAccountView extends VerticalLayout implements BeforeEnterOb
         var mobile = beforeEnterEvent.getLocation().getQueryParameters().getSingleParameter("mobile_number");
 
         customerId.ifPresentOrElse(param -> {
-            CUSTOMER_ID = new AtomicInteger(Integer.parseInt(param));
+            CUSTOMER_ID.set(Integer.parseInt(param));
+            Notification.show("Customer Id " + CUSTOMER_ID.get());
         }, () -> {
             ;
             // If no customer ID is provided, navigate back to the customers view
-            Notification.show("No customer ID provided. Redirecting to customers view.");
+            CUSTOMER_ID.set(0);
             getUI().ifPresent(ui -> ui.navigate("view/customers"));
         });
         CUSTOMER_NAME = new AtomicReference<>(name.get());

@@ -17,6 +17,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -230,7 +231,6 @@ public class CustomerComponents {
         yearField.setPattern("\\d{4}");
         yearField.setHelperText("Enter a valid year (e.g., 2023)");
 
-
         ComponentLoader.setCarBrands(carComboBox);
         var formLayout = new FormLayout(carComboBox, modelField, yearField, plateField, addButton);
         FormLayout.ResponsiveStep single = new FormLayout.ResponsiveStep("0", 1);
@@ -244,15 +244,16 @@ public class CustomerComponents {
         dialog.defaultDialogBox(contentLayout, "Customer Cars", "Add a new or update car for customer ID: " + customerId);
     }
 
-    private Grid<CarDataProvider> carsGrid(int customerId) {
+    public Grid<CarDataProvider> carsGrid(int customerId) {
         var carsData = DATA_MODEL.fetchCustomerCarsById(customerId);
         Grid<CarDataProvider> grid = new Grid<>(CarDataProvider.class, false);
         grid.addClassName("alternative-grid-style");
+        grid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS, GridVariant.LUMO_ROW_STRIPES);
         grid.addColumn(CarDataProvider::getBrand).setHeader("Brand").setSortable(true);
         grid.addColumn(CarDataProvider::getModel).setHeader("Model").setSortable(true);
         grid.addColumn(CarDataProvider::getCarYear).setHeader("Year").setSortable(true);
         grid.addColumn(CarDataProvider::getPlateNumber).setHeader("Plate Number").setSortable(true);
-        grid.setHeight("500px");
+        grid.setHeight("400px");
         grid.setItemDetailsRenderer(carActionsRenderer());
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         grid.setItems(carsData);

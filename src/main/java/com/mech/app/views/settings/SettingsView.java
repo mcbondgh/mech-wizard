@@ -61,6 +61,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
         getContent().setWidthFull();
         getContent().addClassName("page-body");
         SHOP_ID.set(Integer.parseInt(SessionManager.getAttribute("shopId").toString()));
+
         USER_ID.set(Integer.parseInt(SessionManager.getAttribute("userId").toString()));
         DAO_MODEL = new SettingsModel();
     }
@@ -104,7 +105,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
         Tab profileTab = new Tab("Profile");
         profileTab.addClassNames("settings-tab");
         profileTab.addComponentAsFirst(LineAwesomeIcon.USER_CLOCK_SOLID.create());
-        tabSheet.add(profileTab, new UserProfileComponent().userProfileComponent());
+        tabSheet.add(profileTab, new UserProfileComponent().userProfileComponent(USER_ID.get(), USER_ID.get()));
 
         Tab companyTab = new Tab("Company");
         companyTab.addClassNames("settings-tab");
@@ -113,7 +114,7 @@ public class SettingsView extends Composite<VerticalLayout> implements BeforeEnt
 
         Tab securityTab = new Tab("Security");
         securityTab.addComponentAsFirst(LineAwesomeIcon.LOCK_SOLID.create());
-        tabSheet.add(securityTab, securityTabComponent());
+//        tabSheet.add(securityTab, securityTabComponent());
         securityTab.addClassNames("settings-tab");
 
         Tab systemTab = new Tab("Service Types");

@@ -184,7 +184,7 @@ vaadin-form-layout[empty] {
   color:var(--lumo-primary-color);
 }
 .notification-message-list::part(time) {
-  color: var(--lumo-error-color);
+  color: var(--subtitle-color);
 }
 .notification-message-list::part(icon) {
   width:20px;

@@ -52,5 +52,12 @@ public class HeaderComponent {
         fieldLayout.add(field);
         return fieldLayout;
     }
+    public HorizontalLayout dashboardHeader(Component ... component) {
+        HorizontalLayout viewTitleLayout = new HorizontalLayout(component);
+        viewTitleLayout.setWidthFull();
+        viewTitleLayout.setPadding(true);
+        viewTitleLayout.addClassNames("dashboard-view-title-layout");
+        return viewTitleLayout;
+    }
 
 }

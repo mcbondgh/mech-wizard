@@ -2,12 +2,8 @@ package com.mech.app.dataproviders.servicesrequest;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
 
 public class ServicesDataProvider {
 
@@ -47,22 +43,35 @@ public class ServicesDataProvider {
         }
     }
 
+    public record PaidServicesRecord(int jobId, String serviceType, String description, String vehicle, String VIN,
+                                    String stars, String feedback, Timestamp serviceDate, Timestamp dateCompleted, double totalBill
+                                     ){
+        public String jobNo() {
+            return "JC/" + serviceDate.toLocalDateTime().getMonthValue() + "/" + jobId;
+        }
+        public String rate() {
+            return switch (stars) {
+                case "1" -> "⭐";
+                case "2" -> "⭐⭐";
+                case "3" -> "⭐⭐⭐";
+                case "4" -> "⭐⭐⭐⭐";
+                case "5" -> "⭐⭐⭐⭐⭐";
+                default -> "no rating";
+            };
+        }
+    }
 
-
-    public record BookedServicesRecord(int serviceId, String customerName, String vehicle,
+    public record BookedServicesRecord(int serviceId, int customerId, String customerName, String vehicle,
                                        String VIN, String serviceType, double cost, String desc,
                                        String urgencyLevel, String preferredDate, boolean pickupStatus,
                                        String serviceStatus, String mechanic, Timestamp loggedDate,
                                        String terminationNote) {
-
         public String pickupValue() {
             return pickupStatus ? "YES" : "NO";
         }
-
         public String serviceNo() {
             return "SVR/" + loggedDate.toLocalDateTime().toLocalDate().getMonthValue() + "/" + serviceId;
         }
-
         public String statusValue() {
             return switch (serviceStatus) {
                 case "new" -> "New";
@@ -72,7 +81,6 @@ public class ServicesDataProvider {
                 default -> "Unknown Status";
             };
         }
-
     }
 
 

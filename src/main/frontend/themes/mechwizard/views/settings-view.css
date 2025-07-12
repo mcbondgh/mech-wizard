@@ -209,9 +209,13 @@ vaadin-form-layout[empty] {
 
 .profile-tab-content {
   display:grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 28% 70%;
   box-sizing:border-box;
   padding:10px;
+  background-color: #fff;
+  border-radius: 10px;
+  max-width:900px;
+  margin: auto;
 }
 
 .profile-tab-content vaadin-form-layout {
@@ -263,13 +267,10 @@ vaadin-form-layout[empty] {
   box-shadow: 1px 1px 1px 1px #cbcbcb;
 }
 
-/* .settings-profile-formlayout .profile-name-field{
-  grid-column:span 4;
+.settings-profile-formlayout .input-style::part(input-field) {
+  font-weight: 600;
+  color: var(--lumo-primary-color);
 }
-
-.settings-profile-formlayout .profile-number-field, .profile-email-field{
-  grid-column:span 2;
-} */
 
 
 /* SETTINGS FORM STYLING */

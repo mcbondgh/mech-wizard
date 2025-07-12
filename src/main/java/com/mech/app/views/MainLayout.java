@@ -201,9 +201,9 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
 
         contextMenu.add(popoverHeader, new Hr());
         contextMenu.setClassName("notification-icon-context-menu");
-        contextMenu.addItem(profileLink, e -> {
-            UI.getCurrent().navigate("/user-profile");
-        });
+//        contextMenu.addItem(profileLink, e -> {
+//            UI.getCurrent().navigate("/user-profile");
+//        });
         contextMenu.addItem(singoutLink, e -> {
             SessionManager.destroySession();
             UI.getCurrent().getPage().setLocation("/");

@@ -1,5 +1,7 @@
 package com.mech.app.dataproviders.users;
 
+import com.github.javaparser.metamodel.OptionalProperty;
+
 public class UsersDataProvider {
     int record_id;
     int shop_id;
@@ -7,16 +9,64 @@ public class UsersDataProvider {
     int emp_id;
     String username;
     String password;
+    @OptionalProperty
+    String statusString;
     String role;
+    String fullName, gender, mobileNumber, otherNumber, address;
 
     public record usersRecord(int id, String username, String password, String role) {}
 
-    public record LoginUserRecord(int id, int shopId, String username, String role, String name, String status, String password){}
+    public record LoginUserRecord(int id, int shopId, int clientId, String username, String role, String name, String status, String password){}
 
-    public UsersDataProvider() {
+    public UsersDataProvider() {}
+
+    public String getOtherNumber() {
+        return otherNumber;
     }
 
+    public void setOtherNumber(String otherNumber) {
+        this.otherNumber = otherNumber;
+    }
 
+    public String getStatusString() {
+        return statusString;
+    }
+
+    public void setStatusString(String statusString) {
+        this.statusString = statusString;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public int getRecord_id() {
         return record_id;
