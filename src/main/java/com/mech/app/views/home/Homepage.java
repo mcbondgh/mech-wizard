@@ -81,7 +81,7 @@ public class Homepage extends VerticalLayout {
         Image heroImage = new Image("images/landing-page-img.jpg", "HERO IMG");
         heroImage.addClassName("landing-hero-image");
 
-        var imageAndLoginDiv = new HorizontalLayout(loginSection(), heroImage);
+        var imageAndLoginDiv = new HorizontalLayout(heroImage, loginSection());
         imageAndLoginDiv.addClassNames("landing-image-and-login-div");
 
         // parentLayout.add(textSection, 2);
