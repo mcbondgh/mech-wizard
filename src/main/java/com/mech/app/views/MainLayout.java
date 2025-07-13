@@ -73,7 +73,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
             addDrawerContent();
             addHeaderContent();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             UI.getCurrent().getPage().setLocation("/login");
         }
     }
@@ -120,7 +120,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         var completedJobs = new SideNavItem("Completed Jobs", CompletedJobView.class, LineAwesomeIcon.CHECK_CIRCLE_SOLID.create());
         var serviceRequests = new SideNavItem("Service Requests", ServiceRequestsView.class, LineAwesomeIcon.TOOLBOX_SOLID.create());
         var transactions = new SideNavItem("Transactions", TransactionsView.class, LineAwesomeIcon.DOLLAR_SIGN_SOLID.create());
-        var feedbacks = new SideNavItem("Feedback", "views/feedbacks", LineAwesomeIcon.STAR.create());
+        var feedbacks = new SideNavItem("Feedback", "view/feedbacks", LineAwesomeIcon.STAR.create());
         var settings = new SideNavItem("Settings", SettingsView.class, LineAwesomeIcon.TOOLS_SOLID.create());
         var employees = new SideNavItem("Employees", EmployeesView.class, LineAwesomeIcon.USER_ALT_SOLID.create());
 //        var inventory = new SideNavItem("Inventory", "/dashboard", LineAwesomeIcon.BOOK_SOLID.create());

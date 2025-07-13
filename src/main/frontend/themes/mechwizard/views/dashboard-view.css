@@ -11,7 +11,6 @@
   --cv-dropzone-bg-color: hsl(var(--cv-blue) / 0.2);
   --cv-droptarget-border-color: hsl(var(--cv-purple) / 1);
   --cv-droptarget-bg-color: hsl(var(--cv-purple) / 0.4);
-  --cv-stripe-width: 1.5px;
   --cv-stripe-gap: 9px;
   --cv-stripe-color: hsl(var(--cv-blue) / 0.2);
   --cv-layout-border-color: var(--lumo-contrast-40pct);
@@ -212,9 +211,20 @@ vaadin-form-layout[empty] {
 }
 
 .dashboard-recent-services {
-  background-color: #f4fdff;
+  background: url('images/landing-page-img.jpg') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
 }
-
+.dashboard-recent-services h3{
+  padding: 2%;
+  margin:auto;
+  text-align: center;
+  font-size: 32px;
+  border-radius: 50px;
+  border: 1px solid #eee;
+  width:70%;
+  background-color: #ffffffd7;
+}
 
 /* CUSTOMER-DASHBOARD-STYLING */
 .dashboard-body-content {
@@ -223,7 +233,6 @@ vaadin-form-layout[empty] {
   box-sizing: border-box;
   margin: 10px;
   background-color: #fff;
-  
 }
 
 .dashboard-view-title-layout {
@@ -239,7 +248,7 @@ vaadin-form-layout[empty] {
    border-bottom: 1px solid #4d819d;
 }
 .dashboard-header-section {
-  background-color:#98a5ba;
+  background-color:#6f7f9a;
   box-sizing: border-box;
   padding:10px;
   border-radius: 5px;
@@ -314,11 +323,11 @@ vaadin-form-layout[empty] {
   padding:10px;
   border-radius: 20px;
   text-align: center;
-
+  margin: 5px;
 } 
 .dashboard-summary-card:hover {
   border:1px solid var(--lumo-primary-color);
-  transition: 0.3m ease;
+  transition: 0.3s ease;
 }
 .dashboard-summary-card h3 {
   color: #4A6FA5;

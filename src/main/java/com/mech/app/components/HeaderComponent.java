@@ -56,6 +56,8 @@ public class HeaderComponent {
         HorizontalLayout viewTitleLayout = new HorizontalLayout(component);
         viewTitleLayout.setWidthFull();
         viewTitleLayout.setPadding(true);
+        viewTitleLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+        viewTitleLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         viewTitleLayout.addClassNames("dashboard-view-title-layout");
         return viewTitleLayout;
     }

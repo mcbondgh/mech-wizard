@@ -1,0 +1,41 @@
+.customer-report-view-parent-layout {
+    border:1px solid #ddd;
+    border-radius: 5px;
+}
+.feedback-component {
+    border:1px solid rgb(218, 208, 208);
+    padding:10px;
+    border-radius: 10px;
+    box-sizing:border-box;
+    background-color: rgb(255, 255, 255);
+    max-width: 80%;
+    margin: auto;
+}
+.feedback-component vaadin-select {
+    width:100%;
+}
+.feedback-component vaadin-text-area::part(input-field) {
+    padding:10px;
+    background-color:#eee;
+    font-size:18px;
+    border: none;
+    
+}
+.rating-label {
+    text-align: center;
+    padding:10px;
+    font-size: 26px;
+    background-color: rgb(255, 226, 183);
+    border-radius: 5px;
+}
+.feedback-component p {
+    padding:5px;
+    box-sizing: border-box;
+    color: var(--subtitle-color);
+}
+
+@media screen and (max-width:768px) {
+    .feedback-component {
+        min-width: 100%;
+    }
+}

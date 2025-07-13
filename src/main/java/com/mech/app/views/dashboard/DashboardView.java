@@ -1,6 +1,7 @@
 package com.mech.app.views.dashboard;
 
 import com.mech.app.configfiles.secutiry.SessionManager;
+import com.mech.app.dataproviders.dao.DAO;
 import com.mech.app.enums.MasterRoles;
 import com.mech.app.views.MainLayout;
 import com.mech.app.views.login.LoginView;
@@ -88,42 +89,43 @@ public class DashboardView extends Composite<VerticalLayout> implements BeforeEn
     }
 
     private Component recentServicesAndJobCardsSection() {
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.setWidthFull();
+        VerticalLayout layout = new VerticalLayout();
+        layout.setSizeFull();
         layout.addClassName("dashboard-recent-services");
 
         //SERVICES GRID SECTION
-        H3 title = new H3("Recent Services");
+        H3 title = new H3("Simple And Easy Auto Mechanic System");
         VerticalLayout servicesGrid = new VerticalLayout(title);
         servicesGrid.addClassNames("dashboard-grid-box", "dashboard-service-section");
-
-
-        //JOB CARD GRID SECTION
-        H3 jobTitle = new H3("Recent Jobs");
-        VerticalLayout jobsGrid = new VerticalLayout(jobTitle);
-        jobsGrid.addClassNames("dashboard-grid-box", "dashboard-jobcard-section");
-
-        layout.add(servicesGrid, jobsGrid);
+        layout.add(servicesGrid);
         return layout;
     }
 
     //    PAGE BODY SECTION
     private Component pageBody() {
         VerticalLayout bodyLayout = new VerticalLayout();
-        bodyLayout.setWidthFull();
+        bodyLayout.setSizeFull();
         bodyLayout.setPadding(true);
         bodyLayout.addClassName("dashboard-body");
         bodyLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         bodyLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
+        //extract data from data model
+        var dataSource = new DAO().fetchMainDashboardValues();
+        var customers = dataSource.getOrDefault("customers", "0");
+        var services = dataSource.getOrDefault("services", "0");
+        var activeJobs = dataSource.getOrDefault("active_jobs", "0");
+        var completed = dataSource.getOrDefault("completed", "0");
+        var assigned = dataSource.getOrDefault("assigned", "0");
         // Example cards
-        var customersCard = cardComponent("Total Customers", "1,234", VaadinIcon.USERS);
-        var serviceCard = cardComponent("Service Requests", "567", VaadinIcon.CHECK_CIRCLE);
-        var jobsCard = cardComponent("Active Jobs", "89", VaadinIcon.TASKS);
-        var assignedCard = cardComponent("Assigned Tasks", "123", VaadinIcon.SCREWDRIVER);
+        var customersCard = cardComponent("Total Customers", customers, VaadinIcon.USERS);
+        var serviceCard = cardComponent("Service Requests", services, VaadinIcon.CHECK_CIRCLE);
+        var jobsCard = cardComponent("Active Jobs", activeJobs, VaadinIcon.TASKS);
+        var assignedCard = cardComponent("Assigned Tasks", assigned, VaadinIcon.SCREWDRIVER);
+        var completedCard = cardComponent("Completed Tasks", completed, VaadinIcon.CHECK_CIRCLE_O);
 
         var cardsLayout = new HorizontalLayout(
-                customersCard, serviceCard, jobsCard, assignedCard);
+                customersCard, serviceCard, jobsCard, assignedCard, completedCard);
         cardsLayout.addClassName("dashboard-cards-layout");
 
         bodyLayout.add(cardsLayout, recentServicesAndJobCardsSection());

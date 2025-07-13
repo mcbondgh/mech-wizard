@@ -21,10 +21,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.BoxSizing;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
@@ -65,7 +62,7 @@ public class CustomerDashboardView extends VerticalLayout implements BeforeEnter
     @Override
     public void onAttach(AttachEvent event) {
         super.onAttach(event);
-        add(bodyContent());
+        add(new Scroller(bodyContent()));
     }
 
 
@@ -94,7 +91,7 @@ public class CustomerDashboardView extends VerticalLayout implements BeforeEnter
         var totalServiceCard = summaryCards(VaadinIcon.BOOK.create(), dataSource.get("totalService"), "Total Services");
         var completedCard = summaryCards(VaadinIcon.FLAG_CHECKERED.create(), dataSource.get("completed"), "Completed Services");
         var queuedServicesCard = summaryCards(VaadinIcon.LIST.create(), dataSource.get("queued"), "Queued Services");
-        var accountCard = summaryCards(VaadinIcon.DOLLAR.create(),  dataSource.get("account"), "Account Balance");
+        var accountCard = summaryCards(VaadinIcon.MONEY.create(),"Ghc "+ dataSource.get("account"), "Account Balance");
         accountCard.addClassName("dashboard-account-card");
 
         H4 summaryLabel = new H4("Your System Summary");
@@ -113,7 +110,7 @@ public class CustomerDashboardView extends VerticalLayout implements BeforeEnter
     private Component bodyContent() {
         VerticalLayout parentLayout = new VerticalLayout();
         parentLayout.addClassNames("dashboard-body-content");
-        parentLayout.setSizeFull();
+        parentLayout.setWidthFull();
         parentLayout.setBoxSizing(BoxSizing.BORDER_BOX);
 
         Icon icon = VaadinIcon.DASHBOARD.create();

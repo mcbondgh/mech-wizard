@@ -107,10 +107,11 @@ public class TransactionsView extends Composite<VerticalLayout> implements Befor
         var paymentCount = dataObject.getOrDefault("payment_count", "0");
         var serviceCost = dataObject.getOrDefault("service_cost" , "0.00");
         var totalAmount = dataObject.getOrDefault("total_amount", "0.00");
+        var collectedAmount = dataObject.getOrDefault("collected_amount", "0.00");
 
         var sectionOne = new CardComponent().paymentTransactionsDashboardCard("Awaiting Payment", awaitingPayment, "Total Completed Jobs");
         var sectionTwo = new CardComponent().paymentTransactionsDashboardCard("Total Unpaid", totalAmount == null ? "0.00" : totalAmount, "Outstanding Balance Without Labour Cost");
-        var sectionThree = new CardComponent().paymentTransactionsDashboardCard("Collected", paymentCount, "Paid Amount");
+        var sectionThree = new CardComponent().paymentTransactionsDashboardCard("Total Payments", "Ghc" + collectedAmount, paymentCount + " Total Count");
         HorizontalLayout layout = new HorizontalLayout(sectionOne, sectionTwo, sectionThree);
         layout.setWidthFull();
         layout.addClassNames("payment-header-card-layout");

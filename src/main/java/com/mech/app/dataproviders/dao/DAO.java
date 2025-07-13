@@ -3,6 +3,7 @@ package com.mech.app.dataproviders.dao;
 import com.mech.app.configfiles.ErrorLoggerTemplate;
 import com.mech.app.configfiles.database.AppConnection;
 import com.mech.app.dataproviders.cars.CarDataProvider;
+import com.mech.app.dataproviders.customers.CustomerFeedbackRecords;
 import com.mech.app.dataproviders.customers.CustomersDataProvider;
 import com.mech.app.dataproviders.employees.EmployeesDataProvider;
 import com.mech.app.dataproviders.jobcards.JobCardDataProvider;
@@ -24,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DAO extends AppConnection {
@@ -509,11 +511,13 @@ public class DAO extends AppConnection {
                     payment_count,
                     service_cost,
                     purchased_items_cost,
+                    collected_amount,
                     (service_cost + purchased_items_cost) AS total_amount
                 FROM (
                     SELECT\s
                         (SELECT COUNT(id) FROM service_requests WHERE service_status = 'completed') AS awaiting_payment,
                         (SELECT COUNT(id) FROM service_requests WHERE service_status = 'paid') AS payment_count,
+                        (SELECT SUM(collected_amount) FROM payments ) AS collected_amount,
                         (
                             SELECT SUM(service_cost) FROM service_requests AS sr
                             INNER JOIN job_cards AS jc ON sr.id = jc.service_id
@@ -537,6 +541,7 @@ public class DAO extends AppConnection {
                 data.put("service_cost", resultSet.getString("service_cost"));
                 data.put("purchased_items_cost", resultSet.getString("purchased_items_cost"));
                 data.put("total_amount", resultSet.getString("total_amount"));
+                data.put("collected_amount", resultSet.getString("collected_amount"));
             }
             resultSet.close();
         } catch (Exception ex) {
@@ -809,6 +814,30 @@ public class DAO extends AppConnection {
         }
         return data;
     }
+    public Map<String, String> fetchMainDashboardValues() {
+        Map<String,String> data = new HashMap<>();
+        String query = """
+                SELECT\s
+                	(SELECT COUNT(*) FROM customers WHERE is_deleted = FALSE) AS customers,
+                    (SELECT COUNT(*) FROM service_requests WHERE is_deleted = FALSE) AS services,
+                    (SELECT COUNT(*) FROM service_requests WHERE service_status = 'new' OR service_status = 'assigned'  AND is_deleted = FALSE) AS active_jobs,
+                    (SELECT COUNT(*) FROM service_requests WHERE service_status = 'assigned' AND is_deleted = FALSE) AS assigned,
+                    (SELECT COUNT(*) FROM service_requests WHERE service_status = 'paid' AND is_deleted = FALSE) AS completed
+                """;
+            try {
+                resultSet = getCon().prepareStatement(query).executeQuery();
+                if (resultSet.next()) {
+                    data.put("customers", resultSet.getString("customers"));
+                    data.put("services", resultSet.getString("services"));
+                    data.put("active_jobs", resultSet.getString("active_jobs"));
+                    data.put("assigned", resultSet.getString("assigned"));
+                    data.put("completed", resultSet.getString("completed"));
+                }
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        return data;
+    }
 
     public List<ServicesDataProvider.PaidServicesRecord> fetchPaidServicesByCustomerId(int customerId) {
         List<ServicesDataProvider.PaidServicesRecord>data = new ArrayList<>();
@@ -854,6 +883,46 @@ public class DAO extends AppConnection {
             resultSet.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return data;
+    }
+
+    public List<CustomerFeedbackRecords> fetchCustomerFeedbacks() {
+        List<CustomerFeedbackRecords>data = new ArrayList<>();
+        String query = """
+                SELECT\s
+                fbk.job_id,
+                fbk.entry_date,
+                customer_name,
+                brand, plate_number,
+                stars, comments, response
+                 FROM customer_feedbacks AS fbk
+                JOIN customers AS c\s
+                ON fbk.customer_id = c.record_id
+                JOIN job_cards AS jc
+                ON jc.job_id = fbk.job_id
+                JOIN service_requests AS sr
+                ON jc.service_id = sr.id
+                JOIN customer_vehicles AS cv
+                ON sr.vehicle_id = cv.record_id
+        """;
+        try {
+            resultSet = getCon().prepareStatement(query).executeQuery();
+            while(resultSet.next()) {
+                data.add(new CustomerFeedbackRecords(
+                        resultSet.getString("job_id"),
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy").format(resultSet.getTimestamp("entry_date").toLocalDateTime()),
+                        resultSet.getString("customer_name"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("plate_number"),
+                        resultSet.getString("stars"),
+                        resultSet.getString("comments"),
+                        resultSet.getString("response")
+                ));
+            }
+            resultSet.close();
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         return data;
     }

@@ -12,6 +12,7 @@
 @import url('./views/confirm-dialog-component.css');
 @import url('./views/customers-view.css');
 @import url('./views/completed-services-view.css');
+@import url('./views/feedback-card-view.css');
 @import url('@vaadin/vaadin-lumo-styles/auto-complete.css');
 @import url('./views/settings-view.css');
 html {

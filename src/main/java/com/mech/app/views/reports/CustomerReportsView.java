@@ -226,7 +226,7 @@ public class CustomerReportsView extends VerticalLayout implements BeforeEnterOb
                 int rateValue = starsSelect.getValue();
                 String name = SessionManager.getAttribute("fullName").toString();
                String logMsg = String.format("Customer %s submitted a %d-star rating for job #%d with satisfaction level: %s", name, rateValue, jobId, indicator.getText());
-               int response = new ServiceRequestModel().rateService(CUSTOMER_ID, jobId, rateValue, indicator.getText());
+               int response = new ServiceRequestModel().rateService(CUSTOMER_ID, jobId, rateValue, feedbackArea.getValue());
                if (response > 0) {
                    var logger = new NotificationRecords("SERVICE RATING", logMsg, USER_ID, SHOP_ID);
                    SERVICE_REQUEST_MODEL.logNotification(logger);
@@ -238,6 +238,7 @@ public class CustomerReportsView extends VerticalLayout implements BeforeEnterOb
         rateButton.setWidthFull();
         if (!stars.equals("no rating")) {
             feedbackArea.setValue(feedback);
+            rateButton.setVisible(false);
             div.setEnabled(false);
         }
         div.add(h3, indicator, new Hr(), starsSelect, feedbackArea, rateButton);
